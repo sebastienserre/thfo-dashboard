@@ -1,0 +1,111 @@
+.thivinfo-welcome-panel.welcome-panel {
+    padding: 0;    
+    line-height: 1.5em;
+}
+.thivinfo-welcome-panel-content {
+    display: flex;    
+}
+.thivinfo-welcome-panel-aside {
+    width: 300px;
+    flex-grow: 0;
+    flex-shrink: 0;    
+    background: #62727b;
+    color: #ffffff;
+    padding: 15px 30px;
+}
+.thivinfo-welcome-panel-main {
+    flex-grow: 1;
+    padding: 15px 30px;
+}
+.thivinfo-welcome-panel-header .thivinfo-welcome-panel-main {
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+.thivinfo-welcome-panel-header {
+    background: #38474f;    
+    border-bottom: 1px #738088 solid;
+}
+.thivinfo-welcome-panel-header h2 {
+    color: #ffffff;    
+}
+.thivinfo-welcome-panel-header .about-description {
+    color: #fd9f28;
+}
+.thivinfo-welcome-panel-header .thivinfo-welcome-panel-aside {
+    background: #5a6a72;   
+    text-align: center; 
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+.thivinfo-welcome-panel-content a {
+    color: #fd9f28;
+}
+.welcome-panel .welcome-icon:before {
+    top: 2px;
+}
+.welcome-panel .thivinfo-welcome-panel-aside .welcome-icon:before {
+    color: #323c44;
+}
+.welcome-panel .thivinfo-welcome-panel-aside h3 {
+    color: #ffffff;    
+}
+
+.thivinfo-welcome-panel-news li {
+    border-top: 1px #808d94 solid;
+}
+.thivinfo-welcome-panel-news li:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+.thivinfo-welcome-panel-news li a {
+    display: inline-block;
+    margin-top: 10px;
+}
+.thivinfo-welcome-panel-support li {
+    padding-top: 10px;
+}
+.welcome-panel .thivinfo-welcome-panel-main h3 {
+    padding-bottom: 10px;   
+}
+.video-modal {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    z-index: 99999;
+}
+.video-modal-bg {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background:rgba(0, 0, 0, 0.8); 
+    z-index:100000;
+}
+.video-modal-content {
+    width:640px; 
+    height: 360px; 
+    top: 100px; 
+    left: 10%; 
+    position: absolute; 
+    background: #ffffff;
+    z-index:100001;
+}
+
+.thivinfo-welcome-panel-aside img {
+    width: 90%;
+}
+
+.thivinfo-welcome-panel-aside a {
+    color: #fefefe;
+}
+
+.thivinfo-welcome-panel-support h3{
+    color: #fefefe;
+}
+
+.thivinfo-welcome-panel-support {
+    margin-right: 50px;
+}
