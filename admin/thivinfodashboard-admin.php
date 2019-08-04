@@ -53,12 +53,17 @@ function thivinfo_main_dashboard_widget() {
                     !</p>
             </div>
             <div class="thivinfo-welcome-panel-support">
-                <h3>Besoin d'aide ?</h3>
+
                 <ul>
-                    <!--                                    <li><a target="_blank" href="https://support.e-labo.io/" class="welcome-icon dashicons-admin-tools">Outil de tickets e-labo</a></li>
-					-->
-                    <li><a target="_blank" href="mailto:support@thivinfo.com" class="welcome-icon
-                                    dashicons-admin-users" title="Envoi un mail au support de Thivinfo">support@thivinfo.com</a></li>
+                    <li>
+                        <h3>Besoin d'aide ?</h3>
+                        <a target="_blank" href="mailto:support@thivinfo.com" class="welcome-icon
+                                    dashicons-admin-users" title="Envoi un mail au support de Thivinfo">support@thivinfo.com</a>
+                    </li>
+                    <li>
+                        <h3>Suivez moi</h3>
+                        <a href="https://twiter.com/sebastienserre" class="welcome-icon dashicon dashicons-twitter"
+                           target="_blank">Twitter</a></li>
                 </ul>
             </div>
             <div class="thivinfo-welcome-panel-aside">

@@ -108,4 +108,10 @@
 
 .thivinfo-welcome-panel-support {
     margin-right: 50px;
+    width: 45%;
+}
+
+.thivinfo-welcome-panel-support li {
+    float: left;
+    padding: 10px;
 }
