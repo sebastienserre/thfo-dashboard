@@ -193,41 +193,44 @@ function thivinfo_main_dashboard_widget() {
                             extensions
                             WordPress</a></h3>
 					<?php
-					$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/freemius-cpt/?per_page=5&orderby=date&order=desc&lang=fr' );
-					if ( ! is_wp_error( $response ) ) {
-						$posts = json_decode( wp_remote_retrieve_body( $response ) );
-						if ( ! empty( $posts ) ) {
-							echo '<ul>';
-							foreach ( $posts as $post ) {
-								echo '<li><a href="' . $post->link . '">'
-								     . $post->title->rendered . '</a></li>';
-							}
-							echo '</ul>';
-						} else {
-							//ERROR::remote ressouces has no post
+					$posts = get_transient( 'dashboard_shop_posts' );
+					if ( empty( $posts ) ) {
+						$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/freemius-cpt/?per_page=5&orderby=date&order=desc&lang=fr' );
+						if ( ! is_wp_error( $response ) ) {
+							$posts = json_decode( wp_remote_retrieve_body( $response ) );
+							set_transient( 'dashboard_shop_posts', $posts, HOUR_IN_SECONDS * 12 );
 						}
+					}
+					if ( ! empty( $posts ) ) {
+						echo '<ul>';
+						foreach ( $posts as $post ) {
+							echo '<li><a href="' . $post->link . '">'
+							     . $post->title->rendered . '</a></li>';
+						}
+						echo '</ul>';
 					} else {
-						//ERROR::remote ressouces unavailable
+						//ERROR::remote ressouces has no post
 					}
 					?>
                     <h3><a href="https://thivinfo.com/blog/" title="Lien vers le blog Thivinfo" target="_blank">Mes
                             derniers Articles WordPress</a></h3>
 					<?php
-					$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/posts/?per_page=2&orderby=date&order=desc&lang=fr' );
-					if ( ! is_wp_error( $response ) ) {
-						$posts = json_decode( wp_remote_retrieve_body( $response ) );
-						if ( ! empty( $posts ) ) {
-							echo '<ul>';
-							foreach ( $posts as $post ) {
-								echo '<li><a href="' . $post->link . '">'
-								     . $post->title->rendered . '</a></li>';
-							}
-							echo '</ul>';
-						} else {
-							//ERROR::remote ressouces has no post
+					$posts = get_transient( 'dashboard_post' );
+					if ( empty( $posts ) ) {
+						$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/posts/?per_page=2&orderby=date&order=desc&lang=fr' );
+
+						if ( ! is_wp_error( $response ) ) {
+							$posts = json_decode( wp_remote_retrieve_body( $response ) );
+							set_transient( 'dashboard_post', $posts, HOUR_IN_SECONDS * 12 );
 						}
-					} else {
-						//ERROR::remote ressouces unavailable
+					}
+					if ( ! empty( $posts ) ) {
+						echo '<ul>';
+						foreach ( $posts as $post ) {
+							echo '<li><a href="' . $post->link . '">'
+							     . $post->title->rendered . '</a></li>';
+						}
+						echo '</ul>';
 					}
 					?>
                 </div>
