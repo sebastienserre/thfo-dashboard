@@ -127,7 +127,7 @@
 
 .dashboard-msg.dashboard-alert {
     background: #fe5000;
-    border-radius: 3px 30px 3px 3px;
+    border-radius: 3px;
 }
 
 p.alert-msg {
