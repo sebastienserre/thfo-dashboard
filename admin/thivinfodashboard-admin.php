@@ -75,54 +75,41 @@ function thivinfo_main_dashboard_widget() {
         </div>
         <div class="thivinfo-welcome-panel-content">
             <div class="thivinfo-welcome-panel-main">
-                <div class="">
-					<?php $options = get_option( 'whoadmin_options' ); ?>
-                    <ul>
-						<?php if ( isset( $options['title_guide1'] ) && ! empty( $options['title_guide1'] ) && isset( $options['url_guide1'] ) && ! empty( $options['url_guide1'] ) ) : ?>
+                <div class="dashboard-msg dashboard-welcome-msg">
 
-                            <h3>Guides d’utilisation</h3>
-                            <li>
-                                <a target="_blank" href="<?php echo $options['url_guide1']; ?>"
-                                   class="welcome-icon welcome-learn-more linkmodal" title="Télécharger le document">
-									<?php echo $options['title_guide1']; ?>
-                                </a>
-                            </li>
-						<?php endif; ?>
-						<?php if ( isset( $options['title_guide2'] ) && ! empty( $options['title_guide2'] ) && isset( $options['url_guide2'] ) && ! empty( $options['url_guide2'] ) ) : ?>
-                            <li>
-                                <a target="_blank" href="<?php echo $options['url_guide2']; ?>"
-                                   class="welcome-icon welcome-learn-more linkmodal" title="Télécharger le document">
-									<?php echo $options['title_guide2']; ?>
-                                </a>
-                            </li>
-						<?php endif; ?>
-						<?php if ( isset( $options['title_guide3'] ) && ! empty( $options['title_guide3'] ) && isset( $options['url_guide3'] ) && ! empty( $options['url_guide3'] ) ) : ?>
-                            <li>
-                                <a target="_blank" href="<?php echo $options['url_guide3']; ?>"
-                                   class="welcome-icon welcome-learn-more linkmodal" title="Télécharger le document">
-									<?php echo $options['title_guide3']; ?>
-                                </a>
-                            </li>
-						<?php endif; ?>
-						<?php if ( isset( $options['title_guide4'] ) && ! empty( $options['title_guide4'] ) && isset( $options['url_guide4'] ) && ! empty( $options['url_guide4'] ) ) : ?>
-                            <li>
-                                <a target="_blank" href="<?php echo $options['url_guide4']; ?>"
-                                   class="welcome-icon welcome-learn-more linkmodal" title="Télécharger le document">
-									<?php echo $options['title_guide4']; ?>
-                                </a>
-                            </li>
-						<?php endif; ?>
-						<?php if ( isset( $options['title_guide5'] ) && ! empty( $options['title_guide5'] ) && isset( $options['url_guide5'] ) && ! empty( $options['url_guide5'] ) ) : ?>
-                            <li>
-                                <a target="_blank" href="<?php echo $options['url_guide5']; ?>"
-                                   class="welcome-icon welcome-learn-more linkmodal" title="Télécharger le document">
-									<?php echo $options['title_guide5']; ?>
-                                </a>
-                            </li>
-						<?php endif; ?>
-                    </ul>
+                    <p>Bonjour,</p>
+                    <p>Vous trouverez ici un détail de vos dernières publications ainsi qu'un lien mail pour
+                        me contacter en cas de besoin.
+                    </p>
+                    <p>Je pourrais etre amené a diffuser également des messages d'information à votre
+                        intention dans cette zone.
+                    </p>
+                    <p>Bonne Journée</p>
+                    <p>Sébastien</p>
                 </div>
-                <div class="">
+                <div class="dashboard-msg dashboard-alert">
+					<?php
+					$site    = home_url();
+					$decoded = get_transient( 'dashboard-alert' );
+					if ( empty( $decoded ) ) {
+						$json = wp_remote_get( 'https://thivinfo.com/config-dashboard.json' );
+						if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
+
+							$body         = wp_remote_retrieve_body( $json );
+							$decoded_body = json_decode( $body, true );
+							$decoded      = $decoded_body['message'];
+							set_transient( 'dashboard-alert', $decoded, HOUR_IN_SECONDS * 12 );
+						}
+					}
+					$arraykey = array_key_exists( $site, $decoded );
+					if ( $arraykey ) {
+						echo '<p class="alert-msg">' . $decoded[ $site ] . '</p>';
+					}
+
+
+					?>
+                </div>
+                <div class="dashboard-news">
                     <h3>Dernières mise à jour</h3>
                     <div class="feature-section images-stagger-right">
 						<?php
@@ -206,7 +193,7 @@ function thivinfo_main_dashboard_widget() {
                             extensions
                             WordPress</a></h3>
 					<?php
-					$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/freemius-cpt/?per_page=2&orderby=date&order=desc&lang=fr' );
+					$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/freemius-cpt/?per_page=5&orderby=date&order=desc&lang=fr' );
 					if ( ! is_wp_error( $response ) ) {
 						$posts = json_decode( wp_remote_retrieve_body( $response ) );
 						if ( ! empty( $posts ) ) {
@@ -225,24 +212,24 @@ function thivinfo_main_dashboard_widget() {
 					?>
                     <h3><a href="https://thivinfo.com/blog/" title="Lien vers le blog Thivinfo" target="_blank">Mes
                             derniers Articles WordPress</a></h3>
-	                <?php
-	                $response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/posts/?per_page=2&orderby=date&order=desc&lang=fr' );
-	                if ( ! is_wp_error( $response ) ) {
-		                $posts = json_decode( wp_remote_retrieve_body( $response ) );
-		                if ( ! empty( $posts ) ) {
-			                echo '<ul>';
-			                foreach ( $posts as $post ) {
-				                echo '<li><a href="' . $post->link . '">'
-				                     . $post->title->rendered . '</a></li>';
-			                }
-			                echo '</ul>';
-		                } else {
-			                //ERROR::remote ressouces has no post
-		                }
-	                } else {
-		                //ERROR::remote ressouces unavailable
-	                }
-	                ?>
+					<?php
+					$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/posts/?per_page=2&orderby=date&order=desc&lang=fr' );
+					if ( ! is_wp_error( $response ) ) {
+						$posts = json_decode( wp_remote_retrieve_body( $response ) );
+						if ( ! empty( $posts ) ) {
+							echo '<ul>';
+							foreach ( $posts as $post ) {
+								echo '<li><a href="' . $post->link . '">'
+								     . $post->title->rendered . '</a></li>';
+							}
+							echo '</ul>';
+						} else {
+							//ERROR::remote ressouces has no post
+						}
+					} else {
+						//ERROR::remote ressouces unavailable
+					}
+					?>
                 </div>
             </div>
         </div>
