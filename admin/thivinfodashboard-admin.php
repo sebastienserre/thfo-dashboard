@@ -76,16 +76,24 @@ function thivinfo_main_dashboard_widget() {
         <div class="thivinfo-welcome-panel-content">
             <div class="thivinfo-welcome-panel-main">
                 <div class="dashboard-msg dashboard-welcome-msg">
+					<?php
+					$decoded = get_transient( 'dashboard-general-msg' );
 
-                    <p>Bonjour,</p>
-                    <p>Vous trouverez ici un détail de vos dernières publications ainsi qu'un lien mail pour
-                        me contacter en cas de besoin.
-                    </p>
-                    <p>Je pourrais etre amené a diffuser également des messages d'information à votre
-                        intention dans cette zone.
-                    </p>
-                    <p>Bonne Journée</p>
-                    <p>Sébastien</p>
+					if ( empty( $decoded ) ) {
+						$json = wp_remote_get( 'https://thivinfo.com/config-dashboard.json' );
+						if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
+
+							$body         = wp_remote_retrieve_body( $json );
+							$decoded_body = json_decode( $body, true );
+							$decoded      = $decoded_body['message']['general'];
+							set_transient( 'dashboard-general-msg', $decoded, HOUR_IN_SECONDS * 12 );
+						}
+					}
+					if ( ! empty( $decoded ) ) {
+						echo '<p>' . $decoded . '</p>';
+					}
+					?>
+
                 </div>
                 <div class="dashboard-msg dashboard-alert">
 					<?php
@@ -104,6 +112,9 @@ function thivinfo_main_dashboard_widget() {
 					$arraykey = array_key_exists( $site, $decoded );
 					if ( $arraykey ) {
 						echo '<p class="alert-msg">' . $decoded[ $site ] . '</p>';
+					}
+					if ( ! empty( $decoded['all'] ) ) {
+						echo '<p class="alert-msg">' . $decoded['all'] . '</p>';
 					}
 
 
