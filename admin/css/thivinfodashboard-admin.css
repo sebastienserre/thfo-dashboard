@@ -125,9 +125,18 @@
     clear: both;
 }
 
-p.alert-msg {
+.alert-msg {
     background: #fe5000;
     color: #fefefe;
     padding: 15px 10px;
     border-radius: 3px;
+}
+
+.alert-msg p {
+    color: #fefefe;
+}
+
+.alert-msg a {
+    color: #fefefe;
+    text-decoration: underline;
 }
