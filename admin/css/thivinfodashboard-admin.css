@@ -125,13 +125,18 @@
     clear: both;
 }
 
-div.alert-msg {
+.alert-msg {
     background: #fe5000;
-    padding: 10px 10px;
+    color: #fefefe;
+    padding: 15px 10px;
     border-radius: 3px;
-    margin: 5px 0;
 }
 
-.alert-msg p{
+.alert-msg p {
     color: #fefefe;
+}
+
+.alert-msg a {
+    color: #fefefe;
+    text-decoration: underline;
 }
