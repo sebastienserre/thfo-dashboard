@@ -11,7 +11,7 @@
  *
  * @package    thivinfodashboard
  * @subpackage thivinfodashboard/admin
- * @author     audrasjb <audrasjb@gmail.com>, Eddy BOELS <eddy@e-labo.biz>
+ * @author     sebastienserre <sebastien@thivinfo.com>
  */
 
 /**
@@ -32,6 +32,55 @@ function thivinfo_disable_default_dashboard_widgets() {
 }
 
 add_action( 'admin_menu', 'thivinfo_disable_default_dashboard_widgets' );
+
+function thfo_retrieve_alert(){
+    $decoded_body = get_transient('dashboard-alerts');
+    if ( empty( $decoded_body ) ) {
+	    $main_url = stripslashes( MAIN_SITE );
+	    $json     = wp_remote_get( "$main_url/wp-json/wp/v2/alert?orderby=date&order=desc&lang=fr" );
+	    if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
+
+		    $body         = wp_remote_retrieve_body( $json );
+		    $decoded_body = json_decode( $body, true );
+		    set_transient( 'dashboard-alerts', $decoded_body, HOUR_IN_SECONDS * 12 );
+	    }
+    }
+	return $decoded_body;
+}
+
+function thfo_get_msg( $content = '' ) {
+	delete_transient( 'dashboard-alert' );
+	$decoded = get_transient( 'dashboard-alert' );
+	if ( empty( $decoded ) ) {
+		$decoded_body = thfo_retrieve_alert();
+		foreach ( $decoded_body as $alert ) {
+			if ( sanitize_title( home_url() ) === $alert['slug'] || 'all' === $alert['slug'] || $alert['slug'] === $content ) {
+				$decoded[ $alert['slug'] ] = $alert['content']['rendered'];
+				set_transient( 'dashboard-alert', $decoded, HOUR_IN_SECONDS * 12 );
+			}
+		}
+	}
+	foreach ( $decoded as $current_alert ) {
+		echo '<div class="alert-msg">' . $current_alert . '</div>';
+	}
+}
+
+function thfo_get_general_msg() {
+	delete_transient( 'dashboard-general-msg' );
+	$decoded = get_transient( 'dashboard-general-msg' );
+	if ( empty( $decoded ) ) {
+		$decoded_body = thfo_retrieve_alert();
+		foreach ( $decoded_body as $alert ) {
+			if ( 'general' === $alert['slug'] ) {
+				$decoded[ $alert['slug'] ] = $alert['content']['rendered'];
+				set_transient( 'dashboard-general-msg', $decoded, HOUR_IN_SECONDS * 12 );
+			}
+		}
+	}
+	foreach ( $decoded as $current_alert ) {
+		echo '<div class="general">' . $current_alert . '</div>';
+	}
+}
 
 /**
  *
@@ -77,63 +126,28 @@ function thivinfo_main_dashboard_widget() {
             <div class="thivinfo-welcome-panel-main">
                 <div class="dashboard-msg dashboard-welcome-msg">
 					<?php
-					$decoded = get_transient( 'dashboard-general-msg' );
-
-					if ( empty( $decoded ) ) {
-						$json = wp_remote_get( 'https://thivinfo.com/config-dashboard.json' );
-						if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
-
-							$body         = wp_remote_retrieve_body( $json );
-							$decoded_body = json_decode( $body, true );
-							$decoded      = $decoded_body['message']['general'];
-							set_transient( 'dashboard-general-msg', $decoded, HOUR_IN_SECONDS * 12 );
-						}
-					}
-					if ( ! empty( $decoded ) ) {
-						echo '<p>' . $decoded . '</p>';
-					}
+					thfo_get_general_msg( 'general' );
 					?>
 
                 </div>
                 <div class="dashboard-msg dashboard-alert">
 					<?php
-					delete_transient('dashboard-alert');
-					$decoded = get_transient( 'dashboard-alert' );
-					if ( empty( $decoded ) ) {
-						$main_url = stripslashes( MAIN_SITE );
-						
-						$json = wp_remote_get( "$main_url/wp-json/wp/v2/alert?orderby=date&order=desc&lang=fr" );
-						if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
-
-							$body         = wp_remote_retrieve_body( $json );
-							$decoded_body = json_decode( $body, true );
-							foreach ( $decoded_body as $alert ){
-
-							    if (  $alert['slug'] === sanitize_title( home_url() ) || $alert['slug'] === 'all' ){
-								    $decoded[] = $alert['content']['rendered'];
-								    set_transient( 'dashboard-alert', $decoded, HOUR_IN_SECONDS * 12 );
-                               }
-                            }
-						}
-					}
-
-					foreach ( $decoded as $current_alert ){
-						echo '<div class="alert-msg">' . $current_alert . '</div>';
-                    }
-
+					thfo_get_msg( );
 					?>
                 </div>
                 <div class="dashboard-news">
                     <h3>Dernières mise à jour</h3>
                     <div class="feature-section images-stagger-right">
 						<?php
-						$drafts_query = new WP_Query( array(
-							'post_type'      => 'any',
-							'post_status'    => array( 'publish', 'pending', 'future' ),
-							'posts_per_page' => 5,
-							'orderby'        => 'modified',
-							'order'          => 'DESC'
-						) );
+						$drafts_query = new WP_Query(
+							[
+								'post_type'      => 'any',
+								'post_status'    => array( 'publish', 'pending', 'future' ),
+								'posts_per_page' => 5,
+								'orderby'        => 'modified',
+								'order'          => 'DESC',
+							]
+						);
 						$drafts       =& $drafts_query->posts;
 						if ( $drafts && is_array( $drafts ) ) {
 							$list = array();
@@ -250,7 +264,6 @@ function thivinfo_main_dashboard_widget() {
                 </div>
             </div>
         </div>
-
     </div>
     </div>
 	<?php
