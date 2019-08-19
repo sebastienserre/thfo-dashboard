@@ -111,7 +111,7 @@ function thivinfo_main_dashboard_widget() {
 					}
 					$arraykey = array_key_exists( $site, $decoded );
 					if ( $arraykey ) {
-						echo '<p class="alert-msg">' . $decoded[ $site ] . '</p>';
+						echo '< class="alert-msg">' . $decoded[ $site ] . '</>';
 					}
 					if ( ! empty( $decoded['all'] ) ) {
 						echo '<p class="alert-msg">' . $decoded['all'] . '</p>';
