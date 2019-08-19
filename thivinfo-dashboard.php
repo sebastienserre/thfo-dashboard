@@ -22,10 +22,21 @@ if( is_admin() ){
 	require_once plugin_dir_path(__FILE__).'admin/thivinfodashboard-admin.php';
 }
 
+
+
 define( 'THFO_DASHBOARD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'THFO_DASHBOARD_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'THFO_DASHBOARD_PLUGIN_DIR', untrailingslashit( THFO_DASHBOARD_PLUGIN_PATH ) );
 
+add_action( 'plugins_loaded', 'thfo_bd_load_cpt' );
+function thfo_bd_load_cpt() {
+	if ( ! defined( 'MAIN_SITE' ) ) {
+		define( 'MAIN_SITE', home_url() );
+	}
+	if( MAIN_SITE === home_url() ) {
+		require_once plugin_dir_path( __FILE__ ) . 'inc/alert-cpt.php';
+	}
+}
 /**
  *
  * Enqueue styles and scripts
