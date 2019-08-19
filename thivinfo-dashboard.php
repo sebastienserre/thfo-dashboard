@@ -34,6 +34,11 @@ function thfo_bd_load_cpt() {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/alert-cpt.php';
 	}
 }
+
+add_action( 'plugins_loaded', 'thfo_load_file' );
+function thfo_load_file(){
+	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
+}
 /**
  *
  * Enqueue styles and scripts
