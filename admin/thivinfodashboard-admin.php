@@ -97,26 +97,27 @@ function thivinfo_main_dashboard_widget() {
                 </div>
                 <div class="dashboard-msg dashboard-alert">
 					<?php
-					$site    = home_url();
+					delete_transient('dashboard-alert');
 					$decoded = get_transient( 'dashboard-alert' );
 					if ( empty( $decoded ) ) {
-						$json = wp_remote_get( 'https://thivinfo.com/config-dashboard.json' );
+					    $main_url = stripslashes( MAIN_SITE );
+						$json = wp_remote_get( "$main_url/wp-json/wp/v2/alert?orderby=date&order=desc&lang=fr" );
 						if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
 
 							$body         = wp_remote_retrieve_body( $json );
 							$decoded_body = json_decode( $body, true );
-							$decoded      = $decoded_body['message'];
-							set_transient( 'dashboard-alert', $decoded, HOUR_IN_SECONDS * 12 );
+							foreach ( $decoded_body as $alert ){
+							    if (  $alert['slug'] === sanitize_title( MAIN_SITE ) || $alert['slug'] === 'all' ){
+								    $decoded[] = $alert['content']['rendered'];
+								    set_transient( 'dashboard-alert', $decoded, HOUR_IN_SECONDS * 12 );
+                               }
+                            }
 						}
 					}
-					$arraykey = array_key_exists( $site, $decoded );
-					if ( $arraykey ) {
-						echo '< class="alert-msg">' . $decoded[ $site ] . '</>';
-					}
-					if ( ! empty( $decoded['all'] ) ) {
-						echo '<p class="alert-msg">' . $decoded['all'] . '</p>';
-					}
 
+					foreach ( $decoded as $current_alert ){
+						echo '<div class="alert-msg">' . $current_alert . '</div>';
+                    }
 
 					?>
                 </div>
