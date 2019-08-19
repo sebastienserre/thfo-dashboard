@@ -97,7 +97,6 @@ function thivinfo_main_dashboard_widget() {
                 </div>
                 <div class="dashboard-msg dashboard-alert">
 					<?php
-					delete_transient('dashboard-alert');
 					$decoded = get_transient( 'dashboard-alert' );
 					if ( empty( $decoded ) ) {
 					    $main_url = stripslashes( MAIN_SITE );
