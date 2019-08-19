@@ -22,35 +22,42 @@ function thivinfo_disable_default_dashboard_widgets() {
 
 add_action( 'admin_menu', 'thivinfo_disable_default_dashboard_widgets' );
 
-function thfo_retrieve_alert(){
-    $decoded_body = get_transient('dashboard-alerts');
-    if ( empty( $decoded_body ) ) {
-	    $main_url = stripslashes( MAIN_SITE );
-	    $json     = wp_remote_get( "$main_url/wp-json/wp/v2/alert?orderby=date&order=desc&lang=fr" );
-	    if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
+function thfo_retrieve_alert() {
+	$decoded_body = get_transient( 'dashboard-alerts' );
+	if ( empty( $decoded_body ) ) {
+		$main_url = stripslashes( MAIN_SITE );
+		$json     = wp_remote_get( "$main_url/wp-json/wp/v2/alert?orderby=date&order=desc&lang=fr" );
+		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
 
-		    $body         = wp_remote_retrieve_body( $json );
-		    $decoded_body = json_decode( $body, true );
-		    set_transient( 'dashboard-alerts', $decoded_body, HOUR_IN_SECONDS * 12 );
-	    }
-    }
+			$body         = wp_remote_retrieve_body( $json );
+			$decoded_body = json_decode( $body, true );
+			set_transient( 'dashboard-alerts', $decoded_body, HOUR_IN_SECONDS * 12 );
+		}
+	}
+
 	return $decoded_body;
 }
 
 function thfo_get_msg( $content = '' ) {
+
 	//delete_transient( 'dashboard-alert' );
 	$decoded = get_transient( 'dashboard-alert' );
 	if ( empty( $decoded ) ) {
+
 		$decoded_body = thfo_retrieve_alert();
+
 		foreach ( $decoded_body as $alert ) {
-			if ( sanitize_title( home_url() ) === $alert['slug'] || 'all' === $alert['slug'] || $alert['slug'] === $content ) {
+
+			if ( ! empty( $alert ) && sanitize_title( home_url() ) === $alert['slug'] || 'all' === $alert['slug'] || $alert['slug'] === $content ) {
 				$decoded[ $alert['slug'] ] = $alert['content']['rendered'];
 				set_transient( 'dashboard-alert', $decoded, HOUR_IN_SECONDS * 12 );
 			}
 		}
 	}
-	foreach ( $decoded as $current_alert ) {
-		echo '<div class="alert-msg">' . $current_alert . '</div>';
+	if ( $decoded ) {
+		foreach ( $decoded as $current_alert ) {
+			echo '<div class="alert-msg">' . $current_alert . '</div>';
+		}
 	}
 }
 
@@ -66,8 +73,10 @@ function thfo_get_general_msg() {
 			}
 		}
 	}
-	foreach ( $decoded as $current_alert ) {
-		echo '<div class="general">' . $current_alert . '</div>';
+	if ( ! empty( $decoded ) ) {
+		foreach ( $decoded as $current_alert ) {
+			echo '<div class="general">' . $current_alert . '</div>';
+		}
 	}
 }
 
@@ -121,7 +130,7 @@ function thivinfo_main_dashboard_widget() {
                 </div>
                 <div class="dashboard-msg dashboard-alert">
 					<?php
-					thfo_get_msg( );
+					thfo_get_msg();
 					?>
                 </div>
                 <div class="dashboard-news">
