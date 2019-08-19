@@ -30,10 +30,7 @@ define( 'THFO_DASHBOARD_PLUGIN_DIR', untrailingslashit( THFO_DASHBOARD_PLUGIN_PA
 
 add_action( 'plugins_loaded', 'thfo_bd_load_cpt' );
 function thfo_bd_load_cpt() {
-	if ( ! defined( 'MAIN_SITE' ) ) {
-		define( 'MAIN_SITE', home_url() );
-	}
-	if( MAIN_SITE === home_url() ) {
+	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() ) {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/alert-cpt.php';
 	}
 }
@@ -50,4 +47,20 @@ function thivinfo_enqueue_styles_admin() {
 add_action( 'admin_enqueue_scripts', 'thivinfo_enqueue_scripts_admin' );
 function thivinfo_enqueue_scripts_admin() {
 	wp_enqueue_script( 'thivinfodashboard-admin-scripts', THFO_DASHBOARD_PLUGIN_URL . 'admin/js/thivinfodashboard-admin.js', array( 'jquery' ), '', true );
+}
+
+add_action( 'plugins_loaded', 'thfo_add_main_constant' );
+function thfo_add_main_constant() {
+	if ( file_exists (ABSPATH . "wp-config.php") && is_writable (ABSPATH . "wp-config.php") ) {
+		if ( ! defined( 'MAIN_SITE' ) ) {
+			$filesystem = thfo_get_filesystem();
+			$config     = file_get_contents( ABSPATH . 'wp-config.php' );
+			$config     = preg_replace( "/^([\r\n\t ]*)(\<\?)(php)?/i", "<?php\nif ( ! defined( 'MAIN_SITE') ) {\ndefine('MAIN_SITE', 'https://thivinfo.com');\n}\n", $config );
+			$filesystem->put_contents( ABSPATH . 'wp-config.php', $config );
+		}else {
+			return;
+		}
+	}else {
+		return;
+	}
 }
