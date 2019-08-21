@@ -35,7 +35,7 @@ function thfo_bd_load_cpt() {
 	}
 }
 
-add_action( 'plugins_loaded', 'thfo_load_file' );
+add_action( 'plugins_loaded', 'thfo_db_load_file' );
 function thfo_db_load_file(){
 	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
 }
