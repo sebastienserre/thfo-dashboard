@@ -32,7 +32,7 @@ add_action( 'plugins_loaded', 'thfo_bd_load_cpt' );
 function thfo_bd_load_cpt() {
 	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() ) {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/alert-cpt.php';
-		require_once plugin_dir_path( __FILE__ ) . 'inc/websute-taxo.php';
+		require_once plugin_dir_path( __FILE__ ) . 'inc/website-taxo.php';
 	}
 }
 

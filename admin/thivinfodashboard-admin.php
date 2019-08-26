@@ -48,10 +48,19 @@ function thfo_get_msg( $content = '' ) {
 	$decoded_body = thfo_retrieve_alert();
 
 	foreach ( $decoded_body as $alert ) {
+	    $websites = get_terms(
+	            [
+	                'taxonomy' => 'websites',
+                    'hide_empty'    => true,
+                ]
+        );
+	    $websites = wp_get_post_terms( $alert['id'], 'websites');
 
-		if ( ! empty( $alert ) && sanitize_title( home_url() ) === $alert['slug'] || 'all' === $alert['slug'] || $alert['slug'] === $content ) {
-			$decoded[ $alert['slug'] ] = $alert['content']['rendered'];
-		}
+	    foreach ( $websites as $website ) {
+		    if ( ! empty( $alert ) && sanitize_title( home_url() ) === $website->slug ) {
+			    $decoded[ $alert['slug'] ] = $alert['content']['rendered'];
+		    }
+	    }
 	}
 	if ( $decoded ) {
 		foreach ( $decoded as $current_alert ) {
