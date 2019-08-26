@@ -22,47 +22,46 @@ function thivinfo_disable_default_dashboard_widgets() {
 
 add_action( 'admin_menu', 'thivinfo_disable_default_dashboard_widgets' );
 
+/**
+ * Return the list of alerts
+ * @return array List of alerts
+ */
 function thfo_retrieve_alert() {
-	$decoded_body = get_transient( 'dashboard-alerts' );
-	if ( empty( $decoded_body ) ) {
-		$main_url = stripslashes( MAIN_SITE );
-		$json     = wp_remote_get( "$main_url/wp-json/wp/v2/alert?orderby=date&order=desc&lang=fr" );
-		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
 
-			$body         = wp_remote_retrieve_body( $json );
-			$decoded_body = json_decode( $body, true );
-			set_transient( 'dashboard-alerts', $decoded_body, HOUR_IN_SECONDS * 12 );
-		}
+	$main_url = stripslashes( MAIN_SITE );
+	$json     = wp_remote_get( "$main_url/wp-json/wp/v2/alert?orderby=date&order=desc&lang=fr" );
+	if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
+
+		$body         = wp_remote_retrieve_body( $json );
+		$decoded_body = json_decode( $body, true );
 	}
 
 	return $decoded_body;
 }
 
+/**
+ * Display alert
+ * @param string $content Type of content
+ */
 function thfo_get_msg( $content = '' ) {
 
-	//delete_transient( 'dashboard-alert' );
-	$decoded = get_transient( 'dashboard-alert' );
-	if ( empty( $decoded ) ) {
+	$decoded_body = thfo_retrieve_alert();
 
-		$decoded_body = thfo_retrieve_alert();
+	foreach ( $decoded_body as $alert ) {
 
-		foreach ( $decoded_body as $alert ) {
-
-			if ( ! empty( $alert ) && sanitize_title( home_url() ) === $alert['slug'] || 'all' === $alert['slug'] || $alert['slug'] === $content ) {
-				$decoded[ $alert['slug'] ] = $alert['content']['rendered'];
-				set_transient( 'dashboard-alert', $decoded, HOUR_IN_SECONDS * 12 );
-			}
+		if ( ! empty( $alert ) && sanitize_title( home_url() ) === $alert['slug'] || 'all' === $alert['slug'] || $alert['slug'] === $content ) {
+			$decoded[ $alert['slug'] ] = $alert['content']['rendered'];
 		}
 	}
 	if ( $decoded ) {
 		foreach ( $decoded as $current_alert ) {
-			echo '<div class="alert-msg">' . $current_alert . '</div>';
+			echo '<div class="alert-msg">' . esc_attr( $current_alert ) . '</div>';
 		}
 	}
 }
 
+
 function thfo_get_general_msg() {
-	//delete_transient( 'dashboard-general-msg' );
 	$decoded = get_transient( 'dashboard-general-msg' );
 	if ( empty( $decoded ) ) {
 		$decoded_body = thfo_retrieve_alert();
@@ -219,9 +218,13 @@ function thivinfo_main_dashboard_widget() {
                             extensions
                             WordPress</a></h3>
 					<?php
-					$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/freemius-cpt/?per_page=5&orderby=date&order=desc&lang=fr' );
-					if ( ! is_wp_error( $response ) ) {
-						$posts = json_decode( wp_remote_retrieve_body( $response ) );
+					$posts = get_transient( 'dashboard_shop_posts' );
+					if ( empty( $posts ) ) {
+						$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/freemius-cpt/?per_page=5&orderby=date&order=desc&lang=fr' );
+						if ( ! is_wp_error( $response ) ) {
+							$posts = json_decode( wp_remote_retrieve_body( $response ) );
+							set_transient( 'dashboard_shop_posts', $posts, HOUR_IN_SECONDS * 12 );
+						}
 					}
 					if ( ! empty( $posts ) ) {
 						echo '<ul>';
@@ -230,6 +233,8 @@ function thivinfo_main_dashboard_widget() {
 							     . $post->title->rendered . '</a></li>';
 						}
 						echo '</ul>';
+					} else {
+						//ERROR::remote ressouces has no post
 					}
 					?>
                     <h3><a href="https://thivinfo.com/blog/" title="Lien vers le blog Thivinfo" target="_blank">Mes
