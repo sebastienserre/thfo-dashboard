@@ -58,13 +58,19 @@ function thfo_get_msg( $content = '' ) {
 
 	    foreach ( $websites as $website ) {
 		    if ( ! empty( $alert ) && sanitize_title( home_url() ) === $website->slug ) {
-			    $decoded[ $alert['slug'] ] = $alert['content']['rendered'];
+			    $decoded[ $alert['slug'] ]['content'] = $alert['content']['rendered'];
+			    $decoded[ $alert['slug'] ]['title'] = $alert['title']['rendered'];
 		    }
 	    }
 	}
 	if ( $decoded ) {
 		foreach ( $decoded as $current_alert ) {
-			echo '<div class="alert-msg">' . $current_alert . '</div>';
+			?>
+            <div class="alert-msg">
+                <h3><?php echo $current_alert['title']; ?></h3>
+                <?php echo $current_alert['content'];?>
+            </div>
+            <?php
 		}
 	}
 }
