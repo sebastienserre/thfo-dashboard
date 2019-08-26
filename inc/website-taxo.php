@@ -39,7 +39,7 @@ if ( ! function_exists( 'sites' ) ) {
 			'show_tagcloud'              => true,
 			'show_in_rest'               => true,
 		);
-		register_taxonomy( 'Websites', array( 'alert' ), $args );
+		register_taxonomy( 'websites', array( 'alert' ), $args );
 
 	}
 	add_action( 'init', 'sites', 0 );
