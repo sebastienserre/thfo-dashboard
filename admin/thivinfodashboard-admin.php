@@ -26,10 +26,10 @@ add_action( 'admin_menu', 'thivinfo_disable_default_dashboard_widgets' );
  * Return the list of alerts
  * @return array List of alerts
  */
-function thfo_retrieve_alert() {
+function thfo_retrieve_alert( $site = '') {
 
 	$main_url = stripslashes( MAIN_SITE );
-	$json     = wp_remote_get( "$main_url/wp-json/wp/v2/alert?orderby=date&order=desc&lang=fr" );
+	$json     = wp_remote_get( "$main_url/wp-json/wp/v2/alert?filter[websites]=$site&orderby=date&order=desc&lang=fr" );
 	if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
 
 		$body         = wp_remote_retrieve_body( $json );
@@ -44,24 +44,13 @@ function thfo_retrieve_alert() {
  * @param string $content Type of content
  */
 function thfo_get_msg( $content = '' ) {
-
-	$decoded_body = thfo_retrieve_alert();
-
+	$current_site = home_url();
+	$decoded_body = thfo_retrieve_alert( $current_site );
 	foreach ( $decoded_body as $alert ) {
-	    $websites = get_terms(
-	            [
-	                'taxonomy' => 'websites',
-                    'hide_empty'    => true,
-                ]
-        );
-	    $websites = wp_get_post_terms( $alert['id'], 'websites');
-
-	    foreach ( $websites as $website ) {
-		    if ( ! empty( $alert ) && sanitize_title( home_url() ) === $website->slug ) {
-			    $decoded[ $alert['slug'] ]['content'] = $alert['content']['rendered'];
-			    $decoded[ $alert['slug'] ]['title'] = $alert['title']['rendered'];
-		    }
-	    }
+		if ( ! empty( $alert ) && 'general' !== $alert['slug'] ) {
+			$decoded[ $alert['slug'] ]['content'] = $alert['content']['rendered'];
+			$decoded[ $alert['slug'] ]['title']   = $alert['title']['rendered'];
+		}
 	}
 	if ( $decoded ) {
 		foreach ( $decoded as $current_alert ) {
