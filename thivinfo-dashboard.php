@@ -32,12 +32,14 @@ add_action( 'plugins_loaded', 'thfo_bd_load_cpt' );
 function thfo_bd_load_cpt() {
 	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() ) {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/alert-cpt.php';
+		require_once plugin_dir_path( __FILE__ ) . 'inc/websute-taxo.php';
 	}
 }
 
 add_action( 'plugins_loaded', 'thfo_db_load_file' );
 function thfo_db_load_file(){
 	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
+
 }
 /**
  *

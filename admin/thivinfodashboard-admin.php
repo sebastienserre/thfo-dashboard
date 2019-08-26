@@ -55,7 +55,7 @@ function thfo_get_msg( $content = '' ) {
 	}
 	if ( $decoded ) {
 		foreach ( $decoded as $current_alert ) {
-			echo '<div class="alert-msg">' . esc_attr( $current_alert ) . '</div>';
+			echo '<div class="alert-msg">' . $current_alert . '</div>';
 		}
 	}
 }
