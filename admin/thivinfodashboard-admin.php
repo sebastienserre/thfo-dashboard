@@ -1,8 +1,12 @@
 <?php
+
+use Dashboard\Helpers\Helpers;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
 
+add_action( 'admin_menu', 'thivinfo_disable_default_dashboard_widgets' );
 /**
  *
  * Remove useless stuff
@@ -13,74 +17,10 @@ function thivinfo_disable_default_dashboard_widgets() {
 	remove_meta_box( 'dashboard_activity', 'dashboard', 'core' );
 	remove_meta_box( 'dashboard_incoming_links', 'dashboard', 'core' );
 	remove_meta_box( 'dashboard_plugins', 'dashboard', 'core' );
-
 	remove_meta_box( 'dashboard_quick_press', 'dashboard', 'core' );
 	remove_meta_box( 'dashboard_recent_drafts', 'dashboard', 'core' );
 	remove_meta_box( 'dashboard_primary', 'dashboard', 'core' );
 	remove_meta_box( 'dashboard_secondary', 'dashboard', 'core' );
-}
-
-add_action( 'admin_menu', 'thivinfo_disable_default_dashboard_widgets' );
-
-/**
- * Return the list of alerts
- * @return array List of alerts
- */
-function thfo_retrieve_alert( $site = '') {
-
-	$main_url = stripslashes( MAIN_SITE );
-	$json     = wp_remote_get( "$main_url/wp-json/wp/v2/alert?filter[websites]=$site&orderby=date&order=desc&lang=fr" );
-	if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
-
-		$body         = wp_remote_retrieve_body( $json );
-		$decoded_body = json_decode( $body, true );
-	}
-
-	return $decoded_body;
-}
-
-/**
- * Display alert
- * @param string $content Type of content
- */
-function thfo_get_msg( $content = '' ) {
-	$current_site = home_url();
-	$decoded_body = thfo_retrieve_alert( $current_site );
-	foreach ( $decoded_body as $alert ) {
-		if ( ! empty( $alert ) && 'general' !== $alert['slug'] ) {
-			$decoded[ $alert['slug'] ]['content'] = $alert['content']['rendered'];
-			$decoded[ $alert['slug'] ]['title']   = $alert['title']['rendered'];
-		}
-	}
-	if ( $decoded ) {
-		foreach ( $decoded as $current_alert ) {
-			?>
-            <div class="alert-msg">
-                <h3><?php echo $current_alert['title']; ?></h3>
-                <?php echo $current_alert['content'];?>
-            </div>
-            <?php
-		}
-	}
-}
-
-
-function thfo_get_general_msg() {
-	$decoded = get_transient( 'dashboard-general-msg' );
-	if ( empty( $decoded ) ) {
-		$decoded_body = thfo_retrieve_alert();
-		foreach ( $decoded_body as $alert ) {
-			if ( 'general' === $alert['slug'] ) {
-				$decoded[ $alert['slug'] ] = $alert['content']['rendered'];
-				set_transient( 'dashboard-general-msg', $decoded, HOUR_IN_SECONDS * 12 );
-			}
-		}
-	}
-	if ( ! empty( $decoded ) ) {
-		foreach ( $decoded as $current_alert ) {
-			echo '<div class="general">' . $current_alert . '</div>';
-		}
-	}
 }
 
 /**
@@ -127,13 +67,13 @@ function thivinfo_main_dashboard_widget() {
             <div class="thivinfo-welcome-panel-main">
                 <div class="dashboard-msg dashboard-welcome-msg">
 					<?php
-					thfo_get_general_msg( 'general' );
+					Helpers::thfo_get_general_msg( 'general' );
 					?>
 
                 </div>
                 <div class="dashboard-msg dashboard-alert">
 					<?php
-					thfo_get_msg();
+					Helpers::thfo_get_msg();
 					?>
                 </div>
                 <div class="dashboard-news">

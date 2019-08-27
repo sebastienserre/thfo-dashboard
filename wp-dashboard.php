@@ -60,7 +60,7 @@ add_action( 'plugins_loaded', 'thfo_add_main_constant' );
 function thfo_add_main_constant() {
 	if ( file_exists (ABSPATH . "wp-config.php") && is_writable (ABSPATH . "wp-config.php") ) {
 		if ( ! defined( 'MAIN_SITE' ) ) {
-			$filesystem = thfo_get_filesystem();
+			$filesystem = Dashboard\Helpers\Helpers::thfo_get_filesystem();
 			$config     = file_get_contents( ABSPATH . 'wp-config.php' );
 			$config     = preg_replace( "/^([\r\n\t ]*)(\<\?)(php)?/i", "<?php\nif ( ! defined( 'MAIN_SITE') ) {\ndefine('MAIN_SITE', 'https://thivinfo.com');\n}\n", $config );
 			$filesystem->put_contents( ABSPATH . 'wp-config.php', $config );
