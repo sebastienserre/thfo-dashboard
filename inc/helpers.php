@@ -130,7 +130,7 @@ class Helpers {
 	public static function thfo_get_general_msg() {
 		$decoded = get_transient( 'dashboard-general-msg' );
 		if ( empty( $decoded ) ) {
-			$decoded_body = thfo_retrieve_alert();
+			$decoded_body = Self::thfo_retrieve_alert();
 			foreach ( $decoded_body as $alert ) {
 				if ( 'general' === $alert['slug'] ) {
 					$decoded[ $alert['slug'] ] = $alert['content']['rendered'];
