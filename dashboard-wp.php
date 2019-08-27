@@ -67,7 +67,7 @@ if ( ! function_exists( 'wd_fs' ) ) {
 load_plugin_textdomain( 'dashboard-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 //Admin
 if( is_admin() ){
-	require_once plugin_dir_path(__FILE__).'admin/thivinfodashboard-admin.php';
+	require_once plugin_dir_path(__FILE__).'admin/dashboard-admin.php';
 }
 
 
