@@ -30,6 +30,7 @@ function thivinfo_disable_default_dashboard_widgets() {
  */
 add_action( 'admin_footer', 'thivinfo_main_dashboard_widget' );
 function thivinfo_main_dashboard_widget() {
+    $options = Helpers::dbwp_get_options();
 	// Kickout this if not viewing the main dashboard page
 	if ( get_current_screen()->base !== 'dashboard' ) {
 		return;
@@ -38,7 +39,7 @@ function thivinfo_main_dashboard_widget() {
     <div id="thivinfo_main_dashboard_widget" class="welcome-panel thivinfo-welcome-panel">
         <div class="thivinfo-welcome-panel-content thivinfo-welcome-panel-header">
             <div class="thivinfo-welcome-panel-main">
-                <h2>Bienvenue sur votre tableau de bord</h2>
+                <h2></h2>
                 <p class="about-description">Conçu et réalisé par Thivinfo, votre Développeur WordPress
                     !</p>
             </div>

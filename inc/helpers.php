@@ -2,6 +2,7 @@
 
 namespace Dashboard\Helpers;
 
+use function apply_filters;
 use function get_transient;
 use function sanitize_title;
 use function self_admin_url;
@@ -27,6 +28,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  */
 class Helpers {
+
+	protected static $options;
+
+	public function __construct() {
+		self::$options = self::dbwp_get_options();
+	}
+
 	/**
 	 * Get WP Direct filesystem object. Also define chmod constants if not done yet.
 	 *
@@ -67,18 +75,23 @@ class Helpers {
 	 * @return $id int term_id
 	 */
 	public static function get_term_id( $slug ) {
-		$main_url = stripslashes( MAIN_SITE );
+		$main_url = untrailingslashit( MAIN_SITE );
 		$json     = wp_remote_get( "$main_url/wp-json/wp/v2/websites?slug=$slug" );
 		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
 
 			$body         = wp_remote_retrieve_body( $json );
 			$decoded_body = json_decode( $body, true );
 		}
-		foreach ( $decoded_body as $decoded ) {
-			$id = $decoded['id'];
+		if ( 404 === (int) wp_remote_retrieve_response_code( $json ) ) {
+			return;
 		}
-		if ( ! empty( $id ) ) {
-			return $id;
+		if ( ! empty( $decoded_body ) ) {
+			foreach ( $decoded_body as $decoded ) {
+				$id = $decoded['id'];
+			}
+			if ( ! empty( $id ) ) {
+				return $id;
+			}
 		}
 
 	}
@@ -93,7 +106,8 @@ class Helpers {
 		$main_url = stripslashes( MAIN_SITE );
 		$id       = self::get_term_id( sanitize_title( $site ) );
 		if ( empty( $id ) ) {
-		    $decoded_body = [];
+			$decoded_body = [];
+
 			return $decoded_body;
 		}
 		$json = wp_remote_get( "$main_url/wp-json/wp/v2/alert?websites=$id&orderby=date&order=desc&lang=fr" );
@@ -120,7 +134,7 @@ class Helpers {
 				$decoded[ $alert['slug'] ]['title']   = $alert['title']['rendered'];
 			}
 		}
-		if ( $decoded ) {
+		if ( ! empty( $decoded ) ) {
 			foreach ( $decoded as $current_alert ) {
 				?>
                 <div class="alert-msg">
@@ -150,6 +164,55 @@ class Helpers {
 			}
 		}
 	}
+
+	public static function dbwp_get_options() {
+		$json = wp_remote_get( MAIN_SITE . '/wp-json/acf/v3/options/dashboard-settings' );
+		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
+			$body    = wp_remote_retrieve_body( $json );
+			$options = json_decode( $body, true );
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Get WP Dashboard Options from remote site
+	 *
+	 * @param string $options Possible Options: 'welcome', 'slogan', 'social', 'posts', 'logo', 'css.
+	 *
+	 * @return string
+	 *
+	 * @since  1.2.0
+	 * @author sebastienserre
+	 */
+	public static function get_options( $options ) {
+		switch ( $options ) {
+			case 'welcome':
+				$data = self::$options['acf']['dbwp_welcome_message']['dbwp_title'];
+				break;
+			case 'slogan':
+				$data = self::$options['acf']['dbwp_welcome_message']['dbwp_slogan'];
+				break;
+			case 'social':
+				$data = self::$options['acf']['dbwp_social'];
+				break;
+			case 'posts':
+				$data = self::$options['acf']['dbwp_posts'];
+				break;
+			case 'logo':
+				$data = self::$options['acf']['dbwp_logo'];
+				break;
+			case 'css':
+				$data = self::$options['acf']['dbwp_css'];
+				break;
+			default:
+				$data = __( 'Information missing in Main Site Settings', 'dashboard-wp' );
+				break;
+		}
+
+		return $data;
+	}
+
 }
 
 new Helpers();
