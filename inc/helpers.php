@@ -77,8 +77,10 @@ class Helpers {
 		foreach ( $decoded_body as $decoded ) {
 			$id = $decoded['id'];
 		}
+		if ( ! empty( $id ) ) {
+			return $id;
+		}
 
-		return $id;
 	}
 
 	/**
@@ -90,7 +92,11 @@ class Helpers {
 
 		$main_url = stripslashes( MAIN_SITE );
 		$id       = self::get_term_id( sanitize_title( $site ) );
-		$json     = wp_remote_get( "$main_url/wp-json/wp/v2/alert?websites=$id&orderby=date&order=desc&lang=fr" );
+		if ( empty( $id ) ) {
+		    $decoded_body = [];
+			return $decoded_body;
+		}
+		$json = wp_remote_get( "$main_url/wp-json/wp/v2/alert?websites=$id&orderby=date&order=desc&lang=fr" );
 		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
 
 			$body         = wp_remote_retrieve_body( $json );
@@ -130,7 +136,7 @@ class Helpers {
 	public static function thfo_get_general_msg() {
 		$decoded = get_transient( 'dashboard-general-msg' );
 		if ( empty( $decoded ) ) {
-			$decoded_body = Self::thfo_retrieve_alert();
+			$decoded_body = self::thfo_retrieve_alert();
 			foreach ( $decoded_body as $alert ) {
 				if ( 'general' === $alert['slug'] ) {
 					$decoded[ $alert['slug'] ] = $alert['content']['rendered'];
