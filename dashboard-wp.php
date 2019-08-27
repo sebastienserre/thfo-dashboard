@@ -11,6 +11,9 @@
  * Text Domain:       wp-dashboard
  * Domain Path:       /languages
  */
+
+use Dashboard\Helpers\Helpers;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
@@ -78,22 +81,32 @@ define( 'THFO_DASHBOARD_PLUGIN_DIR', untrailingslashit( THFO_DASHBOARD_PLUGIN_PA
 define( 'DWP_ACF_PATH', THFO_DASHBOARD_PLUGIN_PATH . '/3rd-party/acf/' );
 define( 'DWP_ACF_URL', THFO_DASHBOARD_PLUGIN_URL . '/3rd-party/acf/' );
 
+
 add_action( 'plugins_loaded', 'thfo_bd_load_cpt' );
 function thfo_bd_load_cpt() {
-	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() ) {
+	if (defined( 'MAIN_SITE' ) && 'ToBeDefined' === MAIN_SITE ){
+		wp_die( __('Please adapt the contant MAIN_SITE actually called ToBeDefined in your wp-config.php',
+			'dashboard_wp') );
+	}
+	include_once DWP_ACF_PATH . 'acf.php';
+	include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/acf-fields.php';
+	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
+
+/*	if ( ! defined( 'MAIN_SITE' ) ) {
+		define( 'MAIN_SITE', get_main_url() );
+	}*/
+
+	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() || MAIN_SITE === trailingslashit( home_url() ) ||
+	     MAIN_SITE === untrailingslashit( home_url() ) ) {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/alert-cpt.php';
 		require_once plugin_dir_path( __FILE__ ) . 'inc/website-taxo.php';
-		include_once DWP_ACF_PATH . 'acf.php';
+
 		include_once THFO_DASHBOARD_PLUGIN_PATH . 'admin/settings.php';
 		include_once THFO_DASHBOARD_PLUGIN_PATH . '3rd-party/acf-to-rest-api/class-acf-to-rest-api.php';
-		include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/acf-fields.php';
+
 	}
 }
 
-add_action( 'plugins_loaded', 'thfo_db_load_file' );
-function thfo_db_load_file(){
-	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
-}
 /**
  *
  * Enqueue styles and scripts
@@ -115,7 +128,7 @@ function thfo_add_main_constant() {
 		if ( ! defined( 'MAIN_SITE' ) ) {
 			$filesystem = Dashboard\Helpers\Helpers::thfo_get_filesystem();
 			$config     = file_get_contents( ABSPATH . 'wp-config.php' );
-			$config     = preg_replace( "/^([\r\n\t ]*)(\<\?)(php)?/i", "<?php\nif ( ! defined( 'MAIN_SITE') ) {\ndefine('MAIN_SITE', 'https://thivinfo.com');\n}\n", $config );
+			$config     = preg_replace( "/^([\r\n\t ]*)(\<\?)(php)?/i", "<?php\nif ( ! defined( 'MAIN_SITE') ) {\ndefine('MAIN_SITE', 'ToBeDefined');\n}\n", $config );
 			$filesystem->put_contents( ABSPATH . 'wp-config.php', $config );
 		}else {
 			return;
@@ -131,4 +144,19 @@ function my_acf_settings_url__premium_only( $url ) {
 
 function my_acf_settings_show_admin__premium_only( $show_admin ) {
 	return false;
+}
+
+/**
+ * @return string $main_url This is the url where the data come from.
+ * @author sebastienserre
+ * @since 1.2
+ */
+function get_main_url() {
+	$main_url = get_field( 'dbwp_main_site', 'dashboard-settings' );
+
+	/**
+	 * Filters the main URL
+	 * This is the url where the data come from.
+	 */
+	return apply_filters( 'dbwp_set_main_url', $main_url );
 }

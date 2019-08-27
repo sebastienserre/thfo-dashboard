@@ -3,6 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
 
+add_action( 'init', 'dbwp_load_acf_field');
+function dbwp_load_acf_field() {
 	if ( function_exists( 'acf_add_local_field_group' ) ):
 
 		acf_add_local_field_group( array(
@@ -143,7 +145,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								'class' => '',
 								'id'    => '',
 							),
-							'choices'           => array(),
+							'choices'           => dbwp_social_network(),
 							'default_value'     => array(),
 							'allow_null'        => 0,
 							'multiple'          => 0,
@@ -183,10 +185,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 						'class' => '',
 						'id'    => '',
 					),
-					'choices'           => array(),
+					'choices'           => dbwp_cpt_list(),
 					'allow_custom'      => 0,
 					'default_value'     => array(),
-					'layout'            => 'vertical',
+					'layout'            => 'horizontal',
 					'toggle'            => 0,
 					'return_format'     => 'value',
 					'save_custom'       => 0,
@@ -228,3 +230,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 		) );
 
 	endif;
+}
+
+function dbwp_social_network() {
+	$rs = [ 'None', 'Twitter', 'Facebook', 'Linkedin', 'WordPress' ];
+
+	/**
+	 * Filter list of Social Network
+	 */
+	return apply_filters( 'dbwp_add_social_network', $rs );
+}
+
+function dbwp_cpt_list() {
+	$cpts = get_post_types(
+		[
+			'public' => true,
+		]
+	);
+
+	return $cpts;
+}
