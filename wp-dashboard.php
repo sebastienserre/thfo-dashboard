@@ -15,6 +15,45 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
 
+if ( ! function_exists( 'wd_fs' ) ) {
+	// Create a helper function for easy SDK access.
+	function wd_fs() {
+		global $wd_fs;
+
+		if ( ! isset( $wd_fs ) ) {
+			// Activate multisite network integration.
+			if ( ! defined( 'WP_FS__PRODUCT_4459_MULTISITE' ) ) {
+				define( 'WP_FS__PRODUCT_4459_MULTISITE', true );
+			}
+
+			// Include Freemius SDK.
+			require_once dirname(__FILE__) . '/freemius/start.php';
+
+			$wd_fs = fs_dynamic_init( array(
+				'id'                  => '4459',
+				'slug'                => 'wp-dashboard',
+				'type'                => 'plugin',
+				'public_key'          => 'pk_43ec4a588d1370ca6bf57eccbcf41',
+				'is_premium'          => false,
+				'has_addons'          => false,
+				'has_paid_plans'      => false,
+				'is_org_compliant'    => false,
+				'menu'                => array(
+					'first-path'     => 'plugins.php',
+					'support'        => false,
+				),
+			) );
+		}
+
+		return $wd_fs;
+	}
+
+	// Init Freemius.
+	wd_fs();
+	// Signal that SDK was initiated.
+	do_action( 'wd_fs_loaded' );
+}
+
 //i18n (to come shortly)
 load_plugin_textdomain( 'wp-dashboard', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 //Admin
