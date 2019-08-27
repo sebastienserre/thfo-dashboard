@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Thivinfo Dashboard
+ * Plugin Name:       WordPress Dashboard
  * Plugin URI:        https://thivinfo.com
  * Description:       Thivinfo Custom Dashboard for WordPress.
  * Version:           1.1
@@ -8,7 +8,7 @@
  * Author URI:        https://thivinfo.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       thivinfo-dashboard
+ * Text Domain:       wp-dashboard
  * Domain Path:       /languages
  */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 } // Exit if accessed directly.
 
 //i18n (to come shortly)
-load_plugin_textdomain( 'thivinfo-dashboard', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+load_plugin_textdomain( 'wp-dashboard', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 //Admin
 if( is_admin() ){
 	require_once plugin_dir_path(__FILE__).'admin/thivinfodashboard-admin.php';
