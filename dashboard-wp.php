@@ -83,16 +83,16 @@ function thfo_bd_load_cpt() {
 	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() ) {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/alert-cpt.php';
 		require_once plugin_dir_path( __FILE__ ) . 'inc/website-taxo.php';
+		include_once DWP_ACF_PATH . 'acf.php';
+		include_once THFO_DASHBOARD_PLUGIN_PATH . 'admin/settings.php';
+		include_once THFO_DASHBOARD_PLUGIN_PATH . '3rd-party/acf-to-rest-api/class-acf-to-rest-api.php';
+		include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/acf-fields.php';
 	}
 }
 
 add_action( 'plugins_loaded', 'thfo_db_load_file' );
 function thfo_db_load_file(){
 	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
-	include_once DWP_ACF_PATH . 'acf.php';
-	include_once THFO_DASHBOARD_PLUGIN_PATH . 'admin/settings.php';
-	include_once THFO_DASHBOARD_PLUGIN_PATH . '3rd-party/acf-to-rest-api/class-acf-to-rest-api.php';
-
 }
 /**
  *
