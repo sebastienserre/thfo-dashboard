@@ -15,6 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
 
+
+
 if ( ! function_exists( 'wd_fs' ) ) {
 	// Create a helper function for easy SDK access.
 	function wd_fs() {
@@ -31,7 +33,8 @@ if ( ! function_exists( 'wd_fs' ) ) {
 
 			$wd_fs = fs_dynamic_init( array(
 				'id'                  => '4459',
-				'slug'                => 'wp-dashboard',
+				'slug'                => 'dashboard-wp',
+				'premium_slug'        => 'wp-dashboard-premium',
 				'type'                => 'plugin',
 				'public_key'          => 'pk_43ec4a588d1370ca6bf57eccbcf41',
 				'is_premium'          => false,
@@ -54,8 +57,11 @@ if ( ! function_exists( 'wd_fs' ) ) {
 	do_action( 'wd_fs_loaded' );
 }
 
+
+
+
 //i18n (to come shortly)
-load_plugin_textdomain( 'wp-dashboard', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+load_plugin_textdomain( 'dashboard-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 //Admin
 if( is_admin() ){
 	require_once plugin_dir_path(__FILE__).'admin/thivinfodashboard-admin.php';
