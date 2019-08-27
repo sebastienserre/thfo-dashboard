@@ -75,8 +75,8 @@ if( is_admin() ){
 define( 'THFO_DASHBOARD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'THFO_DASHBOARD_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'THFO_DASHBOARD_PLUGIN_DIR', untrailingslashit( THFO_DASHBOARD_PLUGIN_PATH ) );
-define( 'MY_ACF_PATH', THFO_DASHBOARD_PLUGIN_PATH . '/3rd-party/acf/' );
-define( 'MY_ACF_URL', THFO_DASHBOARD_PLUGIN_URL . '/3rd-party/acf/' );
+define( 'DWP_ACF_PATH', THFO_DASHBOARD_PLUGIN_PATH . '/3rd-party/acf/' );
+define( 'DWP_ACF_URL', THFO_DASHBOARD_PLUGIN_URL . '/3rd-party/acf/' );
 
 add_action( 'plugins_loaded', 'thfo_bd_load_cpt' );
 function thfo_bd_load_cpt() {
@@ -89,7 +89,9 @@ function thfo_bd_load_cpt() {
 add_action( 'plugins_loaded', 'thfo_db_load_file' );
 function thfo_db_load_file(){
 	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
-	include_once MY_ACF_PATH . 'acf.php';
+	include_once DWP_ACF_PATH . 'acf.php';
+	include_once THFO_DASHBOARD_PLUGIN_PATH . 'admin/settings.php';
+	include_once THFO_DASHBOARD_PLUGIN_PATH . '3rd-party/acf-to-rest-api/class-acf-to-rest-api.php';
 
 }
 /**
@@ -124,7 +126,7 @@ function thfo_add_main_constant() {
 }
 
 function my_acf_settings_url__premium_only( $url ) {
-	return MY_ACF_URL;
+	return DWP_ACF_URL;
 }
 
 function my_acf_settings_show_admin__premium_only( $show_admin ) {
