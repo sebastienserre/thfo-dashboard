@@ -84,16 +84,11 @@ define( 'DWP_ACF_URL', THFO_DASHBOARD_PLUGIN_URL . '/3rd-party/acf/' );
 add_action( 'plugins_loaded', 'thfo_bd_load_cpt' );
 function thfo_bd_load_cpt() {
 	if ( is_admin() && defined( 'MAIN_SITE' ) && 'ToBeDefined' === MAIN_SITE ){
-		wp_die( __('Please adapt the constant MAIN_SITE actually called ToBeDefined in your wp-config.php',
-			'dashboard_wp') );
+		add_action( 'admin_notices','dbwp_notices' );
 	}
 	include_once DWP_ACF_PATH . 'acf.php';
 	include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/acf-fields.php';
 	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
-
-/*	if ( ! defined( 'MAIN_SITE' ) ) {
-		define( 'MAIN_SITE', get_main_url() );
-	}*/
 
 	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() || MAIN_SITE === trailingslashit( home_url() ) ||
 	     MAIN_SITE === untrailingslashit( home_url() ) ) {
@@ -104,6 +99,14 @@ function thfo_bd_load_cpt() {
 		include_once THFO_DASHBOARD_PLUGIN_PATH . '3rd-party/acf-to-rest-api/class-acf-to-rest-api.php';
 
 	}
+}
+
+function dbwp_notices(){
+	?>
+	<div class="notice notice-error">
+		<p><?php _e( __( 'Please adapt the constant MAIN_SITE actually called ToBeDefined in your wp-config.php', 'dashboard_wp' ) ); ?></p>
+	</div>
+	<?php
 }
 
 /**

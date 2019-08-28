@@ -28,7 +28,8 @@ function thivinfo_disable_default_dashboard_widgets() {
  * Add main widget
  *
  */
-add_action( 'admin_footer', 'thivinfo_main_dashboard_widget' );
+//add_action( 'admin_footer', 'thivinfo_main_dashboard_widget' );
+add_action( 'admin_notices', 'thivinfo_main_dashboard_widget', 5000);
 function thivinfo_main_dashboard_widget() {
 	// Kickout this if not viewing the main dashboard page
 	if ( get_current_screen()->base !== 'dashboard' ) {
