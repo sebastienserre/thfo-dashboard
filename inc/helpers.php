@@ -2,8 +2,11 @@
 
 namespace Dashboard\Helpers;
 
+use function add_option;
 use function apply_filters;
+use function get_option;
 use function get_transient;
+use function is_array;
 use function sanitize_title;
 use function self_admin_url;
 use function set_transient;
@@ -167,11 +170,18 @@ class Helpers {
 
 	public static function dbwp_get_options() {
 		$json = wp_remote_get( MAIN_SITE . '/wp-json/acf/v3/options/dashboard-settings' );
-		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
+		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) || 404 === (int) wp_remote_retrieve_response_code( $json ) ) {
 			$body    = wp_remote_retrieve_body( $json );
 			$options = json_decode( $body, true );
 		}
+		if ( 404 === (int) wp_remote_retrieve_response_code( $json ) ){
+		    $options = __( $options['message'], 'dashboard-wp' );
+		    //$options[] = $options;
+        }
 
+		if ( ! is_array( $options ) ){
+		    $options = array( $options);
+        }
 		return $options;
 	}
 
@@ -186,6 +196,14 @@ class Helpers {
 	 * @author sebastienserre
 	 */
 	public static function get_options( $options ) {
+		if ( empty( self::$options['acf'] ) ) {
+		    $error = get_option( 'dbwp_errors' );
+		    if ( 1 === $error ){
+		        return;
+            }
+		    update_option( 'dbwp_errors', '1');
+			return sprintf( __( 'Please activate Dashboard WordPress on %1$s', 'dashboard-wp' ), MAIN_SITE );
+		}
 		switch ( $options ) {
 			case 'welcome':
 				$data = self::$options['acf']['dbwp_welcome_message']['dbwp_title'];
