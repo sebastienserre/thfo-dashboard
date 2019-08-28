@@ -12,13 +12,12 @@
  * Domain Path:       /languages
  */
 
-use Dashboard\Helpers\Helpers;
+//use Dashboard\Helpers\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
-
-
+register_activation_hook( __FILE__, 'thfo_add_main_constant');
 
 if ( ! function_exists( 'wd_fs' ) ) {
 	// Create a helper function for easy SDK access.
@@ -84,8 +83,8 @@ define( 'DWP_ACF_URL', THFO_DASHBOARD_PLUGIN_URL . '/3rd-party/acf/' );
 
 add_action( 'plugins_loaded', 'thfo_bd_load_cpt' );
 function thfo_bd_load_cpt() {
-	if (defined( 'MAIN_SITE' ) && 'ToBeDefined' === MAIN_SITE ){
-		wp_die( __('Please adapt the contant MAIN_SITE actually called ToBeDefined in your wp-config.php',
+	if ( is_admin() && defined( 'MAIN_SITE' ) && 'ToBeDefined' === MAIN_SITE ){
+		wp_die( __('Please adapt the constant MAIN_SITE actually called ToBeDefined in your wp-config.php',
 			'dashboard_wp') );
 	}
 	include_once DWP_ACF_PATH . 'acf.php';
@@ -122,11 +121,10 @@ function thivinfo_enqueue_scripts_admin() {
 	wp_enqueue_script( 'thivinfodashboard-admin-scripts', THFO_DASHBOARD_PLUGIN_URL . 'admin/js/thivinfodashboard-admin.js', array( 'jquery' ), '', true );
 }
 
-add_action( 'plugins_loaded', 'thfo_add_main_constant' );
 function thfo_add_main_constant() {
 	if ( file_exists (ABSPATH . "wp-config.php") && is_writable (ABSPATH . "wp-config.php") ) {
 		if ( ! defined( 'MAIN_SITE' ) ) {
-			$filesystem = Dashboard\Helpers\Helpers::thfo_get_filesystem();
+			$filesystem = thfo_get_filesystem();
 			$config     = file_get_contents( ABSPATH . 'wp-config.php' );
 			$config     = preg_replace( "/^([\r\n\t ]*)(\<\?)(php)?/i", "<?php\nif ( ! defined( 'MAIN_SITE') ) {\ndefine('MAIN_SITE', 'ToBeDefined');\n}\n", $config );
 			$filesystem->put_contents( ABSPATH . 'wp-config.php', $config );
@@ -137,6 +135,29 @@ function thfo_add_main_constant() {
 		return;
 	}
 }
+
+function thfo_get_filesystem() {
+		static $filesystem;
+
+		if ( $filesystem ) {
+			return $filesystem;
+		}
+
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+
+		$filesystem = new \WP_Filesystem_Direct( new \StdClass() ); // WPCS: override ok.
+
+		// Set the permission constants if not already set.
+		if ( ! defined( 'FS_CHMOD_DIR' ) ) {
+			define( 'FS_CHMOD_DIR', ( @fileperms( ABSPATH ) & 0777 | 0755 ) );
+		}
+		if ( ! defined( 'FS_CHMOD_FILE' ) ) {
+			define( 'FS_CHMOD_FILE', ( @fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
+		}
+
+		return $filesystem;
+	}
 
 function my_acf_settings_url__premium_only( $url ) {
 	return DWP_ACF_URL;

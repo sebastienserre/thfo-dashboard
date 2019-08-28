@@ -39,8 +39,7 @@ function thivinfo_main_dashboard_widget() {
         <div class="thivinfo-welcome-panel-content thivinfo-welcome-panel-header">
             <div class="thivinfo-welcome-panel-main">
                 <h2><?php echo Helpers::get_options( 'welcome' );?></h2>
-                <p class="about-description">Conçu et réalisé par Thivinfo, votre Développeur WordPress
-                    !</p>
+                <p class="about-description"><?php echo Helpers::get_options( 'slogan' );?></p>
             </div>
             <div class="thivinfo-welcome-panel-support">
 
