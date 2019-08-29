@@ -28,8 +28,8 @@ function thivinfo_disable_default_dashboard_widgets() {
  * Add main widget
  *
  */
-//add_action( 'admin_footer', 'thivinfo_main_dashboard_widget' );
-add_action( 'admin_notices', 'thivinfo_main_dashboard_widget', 5000);
+add_action( 'admin_footer', 'thivinfo_main_dashboard_widget' );
+//add_action( 'admin_notices', 'thivinfo_main_dashboard_widget', 5000 );
 function thivinfo_main_dashboard_widget() {
 	// Kickout this if not viewing the main dashboard page
 	if ( get_current_screen()->base !== 'dashboard' ) {
@@ -39,26 +39,44 @@ function thivinfo_main_dashboard_widget() {
     <div id="thivinfo_main_dashboard_widget" class="welcome-panel thivinfo-welcome-panel">
         <div class="thivinfo-welcome-panel-content thivinfo-welcome-panel-header">
             <div class="thivinfo-welcome-panel-main">
-                <h2><?php echo Helpers::get_options( 'welcome' );?></h2>
-                <p class="about-description"><?php echo Helpers::get_options( 'slogan' );?></p>
+                <h2><?php $welcome = Helpers::get_options( 'welcome' ); echo $welcome ?></h2>
+                <p class="about-description"><?php echo Helpers::get_options( 'slogan' ); ?></p>
             </div>
             <div class="thivinfo-welcome-panel-support">
+				<?php
+				$rs = Helpers::get_options( 'social' );
+				if ( ! empty( $rs ) ) {
+					?>
+                    <ul>
+						<?php
+						foreach ( $rs as $social ) {
+							$social_name = strtolower( $social['dbwp_name']['label'] );
 
-                <ul>
-                    <li>
-                        <h3>Besoin d'aide ?</h3>
-                        <a target="_blank" href="mailto:support@thivinfo.com" class="welcome-icon
-                                    dashicons-admin-users" title="Envoi un mail au support de Thivinfo">support@thivinfo.com</a>
-                    </li>
-                    <li>
-                        <h3>Suivez moi</h3>
-                        <a href="https://twiter.com/sebastienserre" class="welcome-icon dashicon dashicons-twitter"
-                           target="_blank">Twitter</a></li>
-                </ul>
+							if ( 'Mail' === $social['dbwp_name']['label'] ) {
+								$social['dbwp_url'] = 'mailto:' . $social['dbwp_url'];
+								$social_name        = 'email-alt';
+							}
+
+							?>
+                            <li>
+                                <a href="
+                            <?php
+								echo $social['dbwp_url'] ?>" class="welcome-icon dashicon dashicons-<?php echo
+								$social_name; ?>" target="_blank">
+									<?php echo $social['dbwp_name']['label'] ?>
+                                </a>
+                            </li>
+							<?php
+						}
+						?>
+                    </ul>
+					<?php
+				}
+                    ?>
             </div>
             <div class="thivinfo-welcome-panel-aside">
                 <a href="https://thivinfo.com" target="_blank">
-                    <img src="https://thivinfo.com/wp-content/themes/thivinfo/assets/images/thivinfo-logo.svg"
+                    <img src="<?php echo Helpers::get_options( 'logo' ); ?>"
                          alt="Thivinfo.com"/>
                 </a>
             </div>
@@ -162,6 +180,7 @@ function thivinfo_main_dashboard_widget() {
                             extensions
                             WordPress</a></h3>
 					<?php
+					$posts = Helpers::get_remote_posts();
 					$posts = get_transient( 'dashboard_shop_posts' );
 					if ( empty( $posts ) ) {
 						$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/freemius-cpt/?per_page=5&orderby=date&order=desc&lang=fr' );

@@ -4,7 +4,10 @@
 namespace Dashboard\Rest;
 
 use function add_action;
+use function delete_transient;
+use function get_transient;
 use function register_rest_route;
+use function set_transient;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -25,6 +28,10 @@ function register_route() {
 }
 
 function get_acf_settings(  $resquest ) {
-    $acf = get_fields( 'dashboard-settings');
-    return array( 'acf' => $acf );
+	$acf = get_transient( 'remote-settings' );
+	if ( empty( $acf ) ) {
+		$acf['acf'] = get_fields( 'dashboard-settings' );
+		set_transient( 'remote-settings', $acf, 86400 );
+	}
+    return $acf;
 }
