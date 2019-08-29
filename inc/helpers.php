@@ -4,9 +4,11 @@ namespace Dashboard\Helpers;
 
 use function add_option;
 use function apply_filters;
+use function delete_transient;
 use function get_option;
 use function get_transient;
 use function is_array;
+use function is_wp_error;
 use function sanitize_title;
 use function self_admin_url;
 use function set_transient;
@@ -170,19 +172,29 @@ class Helpers {
 	}
 
 	public static function dbwp_get_options() {
-		$json = wp_remote_get( untrailingslashit( MAIN_SITE ) . '/wp-json/acf/v3/options/dashboard-settings' );
-		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) || 404 === (int) wp_remote_retrieve_response_code( $json ) ) {
-			$body    = wp_remote_retrieve_body( $json );
-			$options = json_decode( $body, true );
-		}
-		if ( 404 === (int) wp_remote_retrieve_response_code( $json ) ){
-		    $options = __( $options['message'], 'dashboard-wp' );
-		    //$options[] = $options;
-        }
+		//delete_transient( 'dbwp_remote_settings' );
+		//delete_transient( 'remote-settings' );
+	    $options = get_transient( 'remote-settings' );
 
-		if ( ! is_array( $options ) ){
-		    $options = array( $options);
-        }
+		if ( empty( $options ) ) {
+			$json = wp_remote_post( untrailingslashit( MAIN_SITE ) . '/wp-json/dashboard-wp/v1/dashboard-settings' );
+
+			if ( 200 === (int) wp_remote_retrieve_response_code( $json ) || 404 === (int)
+				wp_remote_retrieve_response_code( $json ) ) {
+				$body    = wp_remote_retrieve_body( $json );
+				$options = json_decode( $body, true );
+				set_transient( 'remote_settings', $options, 86400 );
+			}
+
+			if ( 404 === (int) wp_remote_retrieve_response_code( $json ) ) {
+				$options = __( $options['message'], 'dashboard-wp' );
+			}
+		}
+
+		if ( ! is_array( $options ) && false !== $options ) {
+			$options = array( $options );
+		}
+
 		return $options;
 	}
 
@@ -197,18 +209,16 @@ class Helpers {
 	 * @author sebastienserre
 	 */
 	public static function get_options( $options ) {
-		if ( empty( self::$options['acf'] ) ) {
-
-
-			    return sprintf( __( 'Please activate Dashboard WordPress on %1$s', 'dashboard-wp' ), MAIN_SITE );
-		    }
+		/*if ( empty( self::$options['acf'] ) ) {
+			return sprintf( __( 'Please activate Dashboard WordPress on %1$s', 'dashboard-wp' ), MAIN_SITE );
+		}*/
 
 		switch ( $options ) {
 			case 'welcome':
-				$data = self::$options['acf']['dbwp_welcome_message']['dbwp_title'];
+				$data = self::$options['acf']['dbwp_welcome_message'][0]['dbwp_title'];
 				break;
 			case 'slogan':
-				$data = self::$options['acf']['dbwp_welcome_message']['dbwp_slogan'];
+				$data = self::$options['acf']['dbwp_welcome_message'][0]['dbwp_slogan'];
 				break;
 			case 'social':
 				$data = self::$options['acf']['dbwp_social'];
@@ -229,6 +239,22 @@ class Helpers {
 
 		return $data;
 	}
+
+	public static function get_remote_posts(){
+	    $cpts = self::$options['acf'];
+	    $cpts = $cpts['dbwp_posts'];
+	    foreach ( $cpts as $cpt ) {
+
+	        $url = MAIN_SITE . 'wp-json/wp/v2/' . $cpt .'/?per_page=5&orderby=date&order=desc&lang=fr';
+		    $response = wp_remote_get( $url );
+		    if ( ! is_wp_error( $response ) ) {
+			    $posts[ $cpt ] = json_decode( wp_remote_retrieve_body( $response ) );
+			 //   set_transient( 'dashboard_shop_posts', $posts, HOUR_IN_SECONDS * 12 );
+		    }
+	    }
+
+	    return $posts;
+    }
 
 }
 
