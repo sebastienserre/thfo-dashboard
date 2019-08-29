@@ -158,7 +158,7 @@ function dbwp_load_acf_field() {
 							'key'               => 'field_5d653e01d12e6',
 							'label'             => 'URL',
 							'name'              => 'dbwp_url',
-							'type'              => 'url',
+							'type'              => 'text',
 							'instructions'      => '',
 							'required'          => 0,
 							'conditional_logic' => 0,
@@ -233,7 +233,7 @@ function dbwp_load_acf_field() {
 }
 
 function dbwp_social_network() {
-	$rs = [ 'None', 'Twitter', 'Facebook', 'Linkedin', 'WordPress' ];
+	$rs = [ 'None', 'Twitter', 'Facebook', 'Linkedin', 'WordPress', 'Mail' ];
 
 	/**
 	 * Filter list of Social Network
@@ -245,8 +245,18 @@ function dbwp_cpt_list() {
 	$cpts = get_post_types(
 		[
 			'public' => true,
-		]
+		],
+		'objects'
 	);
 
-	return $cpts;
+	foreach ( $cpts as $cpt){
+		if ( true === $cpt->show_in_rest) {
+			$cpt_list[ $cpt->name ] = $cpt->rest_base;
+		}
+		if ( false === $cpt->rest_base ){
+			$cpt_list[ $cpt->name ] = $cpt->name;
+		}
+	}
+
+	return $cpt_list;
 }
