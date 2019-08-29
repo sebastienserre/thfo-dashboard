@@ -12,7 +12,8 @@
  * Domain Path:       /languages
  */
 
-//use Dashboard\Helpers\Helpers;
+
+add_filter( 'https_local_ssl_verify', '__return_true' );
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -88,6 +89,7 @@ function thfo_bd_load_cpt() {
 	}
 	include_once DWP_ACF_PATH . 'acf.php';
 	include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/acf-fields.php';
+	include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/api-route.php';
 	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
 
 	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() || MAIN_SITE === trailingslashit( home_url() ) ||
@@ -96,7 +98,7 @@ function thfo_bd_load_cpt() {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/website-taxo.php';
 
 		include_once THFO_DASHBOARD_PLUGIN_PATH . 'admin/settings.php';
-		include_once THFO_DASHBOARD_PLUGIN_PATH . '3rd-party/acf-to-rest-api/class-acf-to-rest-api.php';
+	//	include_once THFO_DASHBOARD_PLUGIN_PATH . '3rd-party/acf-to-rest-api/class-acf-to-rest-api.php';
 
 	}
 }
