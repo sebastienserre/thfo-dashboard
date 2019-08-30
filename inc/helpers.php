@@ -2,29 +2,23 @@
 
 namespace Dashboard\Helpers;
 
-use function add_option;
 use function apply_filters;
-use function array_merge;
-use function delete_transient;
 use function esc_attr;
 use function get_current_screen;
-use function get_option;
 use function get_transient;
 use function is_array;
 use function is_wp_error;
 use function sanitize_title;
-use function self_admin_url;
 use function set_transient;
 use function stripslashes;
-use function thfo_retrieve_alert;
 use function untrailingslashit;
-use function var_dump;
 use function wp_enqueue_style;
 use function wp_remote_get;
 use function wp_remote_retrieve_body;
 use function wp_remote_retrieve_response_code;
 use const HOUR_IN_SECONDS;
 use const MAIN_SITE;
+use const THFO_DASHBOARD_PLUGIN_URL;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -216,7 +210,7 @@ class Helpers {
 	/**
 	 * Get WP Dashboard Options from remote site
 	 *
-	 * @param string $options Possible Options: 'welcome', 'slogan', 'social', 'posts', 'logo', 'css'.
+	 * @param string $options Possible Options: 'welcome', 'slogan', 'social', 'posts', 'logo', 'css', 'custom_css'.
 	 *
 	 * @return string
 	 *
@@ -247,6 +241,9 @@ class Helpers {
 			case 'css':
 				$data = self::$options['acf']['dbwp_css'];
 				break;
+            case 'custom_css':
+	            $data = self::$options['acf']['dbwp_custom_css'];
+	            break;
 			default:
 				$data = __( 'Information missing in Main Site Settings', 'dashboard-wp' );
 				break;
@@ -294,8 +291,13 @@ class Helpers {
 		if ( get_current_screen()->base !== 'dashboard' ) {
 			return;
 		}
-		$css = self::get_options( 'css' );
-		wp_enqueue_style( 'dashboard_wp', $css );
+
+		if ( self::get_options( 'custom_css' ) ) {
+			$css = self::get_options( 'css' );
+			wp_enqueue_style( 'dashboard_wp', $css );
+		} else {
+			wp_enqueue_style( 'dashboard_wp', THFO_DASHBOARD_PLUGIN_URL . 'admin/css/dashboard-admin.css' );
+        }
 	}
 
 }
