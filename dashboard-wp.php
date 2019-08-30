@@ -8,7 +8,7 @@
  * Author URI:        https://thivinfo.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       wp-dashboard
+ * Text Domain:       dashboard-wp
  * Domain Path:       /languages
  */
 
@@ -73,8 +73,6 @@ if( is_admin() ){
 	require_once plugin_dir_path(__FILE__).'admin/dashboard-admin.php';
 }
 
-
-
 define( 'THFO_DASHBOARD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'THFO_DASHBOARD_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'THFO_DASHBOARD_PLUGIN_DIR', untrailingslashit( THFO_DASHBOARD_PLUGIN_PATH ) );
@@ -98,7 +96,6 @@ function thfo_bd_load_cpt() {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/website-taxo.php';
 
 		include_once THFO_DASHBOARD_PLUGIN_PATH . 'admin/settings.php';
-	//	include_once THFO_DASHBOARD_PLUGIN_PATH . '3rd-party/acf-to-rest-api/class-acf-to-rest-api.php';
 
 	}
 }
