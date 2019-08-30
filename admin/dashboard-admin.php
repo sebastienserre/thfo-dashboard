@@ -6,13 +6,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
 
-add_action( 'admin_menu', 'thivinfo_disable_default_dashboard_widgets' );
+add_action( 'admin_menu', 'dbwp_disable_default_dashboard_widgets' );
 /**
  *
  * Remove useless stuff
  *
  */
-function thivinfo_disable_default_dashboard_widgets() {
+function dbwp_disable_default_dashboard_widgets() {
 	remove_meta_box( 'dashboard_right_now', 'dashboard', 'core' );
 	remove_meta_box( 'dashboard_activity', 'dashboard', 'core' );
 	remove_meta_box( 'dashboard_incoming_links', 'dashboard', 'core' );
@@ -28,21 +28,20 @@ function thivinfo_disable_default_dashboard_widgets() {
  * Add main widget
  *
  */
-add_action( 'admin_footer', 'thivinfo_main_dashboard_widget' );
-//add_action( 'admin_notices', 'thivinfo_main_dashboard_widget', 5000 );
-function thivinfo_main_dashboard_widget() {
+add_action( 'admin_footer', 'dbwp_main_dashboard_widget' );
+function dbwp_main_dashboard_widget() {
 	// Kickout this if not viewing the main dashboard page
 	if ( get_current_screen()->base !== 'dashboard' ) {
 		return;
 	}
 	?>
-    <div id="thivinfo_main_dashboard_widget" class="welcome-panel thivinfo-welcome-panel">
-        <div class="thivinfo-welcome-panel-content thivinfo-welcome-panel-header">
-            <div class="thivinfo-welcome-panel-main">
+    <div id="dbwp_main_dashboard_widget" class="welcome-panel dbwp-welcome-panel">
+        <div class="dbwp-welcome-panel-content dbwp-welcome-panel-header">
+            <div class="dbwp-welcome-panel-main">
                 <h2><?php $welcome = Helpers::get_options( 'welcome' ); echo $welcome ?></h2>
                 <p class="about-description"><?php echo Helpers::get_options( 'slogan' ); ?></p>
             </div>
-            <div class="thivinfo-welcome-panel-support">
+            <div class="dbwp-welcome-panel-support">
 				<?php
 				$rs = Helpers::get_options( 'social' );
 				if ( ! empty( $rs ) ) {
@@ -74,15 +73,15 @@ function thivinfo_main_dashboard_widget() {
 				}
                     ?>
             </div>
-            <div class="thivinfo-welcome-panel-aside">
+            <div class="dbwp-welcome-panel-aside">
                 <a href="https://thivinfo.com" target="_blank">
                     <img src="<?php echo Helpers::get_options( 'logo' ); ?>"
                          alt="Thivinfo.com"/>
                 </a>
             </div>
         </div>
-        <div class="thivinfo-welcome-panel-content">
-            <div class="thivinfo-welcome-panel-main">
+        <div class="dbwp-welcome-panel-content">
+            <div class="dbwp-welcome-panel-main">
                 <div class="dashboard-msg dashboard-welcome-msg">
 					<?php
 					Helpers::thfo_get_general_msg( 'general' );
@@ -173,53 +172,10 @@ function thivinfo_main_dashboard_widget() {
                     </div>
                 </div>
             </div>
-            <div class="thivinfo-welcome-panel-aside">
-                <div class="thivinfo-welcome-panel-news">
-                    <h3><a href="https://thivinfo.com/boutique/" title="Lien vers la boutique Thivinfo" target="_blank">Mes
-                            dernières
-                            extensions
-                            WordPress</a></h3>
+            <div class="dbwp-welcome-panel-aside">
+                <div class="dbwp-welcome-panel-news">
 					<?php
-					$posts = Helpers::get_remote_posts();
-					$posts = get_transient( 'dashboard_shop_posts' );
-					if ( empty( $posts ) ) {
-						$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/freemius-cpt/?per_page=5&orderby=date&order=desc&lang=fr' );
-						if ( ! is_wp_error( $response ) ) {
-							$posts = json_decode( wp_remote_retrieve_body( $response ) );
-							set_transient( 'dashboard_shop_posts', $posts, HOUR_IN_SECONDS * 12 );
-						}
-					}
-					if ( ! empty( $posts ) ) {
-						echo '<ul>';
-						foreach ( $posts as $post ) {
-							echo '<li><a href="' . $post->link . '">'
-							     . $post->title->rendered . '</a></li>';
-						}
-						echo '</ul>';
-					} else {
-						//ERROR::remote ressouces has no post
-					}
-					?>
-                    <h3><a href="https://thivinfo.com/blog/" title="Lien vers le blog Thivinfo" target="_blank">Mes
-                            derniers Articles WordPress</a></h3>
-					<?php
-					$posts = get_transient( 'dashboard_post' );
-					if ( empty( $posts ) ) {
-						$response = wp_remote_get( 'https://thivinfo.com/wp-json/wp/v2/posts/?per_page=2&orderby=date&order=desc&lang=fr' );
-
-						if ( ! is_wp_error( $response ) ) {
-							$posts = json_decode( wp_remote_retrieve_body( $response ) );
-							set_transient( 'dashboard_post', $posts, HOUR_IN_SECONDS * 12 );
-						}
-					}
-					if ( ! empty( $posts ) ) {
-						echo '<ul>';
-						foreach ( $posts as $post ) {
-							echo '<li><a href="' . $post->link . '">'
-							     . $post->title->rendered . '</a></li>';
-						}
-						echo '</ul>';
-					}
+					Helpers::get_remote_posts();
 					?>
                 </div>
             </div>
