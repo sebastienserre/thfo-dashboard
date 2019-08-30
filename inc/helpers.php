@@ -4,7 +4,10 @@ namespace Dashboard\Helpers;
 
 use function add_option;
 use function apply_filters;
+use function array_merge;
 use function delete_transient;
+use function esc_attr;
+use function get_current_screen;
 use function get_option;
 use function get_transient;
 use function is_array;
@@ -16,6 +19,7 @@ use function stripslashes;
 use function thfo_retrieve_alert;
 use function untrailingslashit;
 use function var_dump;
+use function wp_enqueue_style;
 use function wp_remote_get;
 use function wp_remote_retrieve_body;
 use function wp_remote_retrieve_response_code;
@@ -39,6 +43,8 @@ class Helpers {
 
 	public function __construct() {
 		self::$options = self::dbwp_get_options();
+
+		add_action( 'admin_enqueue_scripts', [ 'Dashboard\Helpers\Helpers', 'load_admin_css' ] );
 	}
 
 	/**
@@ -81,9 +87,9 @@ class Helpers {
 	 * @return $id int term_id
 	 */
 	public static function get_term_id( $slug ) {
-	    if ( empty( $slug ) ){
-	        return;
-        }
+		if ( empty( $slug ) ) {
+			return;
+		}
 		$main_url = untrailingslashit( MAIN_SITE );
 		$json     = wp_remote_get( "$main_url/wp-json/wp/v2/websites?slug=$slug" );
 		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
@@ -177,7 +183,7 @@ class Helpers {
 	public static function dbwp_get_options() {
 		//delete_transient( 'dbwp_remote_settings' );
 		//delete_transient( 'remote-settings' );
-	    $options = get_transient( 'remote-settings' );
+		$options = get_transient( 'remote-settings' );
 
 		if ( empty( $options ) ) {
 			$json = wp_remote_post(
@@ -210,7 +216,7 @@ class Helpers {
 	/**
 	 * Get WP Dashboard Options from remote site
 	 *
-	 * @param string $options Possible Options: 'welcome', 'slogan', 'social', 'posts', 'logo', 'css.
+	 * @param string $options Possible Options: 'welcome', 'slogan', 'social', 'posts', 'logo', 'css'.
 	 *
 	 * @return string
 	 *
@@ -249,21 +255,48 @@ class Helpers {
 		return $data;
 	}
 
-	public static function get_remote_posts(){
-	    $cpts = self::$options['acf'];
-	    $cpts = $cpts['dbwp_posts'];
-	    foreach ( $cpts as $cpt ) {
+	public static function get_remote_posts() {
+		$opt = self::$options['acf'];
+		$cpts = $opt['dbwp_posts'];
+		$nb = $opt['dbwp_nb_post'];
+		foreach ( $cpts as $cpt ) {
+			$url      = MAIN_SITE . 'wp-json/wp/v2/' . $cpt . '/?per_page=' . $nb . '&orderby=date&order=desc';
+			$response = wp_remote_get( $url );
+			if ( ! is_wp_error( $response ) ) {
+				$posts = json_decode( wp_remote_retrieve_body( $response ) );
+				/**
+				 * Filter the CPT name. By default its the Post name
+				 * @author sebastienserre
+                 * @since 1.2.0
+				 */
+				?>
+                <h3>
+                    <?php
+                    echo $cpt = apply_filters( 'custom_remote_post_title', esc_attr( $cpt ) );
+                    ?>
+                </h3>
+                <ul>
+					<?php
+					foreach ( $posts as $p ) {
+						?>
+                        <li><a href="<?php echo $p->link; ?>"><?php echo $p->title->rendered; ?></a></li>
+						<?php
+					}
+					?>
+                </ul>
+				<?php
+				//   set_transient( 'dashboard_shop_posts', $posts, HOUR_IN_SECONDS * 12 );
+			}
+		}
+	}
 
-	        $url = MAIN_SITE . 'wp-json/wp/v2/' . $cpt .'/?per_page=5&orderby=date&order=desc&lang=fr';
-		    $response = wp_remote_get( $url );
-		    if ( ! is_wp_error( $response ) ) {
-			    $posts[ $cpt ] = json_decode( wp_remote_retrieve_body( $response ) );
-			 //   set_transient( 'dashboard_shop_posts', $posts, HOUR_IN_SECONDS * 12 );
-		    }
-	    }
-
-	    return $posts;
-    }
+	public static function load_admin_css() {
+		if ( get_current_screen()->base !== 'dashboard' ) {
+			return;
+		}
+		$css = self::get_options( 'css' );
+		wp_enqueue_style( 'dashboard_wp', $css );
+	}
 
 }
 
