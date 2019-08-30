@@ -74,9 +74,9 @@ function dbwp_main_dashboard_widget() {
                     ?>
             </div>
             <div class="dbwp-welcome-panel-aside">
-                <a href="https://thivinfo.com" target="_blank">
+                <a href="<?php echo MAIN_SITE; ?>" target="_blank">
                     <img src="<?php echo Helpers::get_options( 'logo' ); ?>"
-                         alt="Thivinfo.com"/>
+                         alt="<?php echo MAIN_SITE; ?>"/>
                 </a>
             </div>
         </div>
@@ -88,7 +88,7 @@ function dbwp_main_dashboard_widget() {
 					?>
                 </div>
                 <div class="dashboard-news">
-                    <h3>Dernières mise à jour</h3>
+                    <h3><?php _e( 'Last Updates', 'dashboard-wp' );?></h3>
                     <div class="feature-section images-stagger-right">
 						<?php
 						$drafts_query = new WP_Query(
@@ -112,26 +112,29 @@ function dbwp_main_dashboard_widget() {
 								$postType  = $obj->labels->singular_name;
 								switch ( get_post_status( $draft->ID ) ) {
 									case 'draft':
-										$post_status = 'Brouillon';
+										$post_status = __( 'Draft', 'dashboard-wp' );
 										break;
 									case 'pending':
-										$post_status = 'En attente de relecture';
+										$post_status = __( 'Pending', 'dashboard-wp' );
 										break;
 									case 'future':
-										$post_status = 'Planifié pour le ' . get_the_date( get_option( 'date_format' ), $draft->ID );
+										$post_status = sprintf( __( 'Planned for %1$s', 'dashboard-wp' ), get_the_date
+										( get_option( 'date_format'), $draft->ID ) );
 										break;
 									case 'auto-draft':
-										$post_status = 'Brouillon automatique';
+										$post_status = __( 'Auto-Draft', 'dashboard-wp' );
 										break;
 									case 'publish':
-										$post_status = 'Publié le ' . get_the_date( get_option
-											( 'date_format' ), $draft->ID );
+										$post_status = sprintf( __( 'Published on %1$s', 'dashboard-wp' ), get_the_date
+										( get_option( 'date_format'), $draft->ID ) );
 										break;
 
 								}
+
 								$last_modified = get_the_modified_date();
 								$item          = '<tr>';
-								$item          .= '<td><a href="' . $url . '" title="' . sprintf( __( 'Modifier ce contenu' ), esc_attr( $title ) ) . '">' . esc_html( $title ) . '</a></td>';
+								$item          .= '<td><a href="' . $url . '" title="' . sprintf( __( 'Modify', 'dashboard-wp' ),
+										esc_attr( $title ) ) . '">' . esc_html( $title ) . '</a></td>';
 								$item          .= '<td>' . $post_status . '</td>';
 								$item          .= '<td>' . $postType . '</td>';
 								if ( $last_user ) {
@@ -139,7 +142,9 @@ function dbwp_main_dashboard_widget() {
 								} else {
 									$item .= '<td>Aucun</td>';
 								}
-								$item   .= '<td>' . sprintf( __( 'Le %2$s à %3$s' ), $last_modified, mysql2date( get_option( 'date_format' ), $draft->post_modified ), mysql2date( get_option( 'time_format' ), $draft->post_modified ) ) . '</td>';
+								$item   .= '<td>' . sprintf( __( 'On %2$s à %3$s', 'dashboard-wp' ), $last_modified,
+										mysql2date(
+											get_option( 'date_format' ), $draft->post_modified ), mysql2date( get_option( 'time_format' ), $draft->post_modified ) ) . '</td>';
 								$item   .= '</tr>';
 								$list[] = $item;
 							}
@@ -147,11 +152,11 @@ function dbwp_main_dashboard_widget() {
                             <table class="widefat">
                                 <thead>
                                 <tr>
-                                    <th>Titre / lien</th>
-                                    <th>Statut</th>
-                                    <th>Type</th>
-                                    <th>Auteur</th>
-                                    <th>Dernière modification</th>
+                                    <th><?php _e('Tile / Link', 'dashboard-wp' ); ?>></th>
+                                    <th><?php _e('Status', 'dashboard-wp' ); ?>Statut</th>
+                                    <th><?php _e('Type', 'dashboard-wp' ); ?></th>
+                                    <th><?php _e('Authors', 'dashboard-wp' ); ?></th>
+                                    <th><?php _e('Last modification', 'dashboard-wp' ); ?></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -160,7 +165,7 @@ function dbwp_main_dashboard_widget() {
                             </table>
 							<?php
 						} else {
-							echo 'Il n\'y a pas de brouillons enregistrés actuellement.';
+							_e('There\'s no draft for the moment', 'dashboard-wp' );
 						}
 						?>
                     </div>
@@ -168,13 +173,12 @@ function dbwp_main_dashboard_widget() {
             </div>
             <div class="dbwp-welcome-panel-aside">
                 <div class="dbwp-welcome-panel-news">
-					<?php
-					Helpers::get_remote_posts();
-					?>
+			        <?php
+			        Helpers::get_remote_posts();
+			        ?>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 	<?php
 }
