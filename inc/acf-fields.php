@@ -71,25 +71,6 @@ function dbwp_load_acf_field() {
 					),
 				),
 				array(
-					'key'               => 'field_5d6536a6799dd',
-					'label'             => 'Main Site',
-					'name'              => 'dbwp_main_site',
-					'type'              => 'text',
-					'instructions'      => 'The Website URL where the datas are coming from',
-					'required'          => 1,
-					'conditional_logic' => 0,
-					'wrapper'           => array(
-						'width' => '',
-						'class' => '',
-						'id'    => '',
-					),
-					'default_value'     => '',
-					'placeholder'       => '',
-					'prepend'           => '',
-					'append'            => '',
-					'maxlength'         => '',
-				),
-				array(
 					'key'               => 'field_5d653d3e64d83',
 					'label'             => 'Logo',
 					'name'              => 'dbwp_logo',
@@ -251,10 +232,10 @@ function dbwp_cpt_list() {
 
 	foreach ( $cpts as $cpt){
 		if ( true === $cpt->show_in_rest) {
-			$cpt_list[ $cpt->name ] = $cpt->rest_base;
+			$cpt_list[ $cpt->rest_base ] = $cpt->rest_base;
 		}
 		if ( false === $cpt->rest_base ){
-			$cpt_list[ $cpt->name ] = $cpt->name;
+			$cpt_list[ $cpt->rest_base ] = $cpt->name;
 		}
 	}
 
