@@ -1,0 +1,289 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress Dashboard\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-30 14:29+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.3.0; wp-5.2.2"
+
+#: inc/helpers.php:248
+msgid "Information missing in Main Site Settings"
+msgstr ""
+
+#: inc/website-taxo.php:11
+msgctxt "Taxonomy General Name"
+msgid "Websites"
+msgstr ""
+
+#: inc/website-taxo.php:12
+msgctxt "Taxonomy Singular Name"
+msgid "Website"
+msgstr ""
+
+#: inc/website-taxo.php:13 inc/website-taxo.php:14
+msgid "Websites"
+msgstr ""
+
+#: inc/website-taxo.php:15
+msgid "Parent website"
+msgstr ""
+
+#: inc/website-taxo.php:16
+msgid "Parent website:"
+msgstr ""
+
+#: inc/website-taxo.php:17
+msgid "New website Name"
+msgstr ""
+
+#: inc/website-taxo.php:18
+msgid "Add New website"
+msgstr ""
+
+#: inc/website-taxo.php:19
+msgid "Edit website"
+msgstr ""
+
+#: inc/website-taxo.php:20
+msgid "Update website"
+msgstr ""
+
+#: inc/website-taxo.php:21
+msgid "View website"
+msgstr ""
+
+#: inc/website-taxo.php:22
+msgid "Separate website with commas"
+msgstr ""
+
+#: inc/website-taxo.php:23
+msgid "Add or remove website"
+msgstr ""
+
+#: inc/website-taxo.php:24
+msgid "Choose from the most used"
+msgstr ""
+
+#: inc/website-taxo.php:25
+msgid "Popular website"
+msgstr ""
+
+#: inc/website-taxo.php:26
+msgid "Search website"
+msgstr ""
+
+#: inc/website-taxo.php:27
+msgid "Not Found"
+msgstr ""
+
+#: inc/website-taxo.php:28
+msgid "No website"
+msgstr ""
+
+#: inc/website-taxo.php:29
+msgid "website list"
+msgstr ""
+
+#: inc/website-taxo.php:30
+msgid "website list navigation"
+msgstr ""
+
+#: inc/alert-cpt.php:12
+msgctxt "Post Type General Name"
+msgid "Alerts"
+msgstr ""
+
+#: inc/alert-cpt.php:13
+msgctxt "Post Type Singular Name"
+msgid "Alert"
+msgstr ""
+
+#: inc/alert-cpt.php:14
+msgid "Alerts"
+msgstr ""
+
+#: inc/alert-cpt.php:15 inc/alert-cpt.php:41 inc/alert-cpt.php:42
+msgid "Alert"
+msgstr ""
+
+#: inc/alert-cpt.php:16
+msgid "Alert Archives"
+msgstr ""
+
+#: inc/alert-cpt.php:17
+msgid "Alert Attributes"
+msgstr ""
+
+#: inc/alert-cpt.php:18
+msgid "Parent Alert:"
+msgstr ""
+
+#: inc/alert-cpt.php:19
+msgid "All Alerts"
+msgstr ""
+
+#: inc/alert-cpt.php:20
+msgid "Add New Alert"
+msgstr ""
+
+#: inc/alert-cpt.php:21
+msgid "Add New"
+msgstr ""
+
+#: inc/alert-cpt.php:22
+msgid "New Alert"
+msgstr ""
+
+#: inc/alert-cpt.php:23
+msgid "Edit Alert"
+msgstr ""
+
+#: inc/alert-cpt.php:24
+msgid "Update Alert"
+msgstr ""
+
+#: inc/alert-cpt.php:25
+msgid "View Alert"
+msgstr ""
+
+#: inc/alert-cpt.php:26
+msgid "View Alerts"
+msgstr ""
+
+#: inc/alert-cpt.php:27
+msgid "Search Alert"
+msgstr ""
+
+#: inc/alert-cpt.php:28
+msgid "Not found"
+msgstr ""
+
+#: inc/alert-cpt.php:29
+msgid "Not found in Trash"
+msgstr ""
+
+#: inc/alert-cpt.php:30
+msgid "Featured Image"
+msgstr ""
+
+#: inc/alert-cpt.php:31
+msgid "Set featured image"
+msgstr ""
+
+#: inc/alert-cpt.php:32
+msgid "Remove featured image"
+msgstr ""
+
+#: inc/alert-cpt.php:33
+msgid "Use as featured image"
+msgstr ""
+
+#: inc/alert-cpt.php:34
+msgid "Insert into item"
+msgstr ""
+
+#: inc/alert-cpt.php:35
+msgid "Uploaded to this item"
+msgstr ""
+
+#: inc/alert-cpt.php:36
+msgid "Alerts list"
+msgstr ""
+
+#: inc/alert-cpt.php:37
+msgid "Alerts list navigation"
+msgstr ""
+
+#: inc/alert-cpt.php:38
+msgid "Filter items list"
+msgstr ""
+
+#: inc/acf-fields.php:17
+msgid "Dashboard"
+msgstr ""
+
+#: inc/acf-fields.php:21
+msgid "Welcome Message"
+msgstr ""
+
+#: inc/acf-fields.php:40
+msgid "Title"
+msgstr ""
+
+#: inc/acf-fields.php:59
+msgid "Slogan"
+msgstr ""
+
+#: inc/acf-fields.php:80
+msgid "Logo"
+msgstr ""
+
+#: inc/acf-fields.php:83
+msgid "URL to the Logo"
+msgstr ""
+
+#: inc/acf-fields.php:104
+msgid "Social"
+msgstr ""
+
+#: inc/acf-fields.php:123
+msgid "Name"
+msgstr ""
+
+#: inc/acf-fields.php:145
+msgid "URL"
+msgstr ""
+
+#: inc/acf-fields.php:166
+msgid "Posts"
+msgstr ""
+
+#: inc/acf-fields.php:187
+msgid "Number of posts"
+msgstr ""
+
+#: inc/acf-fields.php:208
+msgid "Have my own CSS"
+msgstr ""
+
+#: inc/acf-fields.php:222
+msgid "Yes"
+msgstr ""
+
+#: inc/acf-fields.php:223
+msgid "No"
+msgstr ""
+
+#: inc/acf-fields.php:227
+msgid "CSS"
+msgstr ""
+
+#: inc/acf-fields.php:230
+msgid "URL to a CSS file"
+msgstr ""
+
+#. Name of the plugin
+msgid "WordPress Dashboard"
+msgstr ""
+
+#. Description of the plugin
+msgid "Thivinfo Custom Dashboard for WordPress."
+msgstr ""
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid "https://thivinfo.com"
+msgstr ""
+
+#. Author of the plugin
+msgid "Thivinfo"
+msgstr ""
