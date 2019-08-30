@@ -1,7 +1,7 @@
 (function( $ ) {
 	'use strict';
 		
-	$('#thivinfo_main_dashboard_widget').detach().appendTo($('#welcome-panel').siblings('h1'));
+	$('#dbwp_main_dashboard_widget').detach().appendTo($('#welcome-panel').siblings('h1'));
     $("a.linkmodal").click(function() {
         var linkurl = $(this).attr("href");
         $("body").append("<div class='video-modal'><div class='video-modal-bg'></div><div class='video-modal-content'><iframe width='640' height='360' border='0' src='"+linkurl+"' frameborder='0' gesture='media' allowfullscreen></iframe></div></div>");
