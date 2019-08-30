@@ -82,12 +82,6 @@ function dbwp_main_dashboard_widget() {
         </div>
         <div class="dbwp-welcome-panel-content">
             <div class="dbwp-welcome-panel-main">
-                <div class="dashboard-msg dashboard-welcome-msg">
-					<?php
-					Helpers::thfo_get_general_msg( 'general' );
-					?>
-
-                </div>
                 <div class="dashboard-msg dashboard-alert">
 					<?php
 					Helpers::thfo_get_msg();
