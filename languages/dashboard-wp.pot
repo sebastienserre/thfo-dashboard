@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WordPress Dashboard\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-30 14:29+0000\n"
+"POT-Creation-Date: 2019-08-30 15:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -14,6 +14,65 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.3.0; wp-5.2.2"
+
+#: admin/dashboard-admin.php:91
+msgid "Last Updates"
+msgstr ""
+
+#: admin/dashboard-admin.php:115
+msgid "Draft"
+msgstr ""
+
+#: admin/dashboard-admin.php:118
+msgid "Pending"
+msgstr ""
+
+#: admin/dashboard-admin.php:121
+#, php-format
+msgid "Planned for %1$s"
+msgstr ""
+
+#: admin/dashboard-admin.php:125
+msgid "Auto-Draft"
+msgstr ""
+
+#: admin/dashboard-admin.php:128
+#, php-format
+msgid "Published on %1$s"
+msgstr ""
+
+#: admin/dashboard-admin.php:136
+msgid "Modify"
+msgstr ""
+
+#: admin/dashboard-admin.php:145
+#, php-format
+msgid "On %2$s at %3$s"
+msgstr ""
+
+#: admin/dashboard-admin.php:155
+msgid "Title / Link"
+msgstr ""
+
+#: admin/dashboard-admin.php:156
+msgid "Status"
+msgstr ""
+
+#: admin/dashboard-admin.php:157
+msgid "Type"
+msgstr ""
+
+#: admin/dashboard-admin.php:158
+msgid "Authors"
+msgstr ""
+
+#: admin/dashboard-admin.php:159
+msgid "Last modification"
+msgstr ""
+
+#: admin/dashboard-admin.php:168
+msgid "There's no draft for the moment"
+msgstr ""
 
 #: inc/helpers.php:248
 msgid "Information missing in Main Site Settings"

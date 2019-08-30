@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WordPress Dashboard\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-30 14:29+0000\n"
-"PO-Revision-Date: 2019-08-30 14:37+0000\n"
+"POT-Creation-Date: 2019-08-30 15:31+0000\n"
+"PO-Revision-Date: 2019-08-30 15:32+0000\n"
 "Last-Translator: sebastienserre <sebastien@thivinfo.com>\n"
 "Language-Team: Français\n"
 "Language: fr_FR\n"
@@ -13,6 +13,65 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.3.0; wp-5.2.2"
+
+#: admin/dashboard-admin.php:91
+msgid "Last Updates"
+msgstr "Dernières Mise à jour"
+
+#: admin/dashboard-admin.php:115
+msgid "Draft"
+msgstr "Brouillon"
+
+#: admin/dashboard-admin.php:118
+msgid "Pending"
+msgstr "En attente de relecture"
+
+#: admin/dashboard-admin.php:121
+#, php-format
+msgid "Planned for %1$s"
+msgstr "Planifié pour le %1$s"
+
+#: admin/dashboard-admin.php:125
+msgid "Auto-Draft"
+msgstr "Brouillon automatique"
+
+#: admin/dashboard-admin.php:128
+#, php-format
+msgid "Published on %1$s"
+msgstr "Publié le %1$s"
+
+#: admin/dashboard-admin.php:136
+msgid "Modify"
+msgstr "Modifier"
+
+#: admin/dashboard-admin.php:145
+#, php-format
+msgid "On %2$s at %3$s"
+msgstr "Le %2$s à %3$s"
+
+#: admin/dashboard-admin.php:155
+msgid "Title / Link"
+msgstr "Titre / Lien"
+
+#: admin/dashboard-admin.php:156
+msgid "Status"
+msgstr "Statut"
+
+#: admin/dashboard-admin.php:157
+msgid "Type"
+msgstr "Type"
+
+#: admin/dashboard-admin.php:158
+msgid "Authors"
+msgstr "Auteur"
+
+#: admin/dashboard-admin.php:159
+msgid "Last modification"
+msgstr "Dernière modification"
+
+#: admin/dashboard-admin.php:168
+msgid "There's no draft for the moment"
+msgstr "Il n'y a pas de brouillon pour le moment"
 
 #: inc/helpers.php:248
 msgid "Information missing in Main Site Settings"
@@ -94,7 +153,7 @@ msgstr "Liste"
 
 #: inc/website-taxo.php:30
 msgid "website list navigation"
-msgstr ""
+msgstr "Liste des sites"
 
 #: inc/alert-cpt.php:12
 msgctxt "Post Type General Name"
@@ -200,11 +259,11 @@ msgstr "Liste d'alertes"
 
 #: inc/alert-cpt.php:37
 msgid "Alerts list navigation"
-msgstr ""
+msgstr "Liste des alertes"
 
 #: inc/alert-cpt.php:38
 msgid "Filter items list"
-msgstr ""
+msgstr "Filtrer la liste"
 
 #: inc/acf-fields.php:17
 msgid "Dashboard"

@@ -142,7 +142,7 @@ function dbwp_main_dashboard_widget() {
 								} else {
 									$item .= '<td>Aucun</td>';
 								}
-								$item   .= '<td>' . sprintf( __( 'On %2$s à %3$s', 'dashboard-wp' ), $last_modified,
+								$item   .= '<td>' . sprintf( __( 'On %2$s at %3$s', 'dashboard-wp' ), $last_modified,
 										mysql2date(
 											get_option( 'date_format' ), $draft->post_modified ), mysql2date( get_option( 'time_format' ), $draft->post_modified ) ) . '</td>';
 								$item   .= '</tr>';
@@ -152,7 +152,7 @@ function dbwp_main_dashboard_widget() {
                             <table class="widefat">
                                 <thead>
                                 <tr>
-                                    <th><?php _e('Tile / Link', 'dashboard-wp' ); ?>></th>
+                                    <th><?php _e('Title / Link', 'dashboard-wp' ); ?>></th>
                                     <th><?php _e('Status', 'dashboard-wp' ); ?>Statut</th>
                                     <th><?php _e('Type', 'dashboard-wp' ); ?></th>
                                     <th><?php _e('Authors', 'dashboard-wp' ); ?></th>
