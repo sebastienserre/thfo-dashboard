@@ -116,10 +116,6 @@ function dbwp_notices(){
  * Enqueue styles and scripts
  *
  */
-add_action( 'admin_enqueue_scripts', 'thivinfo_enqueue_styles_admin' );
-function thivinfo_enqueue_styles_admin() {
-	wp_enqueue_style( 'thivinfodashboard-admin-styles', THFO_DASHBOARD_PLUGIN_URL . 'admin/css/thivinfodashboard-admin.css', array(), '', 'all' );
-}
 
 add_action( 'admin_enqueue_scripts', 'thivinfo_enqueue_scripts_admin' );
 function thivinfo_enqueue_scripts_admin() {
