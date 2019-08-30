@@ -81,6 +81,9 @@ class Helpers {
 	 * @return $id int term_id
 	 */
 	public static function get_term_id( $slug ) {
+	    if ( empty( $slug ) ){
+	        return;
+        }
 		$main_url = untrailingslashit( MAIN_SITE );
 		$json     = wp_remote_get( "$main_url/wp-json/wp/v2/websites?slug=$slug" );
 		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
@@ -177,7 +180,13 @@ class Helpers {
 	    $options = get_transient( 'remote-settings' );
 
 		if ( empty( $options ) ) {
-			$json = wp_remote_post( untrailingslashit( MAIN_SITE ) . '/wp-json/dashboard-wp/v1/dashboard-settings' );
+			$json = wp_remote_post(
+				untrailingslashit( MAIN_SITE ) . '/wp-json/dashboard-wp/v1/dashboard-settings',
+				[
+					'timeout'    => 20,
+					'user-agent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0',
+				]
+			);
 
 			if ( 200 === (int) wp_remote_retrieve_response_code( $json ) || 404 === (int)
 				wp_remote_retrieve_response_code( $json ) ) {
