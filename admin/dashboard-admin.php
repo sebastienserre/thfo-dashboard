@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
 
-add_action( 'admin_menu', 'dbwp_disable_default_dashboard_widgets' );
+//add_action( 'admin_menu', 'dbwp_disable_default_dashboard_widgets' );
 /**
  *
  * Remove useless stuff
