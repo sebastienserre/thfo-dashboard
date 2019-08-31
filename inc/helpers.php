@@ -257,7 +257,7 @@ class Helpers {
 		$cpts = $opt['dbwp_posts'];
 		$nb = $opt['dbwp_nb_post'];
 		foreach ( $cpts as $cpt ) {
-			$url      = MAIN_SITE . 'wp-json/wp/v2/' . $cpt . '/?per_page=' . $nb . '&orderby=date&order=desc';
+			$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/' . $cpt . '/?per_page=' . $nb . '&orderby=date&order=desc';
 			$response = wp_remote_get( $url );
 			if ( ! is_wp_error( $response ) ) {
 				$posts = json_decode( wp_remote_retrieve_body( $response ) );
