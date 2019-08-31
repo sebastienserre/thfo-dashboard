@@ -261,28 +261,31 @@ class Helpers {
 			$response = wp_remote_get( $url );
 			if ( ! is_wp_error( $response ) ) {
 				$posts = json_decode( wp_remote_retrieve_body( $response ) );
-				/**
-				 * Filter the CPT name. By default its the Post name
-				 * @author sebastienserre
-                 * @since 1.2.0
-				 */
-				?>
-                <h3>
-                    <?php
-                    echo $cpt = apply_filters( 'custom_remote_post_title', esc_attr( $cpt ) );
-                    ?>
-                </h3>
-                <ul>
-					<?php
-					foreach ( $posts as $p ) {
-						?>
-                        <li><a href="<?php echo $p->link; ?>"><?php echo $p->title->rendered; ?></a></li>
-						<?php
-					}
+				if ( ! empty( $posts ) ) {
+					/**
+					 * Filter the CPT name. By default its the Post name
+					 *
+					 * @author sebastienserre
+					 * @since  1.2.0
+					 */
 					?>
-                </ul>
-				<?php
-				//   set_transient( 'dashboard_shop_posts', $posts, HOUR_IN_SECONDS * 12 );
+                    <h3>
+						<?php
+						echo $cpt = apply_filters( 'custom_remote_post_title', esc_attr( $cpt ) );
+						?>
+                    </h3>
+                    <ul>
+						<?php
+						foreach ( $posts as $p ) {
+							?>
+                            <li><a href="<?php echo $p->link; ?>"><?php echo $p->title->rendered; ?></a></li>
+							<?php
+						}
+						?>
+                    </ul>
+					<?php
+					//   set_transient( 'dashboard_shop_posts', $posts, HOUR_IN_SECONDS * 12 );
+				}
 			}
 		}
 	}
