@@ -287,12 +287,13 @@ function dbwp_cpt_list() {
 	);
 
 	foreach ( $cpts as $cpt ) {
-		if ( true === $cpt->show_in_rest ) {
+		if ( true === $cpt->show_in_rest && ! empty( $cpt->rest_base ) ) {
 			$cpt_list[ $cpt->rest_base ] = $cpt->rest_base;
 		}
-		if ( false === $cpt->rest_base ) {
-			$cpt_list[ $cpt->rest_base ] = $cpt->name;
+		if ( true === $cpt->show_in_rest && empty( $cpt->rest_base ) ) {
+			$cpt_list[  $cpt->name ] = $cpt->name;
 		}
+
 	}
 
 	return $cpt_list;

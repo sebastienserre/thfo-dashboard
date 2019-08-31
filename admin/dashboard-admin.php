@@ -52,8 +52,9 @@ function dbwp_main_dashboard_widget() {
 							$social_name = strtolower( $social['dbwp_name']['label'] );
 
 							if ( 'Mail' === $social['dbwp_name']['label'] ) {
-								$social['dbwp_url'] = 'mailto:' . $social['dbwp_url'];
-								$social_name        = 'email-alt';
+								$social['dbwp_name']['label'] = $social['dbwp_url'];
+								$social['dbwp_url']           = 'mailto:' . $social['dbwp_url'];
+								$social_name                  = 'email-alt';
 							}
 
 							?>
