@@ -153,8 +153,8 @@ function dbwp_main_dashboard_widget() {
                             <table class="widefat">
                                 <thead>
                                 <tr>
-                                    <th><?php _e('Title / Link', 'dashboard-wp' ); ?>></th>
-                                    <th><?php _e('Status', 'dashboard-wp' ); ?>Statut</th>
+                                    <th><?php _e('Title / Link', 'dashboard-wp' ); ?></th>
+                                    <th><?php _e('Status', 'dashboard-wp' ); ?></th>
                                     <th><?php _e('Type', 'dashboard-wp' ); ?></th>
                                     <th><?php _e('Authors', 'dashboard-wp' ); ?></th>
                                     <th><?php _e('Last modification', 'dashboard-wp' ); ?></th>
