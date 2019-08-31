@@ -171,13 +171,19 @@ function dbwp_main_dashboard_widget() {
                     </div>
                 </div>
             </div>
-            <div class="dbwp-welcome-panel-aside">
-                <div class="dbwp-welcome-panel-news">
-			        <?php
-			        Helpers::get_remote_posts();
-			        ?>
+            <?php
+            if ( ! empty( Helpers::get_options('posts' ) ) ) {
+	            ?>
+                <div class="dbwp-welcome-panel-aside">
+                    <div class="dbwp-welcome-panel-news">
+			            <?php
+			            Helpers::get_remote_posts();
+			            ?>
+                    </div>
                 </div>
-            </div>
+	            <?php
+            }
+                ?>
         </div>
     </div>
 	<?php
