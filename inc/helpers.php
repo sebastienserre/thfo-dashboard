@@ -8,6 +8,7 @@ use function get_current_screen;
 use function get_transient;
 use function is_array;
 use function is_wp_error;
+use function json_decode;
 use function sanitize_title;
 use function set_transient;
 use function stripslashes;
@@ -257,9 +258,11 @@ class Helpers {
 		$cpts = $opt['dbwp_posts'];
 		$nb = $opt['dbwp_nb_post'];
 		foreach ( $cpts as $cpt ) {
-			$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/' . $cpt . '/?per_page=' . $nb . '&orderby=date&order=desc';
+			$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/' . $cpt['value'] . '/?per_page=' . $nb .
+			'&orderby=date&order=desc';
 			$response = wp_remote_get( $url );
 			if ( ! is_wp_error( $response ) ) {
+
 				$posts = json_decode( wp_remote_retrieve_body( $response ) );
 				if ( ! empty( $posts ) ) {
 					/**
@@ -271,7 +274,8 @@ class Helpers {
 					?>
                     <h3>
 						<?php
-						echo $cpt = apply_filters( 'custom_remote_post_title', esc_attr( $cpt ) );
+                        $label = $cpt['label'];
+						echo  $label = apply_filters( 'custom_remote_post_title', esc_attr( $label ) );
 						?>
                     </h3>
                     <ul>

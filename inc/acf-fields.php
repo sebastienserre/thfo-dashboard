@@ -179,7 +179,7 @@ function dbwp_load_acf_field() {
 					'default_value'     => array(),
 					'layout'            => 'horizontal',
 					'toggle'            => 0,
-					'return_format'     => 'value',
+					'return_format'     => 'array',
 					'save_custom'       => 0,
 				),
 				array(
@@ -288,10 +288,10 @@ function dbwp_cpt_list() {
 
 	foreach ( $cpts as $cpt ) {
 		if ( true === $cpt->show_in_rest && ! empty( $cpt->rest_base ) ) {
-			$cpt_list[ $cpt->rest_base ] = $cpt->rest_base;
+			$cpt_list[ $cpt->rest_base ] = $cpt->label;
 		}
 		if ( true === $cpt->show_in_rest && empty( $cpt->rest_base ) ) {
-			$cpt_list[  $cpt->name ] = $cpt->name;
+			$cpt_list[ $cpt->name ] = $cpt->label;
 		}
 
 	}

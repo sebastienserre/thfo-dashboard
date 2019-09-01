@@ -157,11 +157,13 @@ function thfo_get_filesystem() {
 		return $filesystem;
 	}
 
-function my_acf_settings_url__premium_only( $url ) {
+add_filter('acf/settings/url', 'dbwp_acf_settings_url');
+function dbwp_acf_settings_url( $url ) {
 	return DWP_ACF_URL;
 }
 
-function my_acf_settings_show_admin__premium_only( $show_admin ) {
+//add_filter('acf/settings/show_admin', 'dbwp_acf_settings_show_admin');
+function dbwp_acf_settings_show_admin( $show_admin ) {
 	return false;
 }
 
