@@ -259,7 +259,7 @@ class Helpers {
 		$nb = $opt['dbwp_nb_post'];
 		foreach ( $cpts as $cpt ) {
 			$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/' . $cpt['value'] . '/?per_page=' . $nb .
-			'&orderby=date&order=desc';
+			'&orderby=date&order=desc&lang=fr';
 			$response = wp_remote_get( $url );
 			if ( ! is_wp_error( $response ) ) {
 
