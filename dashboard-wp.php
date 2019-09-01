@@ -47,9 +47,19 @@ if ( ! function_exists( 'wd_fs' ) ) {
 				'has_addons'          => false,
 				'has_paid_plans'      => true,
 				'is_org_compliant'    => false,
+				'trial'               => array(
+					'days'               => 30,
+					'is_require_payment' => true,
+				),
 				'menu'                => array(
-					'first-path'     => 'plugins.php',
-					'support'        => false,
+					'slug'           => 'dashboard-settings',
+					'override_exact' => true,
+					'first-path'     => 'edit.php?post_type=alert&page=dashboard-settings',
+					'support'        => true,
+					'network'        => true,
+					'parent'         => array(
+						'slug' => 'edit.php',
+					),
 				),
 				// Set the SDK to work in a sandbox mode (for development & testing).
 				// IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
@@ -64,7 +74,15 @@ if ( ! function_exists( 'wd_fs' ) ) {
 	wd_fs();
 	// Signal that SDK was initiated.
 	do_action( 'wd_fs_loaded' );
-}
+
+	function wd_fs_settings_url() {
+		return admin_url( 'wp-admin/edit.php?post_type=alert&page=dashboard-settings' );
+	}
+
+	wd_fs()->add_filter('connect_url', 'wd_fs_settings_url');
+	wd_fs()->add_filter('after_skip_url', 'wd_fs_settings_url');
+	wd_fs()->add_filter('after_connect_url', 'wd_fs_settings_url');
+	wd_fs()->add_filter('after_pending_connect_url', 'wd_fs_settings_url');}
 
 //i18n (to come shortly)
 load_plugin_textdomain( 'dashboard-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
