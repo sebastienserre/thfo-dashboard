@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Helpers
  *
- * @package Dashboard\Helpers
+ * @package dashboard-wp
  * @author  sebastienserre
  * @since   1.0.0
  */
@@ -46,10 +46,9 @@ class Helpers {
 	 * Get WP Direct filesystem object. Also define chmod constants if not done yet.
 	 *
 	 * @return `$wp_filesystem` object.
-	 * @since  1.3 Don't use the global Filesystem anymore, to make sure to use "direct" (some things don't work over
-	 *         "ftp").
-	 *
-	 * @since  1.0
+	 * @since  1.2.0
+	 * @author sebastienserre
+     * @package dashboard-wp
 	 */
 	public static function thfo_get_filesystem() {
 		static $filesystem;
@@ -80,6 +79,9 @@ class Helpers {
 	 * @param $slug string Website slug
 	 *
 	 * @return $id int term_id
+	 * @since  1.2.0
+	 * @author sebastienserre
+	 * @package dashboard-wp
 	 */
 	public static function get_term_id( $slug ) {
 		if ( empty( $slug ) ) {
@@ -110,6 +112,10 @@ class Helpers {
 	 * Return the list of alerts
 	 *
 	 * @return array List of alerts
+	 * @since  1.2.0
+	 * @author sebastienserre
+	 * @package dashboard-wp
+     *
 	 */
 	public static function thfo_retrieve_alert( $site = '' ) {
 
@@ -134,6 +140,9 @@ class Helpers {
 	 * Display alert
 	 *
 	 * @param string $content Type of content
+     * @since  1.2.0
+	 * @author sebastienserre
+	 * @package dashboard-wp
 	 */
 	public static function thfo_get_msg( $content = '' ) {
 		$current_site = home_url();
@@ -156,28 +165,14 @@ class Helpers {
 		}
 	}
 
-
-	public static function thfo_get_general_msg() {
-		$decoded = get_transient( 'dashboard-general-msg' );
-		if ( empty( $decoded ) ) {
-			$decoded_body = self::thfo_retrieve_alert();
-			foreach ( $decoded_body as $alert ) {
-				if ( 'general' === $alert['slug'] ) {
-					$decoded[ $alert['slug'] ] = $alert['content']['rendered'];
-					set_transient( 'dashboard-general-msg', $decoded, HOUR_IN_SECONDS * 12 );
-				}
-			}
-		}
-		if ( ! empty( $decoded ) ) {
-			foreach ( $decoded as $current_alert ) {
-				echo '<div class="general">' . $current_alert . '</div>';
-			}
-		}
-	}
-
+	/**
+     * Get Options from remote main website
+	 * @return array array with Remote ACF Options
+	 * @since  1.2.0
+	 * @author sebastienserre
+	 * @package dashboard-wp
+	 */
 	public static function dbwp_get_options() {
-		//delete_transient( 'dbwp_remote_settings' );
-		//delete_transient( 'remote-settings' );
 		$options = get_transient( 'remote-settings' );
 
 		if ( empty( $options ) ) {
@@ -217,6 +212,7 @@ class Helpers {
 	 *
 	 * @since  1.2.0
 	 * @author sebastienserre
+	 * @package dashboard-wp
 	 */
 	public static function get_options( $options ) {
 		/*if ( empty( self::$options['acf'] ) ) {
@@ -242,9 +238,9 @@ class Helpers {
 			case 'css':
 				$data = self::$options['acf']['dbwp_css'];
 				break;
-            case 'custom_css':
-	            $data = self::$options['acf']['dbwp_custom_css'];
-	            break;
+			case 'custom_css':
+				$data = self::$options['acf']['dbwp_custom_css'];
+				break;
 			default:
 				$data = __( 'Information missing in Main Site Settings', 'dashboard-wp' );
 				break;
@@ -253,13 +249,19 @@ class Helpers {
 		return $data;
 	}
 
+	/**
+	 * Display remote Post.
+     * @author sebastienserre
+     * @package dashboard-wp
+     * @since 1.2.0
+	 */
 	public static function get_remote_posts() {
-		$opt = self::$options['acf'];
+		$opt  = self::$options['acf'];
 		$cpts = $opt['dbwp_posts'];
-		$nb = $opt['dbwp_nb_post'];
+		$nb   = $opt['dbwp_nb_post'];
 		foreach ( $cpts as $cpt ) {
 			$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/' . $cpt['value'] . '/?per_page=' . $nb .
-			'&orderby=date&order=desc&lang=fr';
+			            '&orderby=date&order=desc&lang=fr';
 			$response = wp_remote_get( $url );
 			if ( ! is_wp_error( $response ) ) {
 
@@ -274,8 +276,8 @@ class Helpers {
 					?>
                     <h3>
 						<?php
-                        $label = $cpt['label'];
-						echo  $label = apply_filters( 'custom_remote_post_title', esc_attr( $label ) );
+						$label = $cpt['label'];
+						echo $label = apply_filters( 'custom_remote_post_title', esc_attr( $label ) );
 						?>
                     </h3>
                     <ul>
@@ -288,12 +290,17 @@ class Helpers {
 						?>
                     </ul>
 					<?php
-					//   set_transient( 'dashboard_shop_posts', $posts, HOUR_IN_SECONDS * 12 );
 				}
 			}
 		}
 	}
 
+	/**
+	 * Load custom CSS
+     * @author sebastienserre
+     * @package dashboard-wp
+     * @since 1.2.0
+	 */
 	public static function load_admin_css() {
 		if ( get_current_screen()->base !== 'dashboard' ) {
 			return;
@@ -304,7 +311,7 @@ class Helpers {
 			wp_enqueue_style( 'dashboard_wp', $css );
 		} else {
 			wp_enqueue_style( 'dashboard_wp', THFO_DASHBOARD_PLUGIN_URL . 'admin/css/dashboard-admin.css' );
-        }
+		}
 	}
 
 }
