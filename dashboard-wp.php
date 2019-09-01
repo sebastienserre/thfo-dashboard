@@ -152,6 +152,12 @@ function thfo_add_main_constant() {
 	}
 }
 
+/**
+ * @return WP_Filesystem_Direct
+ * @author  Sébastien SERRE
+ * @package dashboard-wp
+ * @since   1.2.0
+ */
 function thfo_get_filesystem() {
 		static $filesystem;
 
@@ -180,14 +186,14 @@ function dbwp_acf_settings_url( $url ) {
 	return DWP_ACF_URL;
 }
 
-//add_filter('acf/settings/show_admin', 'dbwp_acf_settings_show_admin');
+add_filter('acf/settings/show_admin', 'dbwp_acf_settings_show_admin');
 function dbwp_acf_settings_show_admin( $show_admin ) {
 	return false;
 }
 
 /**
  * @return string $main_url This is the url where the data come from.
- * @author sebastienserre
+ * @author Sébastien Serre
  * @since 1.2
  */
 function get_main_url() {

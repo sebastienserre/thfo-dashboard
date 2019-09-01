@@ -47,7 +47,7 @@ class Helpers {
 	 *
 	 * @return `$wp_filesystem` object.
 	 * @since  1.2.0
-	 * @author sebastienserre
+	 * @author Sébastien Serre
      * @package dashboard-wp
 	 */
 	public static function thfo_get_filesystem() {
@@ -80,7 +80,7 @@ class Helpers {
 	 *
 	 * @return $id int term_id
 	 * @since  1.2.0
-	 * @author sebastienserre
+	 * @author Sébastien Serre
 	 * @package dashboard-wp
 	 */
 	public static function get_term_id( $slug ) {
@@ -113,7 +113,7 @@ class Helpers {
 	 *
 	 * @return array List of alerts
 	 * @since  1.2.0
-	 * @author sebastienserre
+	 * @author Sébastien Serre
 	 * @package dashboard-wp
      *
 	 */
@@ -141,7 +141,7 @@ class Helpers {
 	 *
 	 * @param string $content Type of content
      * @since  1.2.0
-	 * @author sebastienserre
+	 * @author Sébastien Serre
 	 * @package dashboard-wp
 	 */
 	public static function thfo_get_msg( $content = '' ) {
@@ -169,7 +169,7 @@ class Helpers {
      * Get Options from remote main website
 	 * @return array array with Remote ACF Options
 	 * @since  1.2.0
-	 * @author sebastienserre
+	 * @author Sébastien Serre
 	 * @package dashboard-wp
 	 */
 	public static function dbwp_get_options() {
@@ -211,7 +211,7 @@ class Helpers {
 	 * @return string
 	 *
 	 * @since  1.2.0
-	 * @author sebastienserre
+	 * @author Sébastien Serre
 	 * @package dashboard-wp
 	 */
 	public static function get_options( $options ) {
@@ -251,7 +251,7 @@ class Helpers {
 
 	/**
 	 * Display remote Post.
-     * @author sebastienserre
+     * @author Sébastien Serre
      * @package dashboard-wp
      * @since 1.2.0
 	 */
@@ -270,7 +270,7 @@ class Helpers {
 					/**
 					 * Filter the CPT name. By default its the Post name
 					 *
-					 * @author sebastienserre
+					 * @author Sébastien Serre
 					 * @since  1.2.0
 					 */
 					?>
@@ -297,7 +297,7 @@ class Helpers {
 
 	/**
 	 * Load custom CSS
-     * @author sebastienserre
+     * @author Sébastien Serre
      * @package dashboard-wp
      * @since 1.2.0
 	 */

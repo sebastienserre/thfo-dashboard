@@ -42,7 +42,7 @@ add_action( 'acf/save_post', __NAMESPACE__ . '\\delete_transients_on_saving', 15
 /**
  * Delete Transients on settings saving
  * @param $post_id
- * @author sebastienserre
+ * @author Sébastien Serre
  * @since 1.2.0
  */
 function delete_transients_on_saving( $post_id ) {
