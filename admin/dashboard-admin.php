@@ -38,7 +38,8 @@ function dbwp_main_dashboard_widget() {
     <div id="dbwp_main_dashboard_widget" class="welcome-panel dbwp-welcome-panel">
         <div class="dbwp-welcome-panel-content dbwp-welcome-panel-header">
             <div class="dbwp-welcome-panel-main">
-                <h2><?php $welcome = Helpers::get_options( 'welcome' ); echo $welcome ?></h2>
+                <h2><?php $welcome = Helpers::get_options( 'welcome' );
+		            echo $welcome ?></h2>
                 <p class="about-description"><?php echo Helpers::get_options( 'slogan' ); ?></p>
             </div>
             <div class="dbwp-welcome-panel-support">
@@ -72,7 +73,7 @@ function dbwp_main_dashboard_widget() {
                     </ul>
 					<?php
 				}
-                    ?>
+				?>
             </div>
             <div class="dbwp-welcome-panel-aside">
                 <a href="<?php echo MAIN_SITE; ?>" target="_blank">
@@ -89,7 +90,7 @@ function dbwp_main_dashboard_widget() {
 					?>
                 </div>
                 <div class="dashboard-news">
-                    <h3><?php _e( 'Last Updates', 'dashboard-wp' );?></h3>
+                    <h3><?php _e( 'Last Updates', 'dashboard-wp' ); ?></h3>
                     <div class="feature-section images-stagger-right">
 						<?php
 						$drafts_query = new WP_Query(
@@ -120,14 +121,14 @@ function dbwp_main_dashboard_widget() {
 										break;
 									case 'future':
 										$post_status = sprintf( __( 'Planned for %1$s', 'dashboard-wp' ), get_the_date
-										( get_option( 'date_format'), $draft->ID ) );
+										( get_option( 'date_format' ), $draft->ID ) );
 										break;
 									case 'auto-draft':
 										$post_status = __( 'Auto-Draft', 'dashboard-wp' );
 										break;
 									case 'publish':
 										$post_status = sprintf( __( 'Published on %1$s', 'dashboard-wp' ), get_the_date
-										( get_option( 'date_format'), $draft->ID ) );
+										( get_option( 'date_format' ), $draft->ID ) );
 										break;
 
 								}
@@ -153,11 +154,11 @@ function dbwp_main_dashboard_widget() {
                             <table class="widefat">
                                 <thead>
                                 <tr>
-                                    <th><?php _e('Title / Link', 'dashboard-wp' ); ?></th>
-                                    <th><?php _e('Status', 'dashboard-wp' ); ?></th>
-                                    <th><?php _e('Type', 'dashboard-wp' ); ?></th>
-                                    <th><?php _e('Authors', 'dashboard-wp' ); ?></th>
-                                    <th><?php _e('Last modification', 'dashboard-wp' ); ?></th>
+                                    <th><?php _e( 'Title / Link', 'dashboard-wp' ); ?></th>
+                                    <th><?php _e( 'Status', 'dashboard-wp' ); ?></th>
+                                    <th><?php _e( 'Type', 'dashboard-wp' ); ?></th>
+                                    <th><?php _e( 'Authors', 'dashboard-wp' ); ?></th>
+                                    <th><?php _e( 'Last modification', 'dashboard-wp' ); ?></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -166,25 +167,25 @@ function dbwp_main_dashboard_widget() {
                             </table>
 							<?php
 						} else {
-							_e('There\'s no draft for the moment', 'dashboard-wp' );
+							_e( 'There\'s no draft for the moment', 'dashboard-wp' );
 						}
 						?>
                     </div>
                 </div>
             </div>
-            <?php
-            if ( ! empty( Helpers::get_options('posts' ) ) ) {
-	            ?>
+	        <?php
+	        if ( ! empty( Helpers::get_options( 'posts' ) ) ) {
+		        ?>
                 <div class="dbwp-welcome-panel-aside">
                     <div class="dbwp-welcome-panel-news">
-			            <?php
-			            Helpers::get_remote_posts();
-			            ?>
+	                    <?php
+	                    Helpers::get_remote_posts();
+	                    ?>
                     </div>
                 </div>
-	            <?php
-            }
-                ?>
+		        <?php
+	        }
+	        ?>
         </div>
     </div>
 	<?php
