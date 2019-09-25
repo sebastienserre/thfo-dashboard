@@ -258,38 +258,43 @@ class Helpers {
 	public static function get_remote_posts() {
 		$opt  = self::$options['acf'];
 		$cpts = $opt['dbwp_posts'];
-		$nb   = $opt['dbwp_nb_post'];
-		foreach ( $cpts as $cpt ) {
-			$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/' . $cpt['value'] . '/?per_page=' . $nb .
-			            '&orderby=date&order=desc&lang=fr';
-			$response = wp_remote_get( $url );
-			if ( ! is_wp_error( $response ) ) {
+		if ( ! empty( $cpts ) ) {
+			$nb = $opt['dbwp_nb_post'];
+			if ( null === $nb ){
+			    $nb = 5;
+            }
+			foreach ( $cpts as $cpt ) {
+				$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/' . $cpt . '/?per_page=' . $nb .
+				            '&orderby=date&order=desc&lang=fr';
+				$response = wp_remote_get( $url );
+				if ( ! is_wp_error( $response ) ) {
 
-				$posts = json_decode( wp_remote_retrieve_body( $response ) );
-				if ( ! empty( $posts ) ) {
-					/**
-					 * Filter the CPT name. By default its the Post name
-					 *
-					 * @author Sébastien Serre
-					 * @since  1.2.0
-					 */
-					?>
-                    <h3>
-						<?php
-						$label = $cpt['label'];
-						echo $label = apply_filters( 'custom_remote_post_title', esc_attr( $label ) );
+					$posts = json_decode( wp_remote_retrieve_body( $response ) );
+					if ( ! empty( $posts ) ) {
+						/**
+						 * Filter the CPT name. By default its the Post name
+						 *
+						 * @author Sébastien Serre
+						 * @since  1.2.0
+						 */
 						?>
-                    </h3>
-                    <ul>
-						<?php
-						foreach ( $posts as $p ) {
-							?>
-                            <li><a href="<?php echo $p->link; ?>"><?php echo $p->title->rendered; ?></a></li>
+                        <h3>
 							<?php
-						}
-						?>
-                    </ul>
-					<?php
+							$label = $cpt;
+							echo $label = apply_filters( 'custom_remote_post_title', esc_attr( $label ) );
+							?>
+                        </h3>
+                        <ul>
+							<?php
+							foreach ( $posts as $p ) {
+								?>
+                                <li><a href="<?php echo $p->link; ?>"><?php echo $p->title->rendered; ?></a></li>
+								<?php
+							}
+							?>
+                        </ul>
+						<?php
+					}
 				}
 			}
 		}
