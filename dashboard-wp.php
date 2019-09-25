@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 } // Exit if accessed directly.
 register_activation_hook( __FILE__, 'thfo_add_main_constant');
 
+
 if ( ! function_exists( 'wd_fs' ) ) {
 	// Create a helper function for easy SDK access.
 	function wd_fs() {
@@ -32,30 +33,28 @@ if ( ! function_exists( 'wd_fs' ) ) {
 			}
 
 			// Include Freemius SDK.
-			require_once dirname(__FILE__) . '/freemius/start.php';
+			require_once dirname( __FILE__ ) . '/freemius/start.php';
 
 			$wd_fs = fs_dynamic_init( array(
-				'id'                  => '4459',
-				'slug'                => 'dashboard-wp',
-				'premium_slug'        => 'wp-dashboard-premium',
-				'type'                => 'plugin',
-				'public_key'          => 'pk_43ec4a588d1370ca6bf57eccbcf41',
-				'is_premium'          => true,
-				'premium_suffix'      => 'Thivinfo',
-				// If your plugin is a serviceware, set this option to false.
-				'has_premium_version' => true,
-				'has_addons'          => false,
-				'has_paid_plans'      => true,
-				'is_org_compliant'    => false,
-				'trial'               => array(
+				'id'               => '4459',
+				'slug'             => 'dashboard-wp',
+				'premium_slug'     => 'wp-dashboard-premium',
+				'type'             => 'plugin',
+				'public_key'       => 'pk_43ec4a588d1370ca6bf57eccbcf41',
+				'is_premium'       => true,
+				'is_premium_only'  => true,
+				'has_addons'       => false,
+				'has_paid_plans'   => true,
+				'is_org_compliant' => false,
+				'trial'            => array(
 					'days'               => 30,
 					'is_require_payment' => true,
 				),
-				'menu'                => array(
-					'slug'           => 'dashboard-settings',
+				'menu'             => array(
+					'slug'           => '?post_type=alert&page=dashboard-settings',
 					'override_exact' => true,
 					'first-path'     => 'edit.php?post_type=alert&page=dashboard-settings',
-					'support'        => true,
+					'support'        => false,
 					'network'        => true,
 					'parent'         => array(
 						'slug' => 'edit.php',
@@ -63,7 +62,7 @@ if ( ! function_exists( 'wd_fs' ) ) {
 				),
 				// Set the SDK to work in a sandbox mode (for development & testing).
 				// IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
-				'secret_key'          => 'sk_5-Y}E%A;;tGEjkC!MWacUcSl&.26+',
+				'secret_key'       => 'sk_5-Y}E%A;;tGEjkC!MWacUcSl&.26+',
 			) );
 		}
 
@@ -82,7 +81,10 @@ if ( ! function_exists( 'wd_fs' ) ) {
 	wd_fs()->add_filter('connect_url', 'wd_fs_settings_url');
 	wd_fs()->add_filter('after_skip_url', 'wd_fs_settings_url');
 	wd_fs()->add_filter('after_connect_url', 'wd_fs_settings_url');
-	wd_fs()->add_filter('after_pending_connect_url', 'wd_fs_settings_url');}
+	wd_fs()->add_filter('after_pending_connect_url', 'wd_fs_settings_url');
+}
+
+
 
 //i18n (to come shortly)
 load_plugin_textdomain( 'dashboard-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WordPress Dashboard\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-30 15:31+0000\n"
-"PO-Revision-Date: 2019-08-30 15:32+0000\n"
+"PO-Revision-Date: 2019-09-25 08:03+0000\n"
 "Last-Translator: sebastienserre <sebastien@thivinfo.com>\n"
 "Language-Team: Français\n"
 "Language: fr_FR\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.3.0; wp-5.2.2"
+"X-Loco-Version: 2.3.0; wp-5.2.3"
 
 #: admin/dashboard-admin.php:91
 msgid "Last Updates"
@@ -331,7 +331,7 @@ msgstr "URL vers une feuille CSS"
 
 #. Name of the plugin
 msgid "WordPress Dashboard"
-msgstr "Tableau de bord WordPress"
+msgstr "WordPress Dashboard"
 
 #. Description of the plugin
 msgid "Thivinfo Custom Dashboard for WordPress."
