@@ -298,3 +298,53 @@ function dbwp_cpt_list() {
 
 	return $cpt_list;
 }
+
+add_action( 'init', 'dbwp_acf_alert_field' );
+function dbwp_acf_alert_field() {
+	if ( function_exists( 'acf_add_local_field_group' ) ):
+
+		acf_add_local_field_group( array(
+			'key'                   => 'group_5d8b98bb469b6',
+			'title'                 => __( 'Alerts Options', 'dashboard-wp' ),
+			'fields'                => array(
+				array(
+					'key'               => 'field_5d8b98d41fc17',
+					'label'             => __( 'Important', 'dashboard-wp' ),
+					'name'              => 'wp_dashboard_important',
+					'type'              => 'true_false',
+					'instructions'      => __( 'Check yes if your alert is important. It will be stylized differently', 'dashboard-wp' ),
+					'required'          => 0,
+					'conditional_logic' => 0,
+					'wrapper'           => array(
+						'width' => '',
+						'class' => '',
+						'id'    => '',
+					),
+					'message'           => __( 'Important notice ?', 'dashboard-wp' ),
+					'default_value'     => 0,
+					'ui'                => 1,
+					'ui_on_text'        => __( 'Oui', 'dashboard-wp' ),
+					'ui_off_text'       => __( 'Non', 'dashboard-wp' ),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'alert',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'hide_on_screen'        => '',
+			'active'                => true,
+			'description'           => '',
+		) );
+
+	endif;
+}
