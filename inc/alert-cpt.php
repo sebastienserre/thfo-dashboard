@@ -65,6 +65,11 @@ if ( ! function_exists( 'alert' ) ) {
 
 }
 
+/**
+ * Add post meta to Rest API
+ *
+ * @since 1.2.3
+ */
 register_rest_field(
 	'alert',
 	'metadata',
