@@ -126,7 +126,7 @@ class Helpers {
 
 			return $decoded_body;
 		}
-		$json = wp_remote_get( "$main_url/wp-json/wp/v2/alert?websites=$id&orderby=date&order=desc&lang=fr" );
+		$json = wp_remote_get( "$main_url/wp-json/wp/v2/alert?websites=$id&orderby=date&order=desc" );
 		if ( 200 === (int) wp_remote_retrieve_response_code( $json ) ) {
 
 			$body         = wp_remote_retrieve_body( $json );
@@ -148,7 +148,7 @@ class Helpers {
 		$current_site = home_url();
 		$decoded_body = self::thfo_retrieve_alert( $current_site );
 		foreach ( $decoded_body as $alert ) {
-			if ( ! empty( $alert ) && 'general' !== $alert['slug'] ) {
+			if ( ! empty( $alert ) ) {
 				$decoded[ $alert['slug'] ]['content'] = $alert['content']['rendered'];
 				$decoded[ $alert['slug'] ]['title']   = $alert['title']['rendered'];
 			}
@@ -305,9 +305,8 @@ class Helpers {
 		if ( get_current_screen()->base !== 'dashboard' ) {
 			return;
 		}
-
-		if ( self::get_options( 'custom_css' ) ) {
-			$css = self::get_options( 'css' );
+		$css = self::get_options( 'css' );
+		if ( !empty( $css ) ){
 			wp_enqueue_style( 'dashboard_wp', $css );
 		} else {
 			wp_enqueue_style( 'dashboard_wp', THFO_DASHBOARD_PLUGIN_URL . 'admin/css/dashboard-admin.css' );

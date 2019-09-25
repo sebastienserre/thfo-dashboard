@@ -63,7 +63,8 @@ if ( ! function_exists( 'wd_fs' ) ) {
 				// Set the SDK to work in a sandbox mode (for development & testing).
 				// IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
 				'secret_key'       => 'sk_5-Y}E%A;;tGEjkC!MWacUcSl&.26+',
-			) );
+			)
+            );
 		}
 
 		return $wd_fs;
