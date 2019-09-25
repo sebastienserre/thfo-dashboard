@@ -174,7 +174,11 @@ function dbwp_acf_settings_url( $url ) {
 
 add_filter('acf/settings/show_admin', 'dbwp_acf_settings_show_admin');
 function dbwp_acf_settings_show_admin( $show_admin ) {
-	return false;
+	if ( defined( 'WP_DEBUG' ) && false === WP_DEBUG ) {
+		return false;
+	} else {
+		return true;
+	}
 }
 
 /**

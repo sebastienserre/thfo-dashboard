@@ -5,6 +5,7 @@ namespace Dashboard\Helpers;
 use function apply_filters;
 use function esc_attr;
 use function get_current_screen;
+use function get_field;
 use function get_transient;
 use function is_array;
 use function is_wp_error;
@@ -149,14 +150,21 @@ class Helpers {
 		$decoded_body = self::thfo_retrieve_alert( $current_site );
 		foreach ( $decoded_body as $alert ) {
 			if ( ! empty( $alert ) ) {
+				$decoded[ $alert['slug'] ]['id']      = $alert['id'];
 				$decoded[ $alert['slug'] ]['content'] = $alert['content']['rendered'];
 				$decoded[ $alert['slug'] ]['title']   = $alert['title']['rendered'];
 			}
 		}
 		if ( ! empty( $decoded ) ) {
 			foreach ( $decoded as $current_alert ) {
+				$important = get_field( 'wp_dashboard_important' );
+				if ( ! empty( 'yes' === $important ) ) {
+					$class = 'important-notice';
+				} else {
+					$class = '';
+				}
 				?>
-                <div class="alert-msg">
+                <div class="alert-msg <?php echo $class; ?>">
                     <h3><?php echo $current_alert['title']; ?></h3>
 					<?php echo $current_alert['content']; ?>
                 </div>
