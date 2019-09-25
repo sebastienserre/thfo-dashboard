@@ -3,7 +3,7 @@
  * Plugin Name:       WordPress Dashboard
  * Plugin URI:        https://thivinfo.com
  * Description:       Thivinfo Custom Dashboard for WordPress.
- * Version:           1.2.1
+ * Version:           1.2.2
  * Author:            Thivinfo
  * Author URI:        https://thivinfo.com
  * License:           GPL-2.0+
@@ -51,20 +51,14 @@ if ( ! function_exists( 'wd_fs' ) ) {
 					'is_require_payment' => true,
 				),
 				'menu'             => array(
-					'slug'           => '?post_type=alert&page=dashboard-settings',
 					'override_exact' => true,
-					'first-path'     => 'edit.php?post_type=alert&page=dashboard-settings',
+					'first-path'     => 'plugins.php',
 					'support'        => false,
-					'network'        => true,
-					'parent'         => array(
-						'slug' => 'edit.php',
-					),
 				),
 				// Set the SDK to work in a sandbox mode (for development & testing).
 				// IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
 				'secret_key'       => 'sk_5-Y}E%A;;tGEjkC!MWacUcSl&.26+',
-			)
-            );
+			) );
 		}
 
 		return $wd_fs;
@@ -74,18 +68,7 @@ if ( ! function_exists( 'wd_fs' ) ) {
 	wd_fs();
 	// Signal that SDK was initiated.
 	do_action( 'wd_fs_loaded' );
-
-	function wd_fs_settings_url() {
-		return admin_url( 'wp-admin/edit.php?post_type=alert&page=dashboard-settings' );
-	}
-
-	wd_fs()->add_filter('connect_url', 'wd_fs_settings_url');
-	wd_fs()->add_filter('after_skip_url', 'wd_fs_settings_url');
-	wd_fs()->add_filter('after_connect_url', 'wd_fs_settings_url');
-	wd_fs()->add_filter('after_pending_connect_url', 'wd_fs_settings_url');
 }
-
-
 
 //i18n (to come shortly)
 load_plugin_textdomain( 'dashboard-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
@@ -145,7 +128,7 @@ function thfo_add_main_constant() {
 		if ( ! defined( 'MAIN_SITE' ) ) {
 			$filesystem = thfo_get_filesystem();
 			$config     = file_get_contents( ABSPATH . 'wp-config.php' );
-			$config     = preg_replace( "/^([\r\n\t ]*)(\<\?)(php)?/i", "<?php\nif ( ! defined( 'MAIN_SITE') ) {\ndefine('MAIN_SITE', 'ToBeDefined');\n}\n", $config );
+			$config     = preg_replace( "/^([\r\n\t ]*)(\<\?)(php)?/i", "<?php\nif ( ! defined( 'MAIN_SITE') ) {\ndefine('MAIN_SITE', 'https://thivinfo.com');\n}\n", $config );
 			$filesystem->put_contents( ABSPATH . 'wp-config.php', $config );
 		}else {
 			return;
