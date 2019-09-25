@@ -300,6 +300,11 @@ function dbwp_cpt_list() {
 }
 
 add_action( 'init', 'dbwp_acf_alert_field' );
+/**
+ * @author  Sébastien SERRE
+ * @package wp-dashboard
+ * @since   1.2.3.1
+ */
 function dbwp_acf_alert_field() {
 	if ( function_exists( 'acf_add_local_field_group' ) ):
 
