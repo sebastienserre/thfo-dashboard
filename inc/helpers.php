@@ -153,12 +153,13 @@ class Helpers {
 				$decoded[ $alert['slug'] ]['id']      = $alert['id'];
 				$decoded[ $alert['slug'] ]['content'] = $alert['content']['rendered'];
 				$decoded[ $alert['slug'] ]['title']   = $alert['title']['rendered'];
+				$decoded[ $alert['slug'] ]['wp_dashboard_important']   =
+                    $alert['metadata']['wp_dashboard_important'][0];
 			}
 		}
 		if ( ! empty( $decoded ) ) {
 			foreach ( $decoded as $current_alert ) {
-				$important = get_field( 'wp_dashboard_important' );
-				if ( ! empty( 'yes' === $important ) ) {
+				if ( ! empty( $current_alert['wp_dashboard_important'] ) && ( '1' === $current_alert['wp_dashboard_important'] ) ) {
 					$class = 'important-notice';
 				} else {
 					$class = '';
