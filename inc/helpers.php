@@ -273,7 +273,7 @@ class Helpers {
 			    $nb = 5;
             }
 			foreach ( $cpts as $cpt ) {
-				$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/' . $cpt . '/?per_page=' . $nb .
+				$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/' . $cpt['value'] . '/?per_page=' . $nb .
 				            '&orderby=date&order=desc&lang=fr';
 				$response = wp_remote_get( $url );
 				if ( ! is_wp_error( $response ) ) {
@@ -289,7 +289,7 @@ class Helpers {
 						?>
                         <h3>
 							<?php
-							$label = $cpt;
+							$label = $cpt['label'];
 							echo $label = apply_filters( 'custom_remote_post_title', esc_attr( $label ) );
 							?>
                         </h3>
