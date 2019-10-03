@@ -19,6 +19,7 @@ use function sprintf;
 use function stripslashes;
 use function untrailingslashit;
 use function wp_enqueue_style;
+use function wp_kses;
 use function wp_remote_get;
 use function wp_remote_retrieve_body;
 use function wp_remote_retrieve_response_code;
@@ -352,7 +353,8 @@ class Helpers {
 		if ( ! is_wp_error( $response ) ) {
 			$terms = json_decode( wp_remote_retrieve_body( $response ) );
 			foreach ( $terms as $term ) {
-				if ( untrailingslashit( $term->name ) === $site ) {
+				if ( untrailingslashit( $term->name ) === $site && ! empty( $term->tma_date ) || ! empty(
+					$term->tma_due ) ) {
 					$tma = [
 						'date' => $term->tma_date,
 						'due'  => $term->tma_due,
@@ -372,6 +374,20 @@ class Helpers {
 						$tma['date'],
 						$tma['due'] );
 				}
+			}
+			if ( empty( $term->tma_date ) || empty( $term->tma_due ) ) {
+				$msg = wp_kses(
+					__( '<p class="wpdb_no_tma">You didn\'t have any TMA account. To get support, please contact me!</p>',
+						'wp-dashboard' ),
+					[
+						'span' => [
+							'class' => [],
+						],
+						'p'    => [
+							'class' => [],
+						]
+					]
+				);
 			}
 		}
 
