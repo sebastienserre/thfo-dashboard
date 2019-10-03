@@ -353,3 +353,64 @@ function dbwp_acf_alert_field() {
 
 	endif;
 }
+
+if ( function_exists( 'acf_add_local_field_group' ) ):
+
+	acf_add_local_field_group( array(
+		'key'                   => 'group_5d9499fe9a2c9',
+		'title'                 => __( 'TMA', 'dashboard-wp' ),
+		'fields'                => array(
+			array(
+				'key'               => 'field_5d949a281d276',
+				'label'             => __( 'Date', 'dashboard-wp' ),
+				'name'              => 'tma_date',
+				'type'              => 'date_picker',
+				'instructions'      => '',
+				'required'          => 0,
+				'conditional_logic' => 0,
+				'wrapper'           => array(
+					'width' => '',
+					'class' => '',
+					'id'    => '',
+				),
+				'display_format'    => 'd/m/Y',
+				'return_format'     => 'd/m/Y',
+				'first_day'         => 1,
+			),
+			array(
+				'key'               => 'field_5d949a4f1d277',
+				'label'             => __( 'Due Time', 'dashboard-wp' ),
+				'name'              => 'tma_due',
+				'type'              => 'time_picker',
+				'instructions'      => '',
+				'required'          => 0,
+				'conditional_logic' => 0,
+				'wrapper'           => array(
+					'width' => '',
+					'class' => '',
+					'id'    => '',
+				),
+				'display_format'    => 'H:i:s',
+				'return_format'     => 'H:i:s',
+			),
+		),
+		'location'              => array(
+			array(
+				array(
+					'param'    => 'taxonomy',
+					'operator' => '==',
+					'value'    => 'websites',
+				),
+			),
+		),
+		'menu_order'            => 0,
+		'position'              => 'normal',
+		'style'                 => 'default',
+		'label_placement'       => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen'        => '',
+		'active'                => true,
+		'description'           => '',
+	) );
+
+endif;
