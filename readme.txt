@@ -4,7 +4,7 @@ Tags: wp-admin, customer, dashboard, relationship
 Requires at least: 4.6
 Tested up to: 5.2
 Requires PHP: 5.6
-Stable tag: 1.2.3.2
+Stable tag: 1.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -26,6 +26,9 @@ define( 'MAIN_SITE', 'url_to_master_website' );
 * 4- have fun!
 
 == Changelog ==
+* 1.2.4 -- 3/10/2019
+Display TMA time left on customer account
+
 * 1.2.0 -- 31 aug 2019
  Settings are retrieving through internet to the Main Website
 
