@@ -343,6 +343,7 @@ class Helpers {
 	 * @author  Sébastien SERRE
 	 * @package wp-dashboard
 	 * @since   1.2.4
+	 * @since   1.2.4.1 add msg if no account
 	 */
 	public static function get_tma( $site = '' ) {
 		if ( empty( $site ) ) {
