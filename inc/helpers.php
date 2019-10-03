@@ -4,14 +4,18 @@ namespace Dashboard\Helpers;
 
 use function apply_filters;
 use function esc_attr;
+use function esc_html__;
 use function get_current_screen;
 use function get_field;
 use function get_transient;
 use function is_array;
 use function is_wp_error;
 use function json_decode;
+use function ob_get_clean;
+use function ob_start;
 use function sanitize_title;
 use function set_transient;
+use function sprintf;
 use function stripslashes;
 use function untrailingslashit;
 use function wp_enqueue_style;
@@ -36,9 +40,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Helpers {
 
 	protected static $options;
+	public static $current_site;
 
 	public function __construct() {
-		self::$options = self::dbwp_get_options();
+		self::$options      = self::dbwp_get_options();
+		self::$current_site = home_url();
 
 		add_action( 'admin_enqueue_scripts', [ 'Dashboard\Helpers\Helpers', 'load_admin_css' ] );
 	}
@@ -325,6 +331,41 @@ class Helpers {
 		} else {
 			wp_enqueue_style( 'dashboard_wp', THFO_DASHBOARD_PLUGIN_URL . 'admin/css/dashboard-admin.css' );
 		}
+	}
+
+	public static function get_tma( $site = '' ) {
+		if ( empty( $site ) ) {
+			$site = self::$current_site;
+		}
+		$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/websites';
+		$response = wp_remote_get( $url );
+		if ( ! is_wp_error( $response ) ) {
+			$terms = json_decode( wp_remote_retrieve_body( $response ) );
+			foreach ( $terms as $term ) {
+				if ( untrailingslashit( $term->name ) === $site ) {
+					$tma = [
+						'date' => $term->tma_date,
+						'due'  => $term->tma_due,
+					];
+					$msg = sprintf(
+						wp_kses(
+							__( '<p class="wpdb_tma">On <span>%1$s</span>, you had <span>%2$s</span> of TMA left</p>', 'wp-dashboard' ),
+							[
+								'span' => [
+									'class' => [],
+								],
+								'p'    => [
+									'class' => [],
+								]
+							]
+						),
+						$tma['date'],
+						$tma['due'] );
+				}
+			}
+		}
+
+		return $msg;
 	}
 
 }

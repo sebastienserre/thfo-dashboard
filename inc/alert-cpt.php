@@ -64,18 +64,3 @@ if ( ! function_exists( 'alert' ) ) {
 	add_action( 'init', 'alert', 0 );
 
 }
-
-/**
- * Add post meta to Rest API
- *
- * @since 1.2.3
- */
-register_rest_field(
-	'alert',
-	'metadata',
-	[
-		'get_callback' => function ( $data ) {
-			return get_post_meta( $data['id'], '', '' );
-		},
-	]
-);

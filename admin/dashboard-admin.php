@@ -86,6 +86,7 @@ function dbwp_main_dashboard_widget() {
             <div class="dbwp-welcome-panel-main">
                 <div class="dashboard-msg dashboard-alert">
 					<?php
+					echo Helpers::get_tma();
 					Helpers::thfo_get_msg();
 					?>
                 </div>
