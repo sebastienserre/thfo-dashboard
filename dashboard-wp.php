@@ -3,7 +3,7 @@
  * Plugin Name:       WordPress Dashboard
  * Plugin URI:        https://thivinfo.com
  * Description:       Thivinfo Custom Dashboard for WordPress.
- * Version:           1.2.4.3
+ * Version:           1.2.4.4
  * Author:            Thivinfo
  * Author URI:        https://thivinfo.com
  * License:           GPL-2.0+
