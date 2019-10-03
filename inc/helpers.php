@@ -362,7 +362,7 @@ class Helpers {
 					];
 					$msg = sprintf(
 						wp_kses(
-							__( '<p class="wpdb_tma">On <span>%1$s</span>, you had <span>%2$s</span> of TMA left</p>', 'wp-dashboard' ),
+							__( '<p class="wpdb_tma">On <span>%1$s</span>, you had <span>%2$s</span> of TMA left</p>', 'dashboard-wp' ),
 							[
 								'span' => [
 									'class' => [],
@@ -379,7 +379,7 @@ class Helpers {
 			if ( empty( $term->tma_date ) || empty( $term->tma_due ) ) {
 				$msg = wp_kses(
 					__( '<p class="wpdb_no_tma">You didn\'t have any TMA account. To get support, please contact me!</p>',
-						'wp-dashboard' ),
+						'dashboard-wp' ),
 					[
 						'span' => [
 							'class' => [],
