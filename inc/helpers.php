@@ -333,6 +333,16 @@ class Helpers {
 		}
 	}
 
+	/**
+	 * Display date and time left on TMA
+	 *
+	 * @param string $site
+	 *
+	 * @return string
+	 * @author  Sébastien SERRE
+	 * @package wp-dashboard
+	 * @since   1.2.4
+	 */
 	public static function get_tma( $site = '' ) {
 		if ( empty( $site ) ) {
 			$site = self::$current_site;
