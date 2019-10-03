@@ -18,6 +18,7 @@ use function set_transient;
 use function sprintf;
 use function stripslashes;
 use function untrailingslashit;
+use function var_dump;
 use function wp_enqueue_style;
 use function wp_kses;
 use function wp_remote_get;
@@ -349,12 +350,16 @@ class Helpers {
 		if ( empty( $site ) ) {
 			$site = self::$current_site;
 		}
-		$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/websites';
+		$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/websites?per_page=99';
 		$response = wp_remote_get( $url );
 		if ( ! is_wp_error( $response ) ) {
 			$terms = json_decode( wp_remote_retrieve_body( $response ) );
 			foreach ( $terms as $term ) {
-				if ( untrailingslashit( $term->name ) === $site && ! empty( $term->tma_date ) || ! empty(
+				$website = untrailingslashit( $term->name );
+				if ( 'https://wp-dashboard.lndo.site' === $website ) {
+					var_dump( $website );
+				}
+				if ( $website === $site && ! empty( $term->tma_date ) || ! empty(
 					$term->tma_due ) ) {
 					$tma = [
 						'date' => $term->tma_date,
@@ -374,6 +379,8 @@ class Helpers {
 						),
 						$tma['date'],
 						$tma['due'] );
+
+					return $msg;
 				}
 			}
 			if ( empty( $term->tma_date ) || empty( $term->tma_due ) ) {
@@ -389,10 +396,10 @@ class Helpers {
 						]
 					]
 				);
+
+				return $msg;
 			}
 		}
-
-		return $msg;
 	}
 
 }
