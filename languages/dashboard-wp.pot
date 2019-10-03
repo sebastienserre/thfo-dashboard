@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WordPress Dashboard\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-30 15:31+0000\n"
+"POT-Creation-Date: 2019-10-03 06:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,66 +15,66 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.3.0; wp-5.2.2"
 
-#: admin/dashboard-admin.php:91
+#: admin/dashboard-admin.php:94
 msgid "Last Updates"
 msgstr ""
 
-#: admin/dashboard-admin.php:115
+#: admin/dashboard-admin.php:118
 msgid "Draft"
 msgstr ""
 
-#: admin/dashboard-admin.php:118
+#: admin/dashboard-admin.php:121
 msgid "Pending"
 msgstr ""
 
-#: admin/dashboard-admin.php:121
+#: admin/dashboard-admin.php:124
 #, php-format
 msgid "Planned for %1$s"
 msgstr ""
 
-#: admin/dashboard-admin.php:125
+#: admin/dashboard-admin.php:128
 msgid "Auto-Draft"
 msgstr ""
 
-#: admin/dashboard-admin.php:128
+#: admin/dashboard-admin.php:131
 #, php-format
 msgid "Published on %1$s"
 msgstr ""
 
-#: admin/dashboard-admin.php:136
+#: admin/dashboard-admin.php:139
 msgid "Modify"
 msgstr ""
 
-#: admin/dashboard-admin.php:145
+#: admin/dashboard-admin.php:148
 #, php-format
 msgid "On %2$s at %3$s"
 msgstr ""
 
-#: admin/dashboard-admin.php:155
+#: admin/dashboard-admin.php:158
 msgid "Title / Link"
 msgstr ""
 
-#: admin/dashboard-admin.php:156
+#: admin/dashboard-admin.php:159
 msgid "Status"
 msgstr ""
 
-#: admin/dashboard-admin.php:157
+#: admin/dashboard-admin.php:160
 msgid "Type"
 msgstr ""
 
-#: admin/dashboard-admin.php:158
+#: admin/dashboard-admin.php:161
 msgid "Authors"
 msgstr ""
 
-#: admin/dashboard-admin.php:159
+#: admin/dashboard-admin.php:162
 msgid "Last modification"
 msgstr ""
 
-#: admin/dashboard-admin.php:168
+#: admin/dashboard-admin.php:171
 msgid "There's no draft for the moment"
 msgstr ""
 
-#: inc/helpers.php:248
+#: inc/helpers.php:260
 msgid "Information missing in Main Site Settings"
 msgstr ""
 
@@ -314,11 +314,11 @@ msgstr ""
 msgid "Have my own CSS"
 msgstr ""
 
-#: inc/acf-fields.php:222
+#: inc/acf-fields.php:222 inc/acf-fields.php:331
 msgid "Yes"
 msgstr ""
 
-#: inc/acf-fields.php:223
+#: inc/acf-fields.php:223 inc/acf-fields.php:332
 msgid "No"
 msgstr ""
 
@@ -328,6 +328,22 @@ msgstr ""
 
 #: inc/acf-fields.php:230
 msgid "URL to a CSS file"
+msgstr ""
+
+#: inc/acf-fields.php:313
+msgid "Alerts Options"
+msgstr ""
+
+#: inc/acf-fields.php:317
+msgid "Important"
+msgstr ""
+
+#: inc/acf-fields.php:320
+msgid "Check yes if your alert is important. It will be stylized differently"
+msgstr ""
+
+#: inc/acf-fields.php:328
+msgid "Important notice ?"
 msgstr ""
 
 #. Name of the plugin

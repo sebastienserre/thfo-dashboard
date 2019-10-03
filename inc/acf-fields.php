@@ -328,8 +328,8 @@ function dbwp_acf_alert_field() {
 					'message'           => __( 'Important notice ?', 'dashboard-wp' ),
 					'default_value'     => 0,
 					'ui'                => 1,
-					'ui_on_text'        => __( 'Oui', 'dashboard-wp' ),
-					'ui_off_text'       => __( 'Non', 'dashboard-wp' ),
+					'ui_on_text'        => __( 'Yes', 'dashboard-wp' ),
+					'ui_off_text'       => __( 'No', 'dashboard-wp' ),
 				),
 			),
 			'location'              => array(

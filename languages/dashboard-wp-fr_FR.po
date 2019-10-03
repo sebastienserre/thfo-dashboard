@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WordPress Dashboard\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-30 15:31+0000\n"
-"PO-Revision-Date: 2019-09-25 08:03+0000\n"
+"POT-Creation-Date: 2019-10-03 06:25+0000\n"
+"PO-Revision-Date: 2019-10-03 06:28+0000\n"
 "Last-Translator: sebastienserre <sebastien@thivinfo.com>\n"
 "Language-Team: Français\n"
 "Language: fr_FR\n"
@@ -14,66 +14,66 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.3.0; wp-5.2.3"
 
-#: admin/dashboard-admin.php:91
+#: admin/dashboard-admin.php:94
 msgid "Last Updates"
 msgstr "Dernières Mise à jour"
 
-#: admin/dashboard-admin.php:115
+#: admin/dashboard-admin.php:118
 msgid "Draft"
 msgstr "Brouillon"
 
-#: admin/dashboard-admin.php:118
+#: admin/dashboard-admin.php:121
 msgid "Pending"
 msgstr "En attente de relecture"
 
-#: admin/dashboard-admin.php:121
+#: admin/dashboard-admin.php:124
 #, php-format
 msgid "Planned for %1$s"
 msgstr "Planifié pour le %1$s"
 
-#: admin/dashboard-admin.php:125
+#: admin/dashboard-admin.php:128
 msgid "Auto-Draft"
 msgstr "Brouillon automatique"
 
-#: admin/dashboard-admin.php:128
+#: admin/dashboard-admin.php:131
 #, php-format
 msgid "Published on %1$s"
 msgstr "Publié le %1$s"
 
-#: admin/dashboard-admin.php:136
+#: admin/dashboard-admin.php:139
 msgid "Modify"
 msgstr "Modifier"
 
-#: admin/dashboard-admin.php:145
+#: admin/dashboard-admin.php:148
 #, php-format
 msgid "On %2$s at %3$s"
 msgstr "Le %2$s à %3$s"
 
-#: admin/dashboard-admin.php:155
+#: admin/dashboard-admin.php:158
 msgid "Title / Link"
 msgstr "Titre / Lien"
 
-#: admin/dashboard-admin.php:156
+#: admin/dashboard-admin.php:159
 msgid "Status"
 msgstr "Statut"
 
-#: admin/dashboard-admin.php:157
+#: admin/dashboard-admin.php:160
 msgid "Type"
 msgstr "Type"
 
-#: admin/dashboard-admin.php:158
+#: admin/dashboard-admin.php:161
 msgid "Authors"
 msgstr "Auteur"
 
-#: admin/dashboard-admin.php:159
+#: admin/dashboard-admin.php:162
 msgid "Last modification"
 msgstr "Dernière modification"
 
-#: admin/dashboard-admin.php:168
+#: admin/dashboard-admin.php:171
 msgid "There's no draft for the moment"
 msgstr "Il n'y a pas de brouillon pour le moment"
 
-#: inc/helpers.php:248
+#: inc/helpers.php:260
 msgid "Information missing in Main Site Settings"
 msgstr "Information manquante sur le site principal"
 
@@ -313,11 +313,11 @@ msgstr "Nombre de publication"
 msgid "Have my own CSS"
 msgstr "J'ai mon propre CSS"
 
-#: inc/acf-fields.php:222
+#: inc/acf-fields.php:222 inc/acf-fields.php:331
 msgid "Yes"
 msgstr "Oui"
 
-#: inc/acf-fields.php:223
+#: inc/acf-fields.php:223 inc/acf-fields.php:332
 msgid "No"
 msgstr "Non"
 
@@ -328,6 +328,24 @@ msgstr "CSS"
 #: inc/acf-fields.php:230
 msgid "URL to a CSS file"
 msgstr "URL vers une feuille CSS"
+
+#: inc/acf-fields.php:313
+msgid "Alerts Options"
+msgstr "Options des Alertes"
+
+#: inc/acf-fields.php:317
+msgid "Important"
+msgstr "Important"
+
+#: inc/acf-fields.php:320
+msgid "Check yes if your alert is important. It will be stylized differently"
+msgstr ""
+"Cochez oui si votre alerte est importante. Elle sera stylée différemment (si "
+"votre CSS est adapté)."
+
+#: inc/acf-fields.php:328
+msgid "Important notice ?"
+msgstr "ALerte importante ?"
 
 #. Name of the plugin
 msgid "WordPress Dashboard"
