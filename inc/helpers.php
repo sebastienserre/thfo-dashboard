@@ -356,18 +356,32 @@ class Helpers {
 			$terms = json_decode( wp_remote_retrieve_body( $response ) );
 			foreach ( $terms as $term ) {
 				$website = untrailingslashit( $term->name );
-				if ( 'https://wp-dashboard.lndo.site' === $website ) {
-					var_dump( $website );
-				}
-				if ( $website === $site && ! empty( $term->tma_date ) || ! empty(
-					$term->tma_due ) ) {
-					$tma = [
-						'date' => $term->tma_date,
-						'due'  => $term->tma_due,
-					];
-					$msg = sprintf(
-						wp_kses(
-							__( '<p class="wpdb_tma">On <span>%1$s</span>, you had <span>%2$s</span> of TMA left</p>', 'dashboard-wp' ),
+
+				if ( $website === $site /*&& ! empty( $term->tma_date ) || ! empty(
+					$term->tma_due ) */ ) {
+					if ( ! empty( $term->tma_date ) || ! empty( $term->tma_due ) ) {
+						$tma = [
+							'date' => $term->tma_date,
+							'due'  => $term->tma_due,
+						];
+						$msg = sprintf(
+							wp_kses(
+								__( '<p class="wpdb_tma">On <span>%1$s</span>, you had <span>%2$s</span> of TMA left</p>', 'dashboard-wp' ),
+								[
+									'span' => [
+										'class' => [],
+									],
+									'p'    => [
+										'class' => [],
+									]
+								]
+							),
+							$tma['date'],
+							$tma['due'] );
+					} else {
+						$msg = wp_kses(
+							__( '<p class="wpdb_no_tma">You didn\'t have any TMA account. To get support, please contact me!</p>',
+								'dashboard-wp' ),
 							[
 								'span' => [
 									'class' => [],
@@ -376,29 +390,12 @@ class Helpers {
 									'class' => [],
 								]
 							]
-						),
-						$tma['date'],
-						$tma['due'] );
-
-					return $msg;
+						);
+					}
 				}
 			}
-			if ( empty( $term->tma_date ) || empty( $term->tma_due ) ) {
-				$msg = wp_kses(
-					__( '<p class="wpdb_no_tma">You didn\'t have any TMA account. To get support, please contact me!</p>',
-						'dashboard-wp' ),
-					[
-						'span' => [
-							'class' => [],
-						],
-						'p'    => [
-							'class' => [],
-						]
-					]
-				);
 
-				return $msg;
-			}
+			return $msg;
 		}
 	}
 
