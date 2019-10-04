@@ -3,7 +3,7 @@
  * Plugin Name:       WordPress Dashboard
  * Plugin URI:        https://thivinfo.com
  * Description:       Thivinfo Custom Dashboard for WordPress.
- * Version:           1.2.4.5
+ * Version:           1.2.5
  * Author:            Thivinfo
  * Author URI:        https://thivinfo.com
  * License:           GPL-2.0+
@@ -50,10 +50,14 @@ if ( ! function_exists( 'wd_fs' ) ) {
 					'days'               => 30,
 					'is_require_payment' => true,
 				),
+				'has_affiliation'  => 'selected',
 				'menu'             => array(
-					'override_exact' => true,
-					'first-path'     => 'plugins.php',
-					'support'        => false,
+					'slug'    => 'dasboard-wp',
+					'support' => false,
+					'network' => true,
+					'parent'  => array(
+						'slug' => 'options-general.php',
+					),
 				),
 				// Set the SDK to work in a sandbox mode (for development & testing).
 				// IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
@@ -194,4 +198,20 @@ function get_main_url() {
 	 * This is the url where the data come from.
 	 */
 	return apply_filters( 'dbwp_set_main_url', $main_url );
+}
+
+add_action( 'admin_menu', 'wpdb_admin_menu' );
+function wpdb_admin_menu() {
+	add_submenu_page(
+		'options-general.php',
+		'Dashboard WP',
+		'Dashboard WP',
+		'manage_options',
+		'dasboard-wp',
+		'wpdb_admin_menu_render'
+	);
+}
+
+function wpdb_admin_menu_render() {
+
 }

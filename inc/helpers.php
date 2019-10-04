@@ -3,6 +3,7 @@
 namespace Dashboard\Helpers;
 
 use function apply_filters;
+use function date;
 use function esc_attr;
 use function esc_html__;
 use function get_current_screen;
@@ -17,6 +18,7 @@ use function sanitize_title;
 use function set_transient;
 use function sprintf;
 use function stripslashes;
+use function strtotime;
 use function untrailingslashit;
 use function var_dump;
 use function wp_enqueue_style;
@@ -360,13 +362,21 @@ class Helpers {
 				if ( $website === $site /*&& ! empty( $term->tma_date ) || ! empty(
 					$term->tma_due ) */ ) {
 					if ( ! empty( $term->tma_date ) || ! empty( $term->tma_due ) ) {
+						$ts   = strtotime( $term->tma_due );
+						$time = date( 'H:i', $ts );
+						if ( $time < '05:00' ) {
+							$class = 'tma-left-5';
+						}
+						if ( $time === '00:00' ) {
+							$class = 'tma-left-0';
+						}
 						$tma = [
 							'date' => $term->tma_date,
 							'due'  => $term->tma_due,
 						];
 						$msg = sprintf(
 							wp_kses(
-								__( '<p class="wpdb_tma">On <span>%1$s</span>, you had <span>%2$s</span> of TMA left</p>', 'dashboard-wp' ),
+								__( '<p class="wpdb_tma ' . $class . '">On <span>%1$s</span>, you had <span>%2$s</span> of TMA left</p>', 'dashboard-wp' ),
 								[
 									'span' => [
 										'class' => [],
