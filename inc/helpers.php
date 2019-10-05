@@ -407,7 +407,9 @@ class Helpers {
 				}
 			}
 
-			return $msg;
+			if ( ! empty( $msg ) ) {
+				return $msg;
+			}
 		}
 	}
 
