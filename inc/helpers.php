@@ -21,6 +21,7 @@ use function stripslashes;
 use function strtotime;
 use function untrailingslashit;
 use function var_dump;
+use function wp_dashboard;
 use function wp_enqueue_style;
 use function wp_kses;
 use function wp_remote_get;
@@ -352,31 +353,51 @@ class Helpers {
 		if ( empty( $site ) ) {
 			$site = self::$current_site;
 		}
-		$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/websites?per_page=99';
-		$response = wp_remote_get( $url );
-		if ( ! is_wp_error( $response ) ) {
-			$terms = json_decode( wp_remote_retrieve_body( $response ) );
-			foreach ( $terms as $term ) {
-				$website = untrailingslashit( $term->name );
+		$msg = get_transient( 'wp_dashboard_msg' );
+		if ( empty( $msg ) ) {
+			$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/websites?per_page=99';
+			$response = wp_remote_get( $url );
+			if ( ! is_wp_error( $response ) ) {
+				$terms = json_decode( wp_remote_retrieve_body( $response ) );
+				foreach ( $terms as $term ) {
+					$website = untrailingslashit( $term->name );
 
-				if ( $website === $site /*&& ! empty( $term->tma_date ) || ! empty(
-					$term->tma_due ) */ ) {
-					if ( ! empty( $term->tma_date ) || ! empty( $term->tma_due ) ) {
-						$ts   = strtotime( $term->tma_due );
-						$time = date( 'H:i', $ts );
-						if ( $time < '05:00' ) {
-							$class = 'tma-left-5';
-						}
-						if ( $time === '00:00' ) {
-							$class = 'tma-left-0';
-						}
-						$tma = [
-							'date' => $term->tma_date,
-							'due'  => $term->tma_due,
-						];
-						$msg = sprintf(
-							wp_kses(
-								__( '<p class="wpdb_tma  %3$s ">On <span>%1$s</span>, you had <span>%2$s</span> of TMA left</p>', 'dashboard-wp' ),
+					if ( $website === $site ) {
+
+						if ( ! empty( $term->tma_date ) || ! empty( $term->tma_due ) ) {
+							$ts   = strtotime( $term->tma_due );
+							$time = date( 'H:i', $ts );
+							if ( $time < '05:00' ) {
+								$class = 'tma-left-5';
+							}
+							if ( $time === '00:00' ) {
+								$class = 'tma-left-0';
+							}
+							$tma = [
+								'date' => $term->tma_date,
+								'due'  => $term->tma_due,
+							];
+							$msg = sprintf(
+								wp_kses(
+									__( '<p class="wpdb_tma  %3$s ">On <span>%1$s</span>, you had <span>%2$s</span> of TMA left</p>', 'dashboard-wp' ),
+									[
+										'span' => [
+											'class' => [],
+										],
+										'p'    => [
+											'class' => [],
+										]
+									]
+								),
+								$tma['date'],
+								$tma['due'],
+								$class,
+							);
+							set_transient( 'wp_dashboard_msg', $msg, DAY_IN_SECONDS );
+						} else {
+							$msg = wp_kses(
+								__( '<p class="wpdb_no_tma">You didn\'t have any TMA account. To get support, please contact me!</p>',
+									'dashboard-wp' ),
 								[
 									'span' => [
 										'class' => [],
@@ -385,32 +406,18 @@ class Helpers {
 										'class' => [],
 									]
 								]
-							),
-							$tma['date'],
-							$tma['due'],
-							$class,
-						);
-					} else {
-						$msg = wp_kses(
-							__( '<p class="wpdb_no_tma">You didn\'t have any TMA account. To get support, please contact me!</p>',
-								'dashboard-wp' ),
-							[
-								'span' => [
-									'class' => [],
-								],
-								'p'    => [
-									'class' => [],
-								]
-							]
-						);
+							);
+						}
 					}
 				}
-			}
 
-			if ( ! empty( $msg ) ) {
-				return $msg;
+				if ( ! empty( $msg ) ) {
+					return $msg;
+				}
 			}
 		}
+
+		return $msg;
 	}
 
 }
