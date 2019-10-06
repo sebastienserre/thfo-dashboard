@@ -46,3 +46,28 @@ if ( ! function_exists( 'sites' ) ) {
 	add_action( 'init', 'sites', 0 );
 
 }
+
+function add_book_place_columns( $columns ) {
+	$columns['tma'] = 'TMA';
+
+	return $columns;
+}
+
+add_filter( 'manage_edit-websites_columns', 'add_book_place_columns' );
+
+function add_column_due( $content, $column_name, $term_id ) {
+	switch ( $column_name ) {
+		case 'tma':
+			//do your stuff here with $term or $term_id
+			if ( function_exists( 'get_field' ) ) {
+				$content = get_field( 'tma_due', 'websites_' . $term_id );
+			}
+			break;
+		default:
+			break;
+	}
+
+	return $content;
+}
+
+add_filter( 'manage_websites_custom_column', 'add_column_due', 10, 3 );
