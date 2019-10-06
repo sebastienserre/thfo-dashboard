@@ -368,11 +368,11 @@ class Helpers {
 
 						if ( ! empty( $term->tma_date ) || ! empty( $term->tma_due ) ) {
 							$ts   = strtotime( $term->tma_due );
-							$time = date( 'H:i', $ts );
-							if ( $time < '05:00' ) {
+							$time = date( 'H\hi', $ts );
+							if ( $time < '05\h00' ) {
 								$class = 'tma-left-5';
 							}
-							if ( $time === '00:00' ) {
+							if ( $time === '00\h00' ) {
 								$class = 'tma-left-0';
 							}
 							$tma = [
