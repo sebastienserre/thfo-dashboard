@@ -32,11 +32,11 @@ if ( ! function_exists( 'sites' ) ) {
 		$args = array(
 			'labels'            => $labels,
 			'hierarchical'      => true,
-			'public'            => true,
+			'public'            => false,
 			'show_ui'           => true,
 			'show_admin_column' => true,
-			'show_in_nav_menus' => true,
-			'show_tagcloud'     => true,
+			'show_in_nav_menus' => false,
+			'show_tagcloud'     => false,
 			'show_in_rest'      => true,
 			'query_var'         => true
 		);
