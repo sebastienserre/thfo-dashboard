@@ -353,7 +353,9 @@ class Helpers {
 		if ( empty( $site ) ) {
 			$site = self::$current_site;
 		}
-		$msg = get_transient( 'wp_dashboard_msg' );
+		if ( defined( 'WP_DEBUG' && false === 'WP_DEBUG' ) ) {
+			$msg = get_transient( 'wp_dashboard_msg' );
+		}
 		if ( empty( $msg ) ) {
 			$url      = untrailingslashit( MAIN_SITE ) . '/wp-json/wp/v2/websites?per_page=99';
 			$response = wp_remote_get( $url );
@@ -379,7 +381,7 @@ class Helpers {
 							];
 							$msg = sprintf(
 								wp_kses(
-									__( '<p class="wpdb_tma  %3$s ">On <span>%1$s</span>, you had <span>%2$s</span> of TMA left</p>', 'dashboard-wp' ),
+									__( '<p class="wpdb_tma  %3$s ">Updated on <span>%1$s</span>: you had <span>%2$s</span> of TMA left</p>', 'dashboard-wp' ),
 									[
 										'span' => [
 											'class' => [],
