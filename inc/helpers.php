@@ -393,7 +393,7 @@ class Helpers {
 								),
 								$tma['date'],
 								$tma['due'],
-								$class,
+								$class
 							);
 							set_transient( 'wp_dashboard_msg', $msg, DAY_IN_SECONDS );
 						} else {
