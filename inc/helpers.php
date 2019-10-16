@@ -367,8 +367,9 @@ class Helpers {
 					if ( $website === $site ) {
 
 						if ( ! empty( $term->tma_date ) || ! empty( $term->tma_due ) ) {
-							$ts   = strtotime( $term->tma_due );
-							$time = date( 'H\hi', $ts );
+							$ts    = strtotime( $term->tma_due );
+							$time  = date( 'H\hi', $ts );
+							$class = '';
 							if ( $time < '05\h00' ) {
 								$class = 'tma-left-5';
 							}
