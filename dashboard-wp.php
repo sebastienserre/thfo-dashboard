@@ -76,10 +76,7 @@ if ( ! function_exists( 'wd_fs' ) ) {
 
 //i18n (to come shortly)
 load_plugin_textdomain( 'dashboard-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-//Admin
-if( is_admin() ){
-	require_once plugin_dir_path(__FILE__).'admin/dashboard-admin.php';
-}
+
 
 define( 'THFO_DASHBOARD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'THFO_DASHBOARD_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
@@ -90,13 +87,14 @@ define( 'DWP_ACF_URL', THFO_DASHBOARD_PLUGIN_URL . '/3rd-party/acf/' );
 
 add_action( 'plugins_loaded', 'thfo_bd_load_cpt' );
 function thfo_bd_load_cpt() {
-	if ( is_admin() && defined( 'MAIN_SITE' ) && 'ToBeDefined' === MAIN_SITE ){
-		add_action( 'admin_notices','dbwp_notices' );
+	if ( is_admin() && defined( 'MAIN_SITE' ) && 'ToBeDefined' === MAIN_SITE ) {
+		add_action( 'admin_notices', 'dbwp_notices' );
 	}
 	include_once DWP_ACF_PATH . 'acf.php';
 	include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/acf-fields.php';
 	include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/api-route.php';
 	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
+	require_once plugin_dir_path( __FILE__ ) . 'admin/inc/class-dashboard-widget.php';
 
 	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() || MAIN_SITE === trailingslashit( home_url() ) ||
 	     MAIN_SITE === untrailingslashit( home_url() ) ) {
