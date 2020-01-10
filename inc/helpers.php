@@ -249,7 +249,7 @@ class Helpers {
 				$data = self::$options['social']['logo'];
 				break;
 			case 'social':
-				$socials = dbwp_set_social();
+				$socials = self::dbwp_set_social();
 				foreach ( $socials as $social ) {
 					if ( 'mail' === $social || 'logo' === $social ) {
 						continue;
@@ -277,11 +277,18 @@ class Helpers {
 		return $data;
 	}
 
+	public static function dbwp_set_social() {
+		$socials = [ 'facebook', 'twitter', 'instagram', 'mail', 'logo' ];
+
+		return apply_filters( 'dbwp_socials', $socials );
+	}
+
 	/**
 	 * Display remote Post.
-     * @author Sébastien Serre
-     * @package dashboard-wp
-     * @since 1.2.0
+	 *
+	 * @author  Sébastien Serre
+	 * @package dashboard-wp
+	 * @since   1.2.0
 	 */
 	public static function get_remote_posts() {
 		$opt  = self::$options['acf'];

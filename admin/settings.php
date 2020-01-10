@@ -68,14 +68,10 @@ function dbwp_register_setting() {
 	register_setting( 'dashboard-wp', 'dbwp_options ' );
 }
 
-function dbwp_set_social() {
-	$socials = [ 'facebook', 'twitter', 'instagram', 'mail', 'logo' ];
 
-	return apply_filters( 'dbwp_socials', $socials );
-}
 
 function dbwp_socials_network() {
-	$socials = dbwp_set_social();
+	$socials = Helpers::dbwp_set_social();
 	foreach ( $socials as $social ) {
 		add_settings_field( 'dashboard-wp' . $social, $social, function ( $social ) {
 			$option       = get_option( 'dbwp_options' );
