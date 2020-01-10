@@ -32,30 +32,52 @@ class Dashboard_Widget {
 
 	public function custom_dashboard_help() {
 		?>
-		<div class="dbwp-admin-widget">
-			<div class="tma">
+        <div class="dbwp-admin-widget">
+            <div class="dbwp-logo">
+				<?php
+				$img = Helpers::get_options( 'logo' );
+				?>
+                <img src="<?php echo $img; ?>">
+            </div>
+            <div class="tma">
 				<?php echo Helpers::get_tma(); ?>
-			</div>
-			<div class="dbwp_messages">
+            </div>
+            <div class="dbwp_messages">
 				<?php echo Helpers::thfo_get_msg(); ?>
-			</div>
-			<div class="dbwp-admin-widget-support">
-				<h3><?php _e( 'Need Support? Ask a Question:', 'dashboard-wp' ); ?></h3>
-				<form action="#" method="post">
-					<div class="subject-wrap" id="subject-wrap">
+            </div>
+            <div class="dbwp-admin-widget-support">
+                <h3><?php _e( 'Need Support? Ask a Question:', 'dashboard-wp' ); ?></h3>
+                <form action="#" method="post">
+                    <div class="subject-wrap" id="subject-wrap">
 						<label for="subject"><?php _e( 'Subject', 'dashboard-wp' ); ?></label>
 						<input type="text" name="subject">
-					</div>
-					<label for="message"><?php _e( 'Message', 'dashboard-wp' ); ?></label>
-					<div class="textarea-wrap" id="description-wrap">
-						<textarea name="message" rows="3" cols="15"></textarea>
-					</div>
+                    </div>
+                    <label for="message"><?php _e( 'Message', 'dashboard-wp' ); ?></label>
+                    <div class="textarea-wrap" id="description-wrap">
+                        <textarea name="message" rows="3" cols="15"></textarea>
+                    </div>
 					<?php
 					wp_nonce_field( 'ask_support', 'nonce_support', true, true );
 					submit_button( __( 'Send' ) ); ?>
-				</form>
-			</div>
-		</div>
+                </form>
+            </div>
+            <div class="dbwp-social">
+				<?php
+				$socials = Helpers::get_options( 'social' );
+				echo '<p>';
+				foreach ( $socials as $name => $social ) {
+					if ( ! empty( $social ) ) {
+						?>
+                        <a href="<?php echo $social; ?>">
+                            <span class="dashicons dashicons-<?php echo $name; ?>"></span>
+                        </a>
+						<?php
+					}
+				}
+				echo '</p>';
+				?>
+            </div>
+        </div>
 
 		<?php
 	}

@@ -245,8 +245,17 @@ class Helpers {
 			case 'slogan':
 				$data = self::$options['acf']['dbwp_welcome_message'][0]['dbwp_slogan'];
 				break;
+			case 'logo':
+				$data = self::$options['social']['logo'];
+				break;
 			case 'social':
-				$data = self::$options['social'];
+				$socials = dbwp_set_social();
+				foreach ( $socials as $social ) {
+					if ( 'mail' === $social || 'logo' === $social ) {
+						continue;
+					}
+					$data[ $social ] = self::$options['social'][ $social ];
+				}
 				break;
 			case 'posts':
 				$data = self::$options['acf']['dbwp_posts'];
