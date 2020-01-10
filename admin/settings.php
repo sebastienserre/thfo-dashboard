@@ -3,29 +3,119 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
 
-function register_acf_options_pages() {
-
-	// Check function exists.
-	if ( ! function_exists( 'acf_add_options_page' ) ) {
-		return;
-	}
+function register_options_pages() {
 
 	// register options page.
-	$option_page = acf_add_options_sub_page(
-		[
-			'page_title' => __( 'Settings' ),
-			'menu_title' => __( 'Settings' ),
-			'menu_slug'  => 'dashboard-settings',
-			'parent'     => 'edit.php?post_type=alert',
-			'capability' => 'edit_posts',
-			'redirect'   => false,
-			'post_id'    => 'dashboard-settings'
-		]
-	);
+
+	add_submenu_page( 'edit.php?post_type=alert', __( 'Settings' ), __( 'Settings' ), 'manage_options', 'dashboard-settings',
+		'dbwp_settings' );
 }
 
-// Hook into acf initialization.
-add_action('acf/init', 'register_acf_options_pages');
+add_action( 'admin_menu', 'register_options_pages' );
+
+function dbwp_settings() {
+	$tabs = array(
+		'general' => __( 'General', 'dashboard-wp' ),
+		'help'    => __( 'Help', 'dashboard-wp' ),
+	);
+	$tabs = apply_filters( 'dbwp_settings_tabs', $tabs );
+
+	if ( isset( $_GET['tab'] ) ) {
+
+		$active_tab = $_GET['tab'];
+
+	} else {
+		$active_tab = 'general';
+	}
+	?>
+    <div class="wrap">
+        <h3><?php echo esc_html( get_admin_page_title() ); ?></h3>
+        <h2 class="nav-tab-wrapper">
+			<?php
+			foreach ( $tabs as $tab => $value ) {
+				?>
+                <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=alert&page=dashboard-settings&tab=' . $tab ) ); ?>"
+                   class="nav-tab <?php echo 'nav-tab-' . $tab;
+				   echo $active_tab === $tab ? ' nav-tab-active' : ''; ?>"><?php echo $value ?></a>
+			<?php } ?>
+        </h2>
+        <form method="post" action="options.php">
+			<?php $active_tab = apply_filters( 'dbwp_setting_active_tab', $active_tab ); ?>
+			<?php
+			switch ( $active_tab ) {
+				case 'general':
+				default:
+					settings_fields( 'dashboard-wp' );
+					do_settings_sections( 'dashboard-wp' );
+					submit_button( __( 'Save' ) );
+					break;
+				case 'help':
+					settings_fields( 'dashboard-wp-help' );
+					do_settings_sections( 'dashboard-wp-help' );
+					break;
+			}
+			?>
+        </form>
+    </div>
+	<?php
+}
+
+add_action( 'admin_init', 'dbwp_register_setting' );
+function dbwp_register_setting() {
+	add_settings_section( 'dashboard-wp-help', __( 'Help Center', 'wp-openagenda' ), 'thfo_openwp_help', 'dashboard-wp-help' );
+	add_settings_section( 'dashboard-wp', 'Socials', 'dbwp_socials_network', 'dashboard-wp' );
+	register_setting( 'dashboard-wp', 'dbwp_options ' );
+}
+
+function dbwp_set_social() {
+	$socials = [ 'facebook', 'twitter', 'instagram', 'pinterest', 'mail' ];
+
+	return apply_filters( 'dbwp_socials', $socials );
+}
+
+function dbwp_socials_network() {
+	$socials = dbwp_set_social();
+	foreach ( $socials as $social ) {
+		add_settings_field( 'dashboard-wp' . $social, $social, function ( $social ) {
+			$option       = get_option( 'dbwp_options' );
+			$option_value = $option['social'][ $social ];
+			if ( ! empty( $option_value ) ) {
+				$value = 'value="' . $option_value . '"';
+			}
+			?>
+            <input type="text" name="dbwp_options[social][<?php
+			echo $social;
+			?>]" <?php echo $value; ?>>
+			<?php
+		}, 'dashboard-wp', 'dashboard-wp', $social );
+	}
+}
+
+
+/*function dbwp_facebook_input() {
+	*/ ?><!--
+	<input type="text" name="dbwp_options[social][facebook]">
+	<?php
+/*}
+
+function dbwp_twitter_input() {
+	*/ ?>
+    <input type="text" name="dbwp_options[social][twitter]">
+	<?php
+/*}
+
+function dbwp_instagram_input() {
+	*/ ?>
+    <input type="text" name="dbwp_options[social][instagram]">
+	<?php
+/*}
+
+function dbwp_pinterest_input() {
+	*/ ?>
+    <input type="text" name="dbwp_options[social][pinterest]">
+	--><?php
+/*}*/
+
 
 // register the endpoint
 //add_action( 'rest_api_init', 'dashboard_create_settings_route' );
@@ -40,7 +130,8 @@ function dashboard_create_settings_route() {
 	);
 }
 
-function dashboard_acf_settings( $request_data ){
-	$fields = get_fields( 'options');
-	var_dump( $fields);
+function dashboard_acf_settings( $request_data ) {
+	$fields = get_fields( 'options' );
+
+	return $fields;
 }
