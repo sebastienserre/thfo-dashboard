@@ -18,7 +18,7 @@ add_filter( 'https_local_ssl_verify', '__return_true' );
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
-register_activation_hook( __FILE__, 'thfo_add_main_constant');
+register_activation_hook( __FILE__, 'thfo_add_main_constant' );
 
 
 if ( ! function_exists( 'wd_fs' ) ) {
@@ -52,11 +52,10 @@ if ( ! function_exists( 'wd_fs' ) ) {
 				),
 				'has_affiliation'  => 'selected',
 				'menu'             => array(
-					'slug'    => 'dasboard-wp',
+					'slug'    => 'dashboard-settings',
 					'support' => false,
-					'network' => true,
 					'parent'  => array(
-						'slug' => 'options-general.php',
+						'slug' => 'edit.php',
 					),
 				),
 				// Set the SDK to work in a sandbox mode (for development & testing).
@@ -110,11 +109,11 @@ function thfo_bd_load_cpt() {
 	}
 }
 
-function dbwp_notices(){
+function dbwp_notices() {
 	?>
-	<div class="notice notice-error">
-		<p><?php _e( __( 'Please adapt the constant MAIN_SITE actually called ToBeDefined in your wp-config.php', 'dashboard_wp' ) ); ?></p>
-	</div>
+    <div class="notice notice-error">
+        <p><?php _e( __( 'Please adapt the constant MAIN_SITE actually called ToBeDefined in your wp-config.php', 'dashboard_wp' ) ); ?></p>
+    </div>
 	<?php
 }
 
@@ -130,16 +129,16 @@ function thivinfo_enqueue_scripts_admin() {
 }
 
 function thfo_add_main_constant() {
-	if ( file_exists (ABSPATH . "wp-config.php") && is_writable (ABSPATH . "wp-config.php") ) {
+	if ( file_exists( ABSPATH . "wp-config.php" ) && is_writable( ABSPATH . "wp-config.php" ) ) {
 		if ( ! defined( 'MAIN_SITE' ) ) {
 			$filesystem = thfo_get_filesystem();
 			$config     = file_get_contents( ABSPATH . 'wp-config.php' );
 			$config     = preg_replace( "/^([\r\n\t ]*)(\<\?)(php)?/i", "<?php\nif ( ! defined( 'MAIN_SITE') ) {\ndefine('MAIN_SITE', 'https://thivinfo.com');\n}\n", $config );
 			$filesystem->put_contents( ABSPATH . 'wp-config.php', $config );
-		}else {
+		} else {
 			return;
 		}
-	}else {
+	} else {
 		return;
 	}
 }
@@ -151,34 +150,34 @@ function thfo_add_main_constant() {
  * @since   1.2.0
  */
 function thfo_get_filesystem() {
-		static $filesystem;
+	static $filesystem;
 
-		if ( $filesystem ) {
-			return $filesystem;
-		}
-
-		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
-		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
-
-		$filesystem = new \WP_Filesystem_Direct( new \StdClass() ); // WPCS: override ok.
-
-		// Set the permission constants if not already set.
-		if ( ! defined( 'FS_CHMOD_DIR' ) ) {
-			define( 'FS_CHMOD_DIR', ( @fileperms( ABSPATH ) & 0777 | 0755 ) );
-		}
-		if ( ! defined( 'FS_CHMOD_FILE' ) ) {
-			define( 'FS_CHMOD_FILE', ( @fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
-		}
-
+	if ( $filesystem ) {
 		return $filesystem;
 	}
 
-add_filter('acf/settings/url', 'dbwp_acf_settings_url');
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+
+	$filesystem = new \WP_Filesystem_Direct( new \StdClass() ); // WPCS: override ok.
+
+	// Set the permission constants if not already set.
+	if ( ! defined( 'FS_CHMOD_DIR' ) ) {
+		define( 'FS_CHMOD_DIR', ( @fileperms( ABSPATH ) & 0777 | 0755 ) );
+	}
+	if ( ! defined( 'FS_CHMOD_FILE' ) ) {
+		define( 'FS_CHMOD_FILE', ( @fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
+	}
+
+	return $filesystem;
+}
+
+add_filter( 'acf/settings/url', 'dbwp_acf_settings_url' );
 function dbwp_acf_settings_url( $url ) {
 	return DWP_ACF_URL;
 }
 
-add_filter('acf/settings/show_admin', 'dbwp_acf_settings_show_admin');
+add_filter( 'acf/settings/show_admin', 'dbwp_acf_settings_show_admin' );
 function dbwp_acf_settings_show_admin( $show_admin ) {
 	if ( defined( 'WP_DEBUG' ) && false === WP_DEBUG ) {
 		return false;
@@ -190,7 +189,7 @@ function dbwp_acf_settings_show_admin( $show_admin ) {
 /**
  * @return string $main_url This is the url where the data come from.
  * @author Sébastien Serre
- * @since 1.2
+ * @since  1.2
  */
 function get_main_url() {
 	$main_url = get_field( 'dbwp_main_site', 'dashboard-settings' );
