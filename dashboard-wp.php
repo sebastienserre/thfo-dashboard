@@ -84,6 +84,10 @@ define( 'THFO_DASHBOARD_PLUGIN_DIR', untrailingslashit( THFO_DASHBOARD_PLUGIN_PA
 define( 'DWP_ACF_PATH', THFO_DASHBOARD_PLUGIN_PATH . '/3rd-party/acf/' );
 define( 'DWP_ACF_URL', THFO_DASHBOARD_PLUGIN_URL . '/3rd-party/acf/' );
 
+add_action( 'admin_print_styles', 'load_admin_style', 20 );
+function load_admin_style() {
+	wp_enqueue_style( 'wp-dashboard-style', THFO_DASHBOARD_PLUGIN_URL . '/admin/css/dashboard-admin.css' );
+}
 
 add_action( 'plugins_loaded', 'thfo_bd_load_cpt' );
 function thfo_bd_load_cpt() {

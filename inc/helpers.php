@@ -6,6 +6,7 @@ use function apply_filters;
 use function date;
 use function esc_attr;
 use function esc_html__;
+use function explode;
 use function get_current_screen;
 use function get_field;
 use function get_transient;
@@ -50,8 +51,6 @@ class Helpers {
 	public function __construct() {
 		self::$options      = self::dbwp_get_options();
 		self::$current_site = home_url();
-
-		add_action( 'admin_enqueue_scripts', [ 'Dashboard\Helpers\Helpers', 'load_admin_css' ] );
 	}
 
 	/**
@@ -247,7 +246,7 @@ class Helpers {
 				$data = self::$options['acf']['dbwp_welcome_message'][0]['dbwp_slogan'];
 				break;
 			case 'social':
-				$data = self::$options['acf']['dbwp_social'];
+				$data = self::$options['social'];
 				break;
 			case 'posts':
 				$data = self::$options['acf']['dbwp_posts'];
@@ -321,24 +320,6 @@ class Helpers {
 	}
 
 	/**
-	 * Load custom CSS
-     * @author Sébastien Serre
-     * @package dashboard-wp
-     * @since 1.2.0
-	 */
-	public static function load_admin_css() {
-		if ( get_current_screen()->base !== 'dashboard' ) {
-			return;
-		}
-		$css = self::get_options( 'css' );
-		if ( !empty( $css ) ){
-			wp_enqueue_style( 'dashboard_wp', $css );
-		} else {
-			wp_enqueue_style( 'dashboard_wp', THFO_DASHBOARD_PLUGIN_URL . 'admin/css/dashboard-admin.css' );
-		}
-	}
-
-	/**
 	 * Display date and time left on TMA
 	 *
 	 * @param string $site
@@ -370,15 +351,18 @@ class Helpers {
 							$ts    = strtotime( $term->tma_due );
 							$time  = date( 'H\hi', $ts );
 							$class = '';
-							if ( $time < '05\h00' ) {
+							if ( $time < '05:00' ) {
 								$class = 'tma-left-5';
 							}
-							if ( $time === '00\h00' ) {
+							if ( $time === '00:00' ) {
 								$class = 'tma-left-0';
 							}
+							$due = explode( ':', $term->tma_due );
+							$due = sprintf( _n( '%1$s hour %2$s', '%1$s hours %2$s', $due[0], 'dashboard-wp' ),
+								$due[0], $due[1] );
 							$tma = [
 								'date' => $term->tma_date,
-								'due'  => $term->tma_due,
+								'due'  => $due,
 							];
 							$msg = sprintf(
 								wp_kses(
