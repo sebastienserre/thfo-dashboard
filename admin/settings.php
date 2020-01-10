@@ -46,9 +46,10 @@ function dbwp_settings() {
 				case 'general':
 				default:
 					settings_fields( 'dashboard-wp' );
-					do_settings_sections( 'dashboard-wp' );
-					submit_button( __( 'Save' ) );
-					break;
+				do_settings_sections( 'dashboard-wp' );
+				submit_button( __( 'Save' ) );
+				delete_transient( 'remote-settings' );
+				break;
 				case 'help':
 					settings_fields( 'dashboard-wp-help' );
 					do_settings_sections( 'dashboard-wp-help' );
@@ -68,7 +69,7 @@ function dbwp_register_setting() {
 }
 
 function dbwp_set_social() {
-	$socials = [ 'facebook', 'twitter', 'instagram', 'pinterest', 'mail' ];
+	$socials = [ 'facebook', 'twitter', 'instagram', 'mail', 'logo' ];
 
 	return apply_filters( 'dbwp_socials', $socials );
 }
