@@ -53,82 +53,90 @@
         function fs_get_template( $path, &$params = null ) {
             ob_start();
 
-            $VARS = &$params;
-            require fs_get_template_path( $path );
+	        $VARS = &$params;
+	        require fs_get_template_path( $path );
 
-            return ob_get_clean();
+	        return ob_get_clean();
         }
     }
 
-    /* Scripts and styles including.
-    --------------------------------------------------------------------------------------------*/
+/* Scripts and styles including.
+--------------------------------------------------------------------------------------------*/
 
-    /**
-     * Generates an absolute URL to the given path. This function ensures that the URL will be correct whether the asset
-     * is inside a plugin's folder or a theme's folder.
-     *
-     * Examples:
-     * 1. "themes" folder
-     *    Path: C:/xampp/htdocs/fswp/wp-content/themes/twentytwelve/freemius/assets/css/admin/common.css
-     *    URL: http://fswp:8080/wp-content/themes/twentytwelve/freemius/assets/css/admin/common.css
-     *
-     * 2. "plugins" folder
-     *    Path: C:/xampp/htdocs/fswp/wp-content/plugins/rating-widget-premium/freemius/assets/css/admin/common.css
-     *    URL: http://fswp:8080/wp-content/plugins/rating-widget-premium/freemius/assets/css/admin/common.css
-     *
-     * @author Leo Fajardo (@leorw)
-     * @since  1.2.2
-     *
-     * @param  string $asset_abs_path Asset's absolute path.
-     *
-     * @return string Asset's URL.
-     */
-    function fs_asset_url( $asset_abs_path ) {
-        $wp_content_dir = fs_normalize_path( WP_CONTENT_DIR );
-        $asset_abs_path = fs_normalize_path( $asset_abs_path );
+if ( ! function_exists( 'fs_asset_url' ) ) {
+	/**
+	 * Generates an absolute URL to the given path. This function ensures that the URL will be correct whether the asset
+	 * is inside a plugin's folder or a theme's folder.
+	 *
+	 * Examples:
+	 * 1. "themes" folder
+	 *    Path: C:/xampp/htdocs/fswp/wp-content/themes/twentytwelve/freemius/assets/css/admin/common.css
+	 *    URL: http://fswp:8080/wp-content/themes/twentytwelve/freemius/assets/css/admin/common.css
+	 *
+	 * 2. "plugins" folder
+	 *    Path: C:/xampp/htdocs/fswp/wp-content/plugins/rating-widget-premium/freemius/assets/css/admin/common.css
+	 *    URL: http://fswp:8080/wp-content/plugins/rating-widget-premium/freemius/assets/css/admin/common.css
+	 *
+	 * @param string $asset_abs_path Asset's absolute path.
+	 *
+	 * @return string Asset's URL.
+	 * @author Leo Fajardo (@leorw)
+	 * @since  1.2.2
+	 *
+	 */
+	function fs_asset_url( $asset_abs_path ) {
+		$wp_content_dir = fs_normalize_path( WP_CONTENT_DIR );
+		$asset_abs_path = fs_normalize_path( $asset_abs_path );
 
-        if ( 0 === strpos( $asset_abs_path, $wp_content_dir ) ) {
-            // Handle both theme and plugin assets located in the standard directories.
-            $asset_rel_path = str_replace( $wp_content_dir, '', $asset_abs_path );
-            $asset_url      = content_url( fs_normalize_path( $asset_rel_path ) );
-        } else {
-            $wp_plugins_dir = fs_normalize_path( WP_PLUGIN_DIR );
-            if ( 0 === strpos( $asset_abs_path, $wp_plugins_dir ) ) {
-                // Try to handle plugin assets that may be located in a non-standard plugins directory.
-                $asset_rel_path = str_replace( $wp_plugins_dir, '', $asset_abs_path );
-                $asset_url      = plugins_url( fs_normalize_path( $asset_rel_path ) );
-            } else {
-                // Try to handle theme assets that may be located in a non-standard themes directory.
-                $active_theme_stylesheet = get_stylesheet();
-                $wp_themes_dir           = fs_normalize_path( trailingslashit( get_theme_root( $active_theme_stylesheet ) ) );
-                $asset_rel_path          = str_replace( $wp_themes_dir, '', fs_normalize_path( $asset_abs_path ) );
-                $asset_url               = trailingslashit( get_theme_root_uri( $active_theme_stylesheet ) ) . fs_normalize_path( $asset_rel_path );
-            }
-        }
+		if ( 0 === strpos( $asset_abs_path, $wp_content_dir ) ) {
+			// Handle both theme and plugin assets located in the standard directories.
+			$asset_rel_path = str_replace( $wp_content_dir, '', $asset_abs_path );
+			$asset_url      = content_url( fs_normalize_path( $asset_rel_path ) );
+		} else {
+			$wp_plugins_dir = fs_normalize_path( WP_PLUGIN_DIR );
+			if ( 0 === strpos( $asset_abs_path, $wp_plugins_dir ) ) {
+				// Try to handle plugin assets that may be located in a non-standard plugins directory.
+				$asset_rel_path = str_replace( $wp_plugins_dir, '', $asset_abs_path );
+				$asset_url      = plugins_url( fs_normalize_path( $asset_rel_path ) );
+			} else {
+				// Try to handle theme assets that may be located in a non-standard themes directory.
+				$active_theme_stylesheet = get_stylesheet();
+				$wp_themes_dir           = fs_normalize_path( trailingslashit( get_theme_root( $active_theme_stylesheet ) ) );
+				$asset_rel_path          = str_replace( $wp_themes_dir, '', fs_normalize_path( $asset_abs_path ) );
+				$asset_url               = trailingslashit( get_theme_root_uri( $active_theme_stylesheet ) ) . fs_normalize_path( $asset_rel_path );
+			}
+		}
 
-        return $asset_url;
-    }
+		return $asset_url;
+	}
+}
 
-    function fs_enqueue_local_style( $handle, $path, $deps = array(), $ver = false, $media = 'all' ) {
-        wp_enqueue_style( $handle, fs_asset_url( WP_FS__DIR_CSS . '/' . trim( $path, '/' ) ), $deps, $ver, $media );
-    }
+if ( ! function_exists( 'fs_enqueue_local_style' ) ) {
+	function fs_enqueue_local_style( $handle, $path, $deps = array(), $ver = false, $media = 'all' ) {
+		wp_enqueue_style( $handle, fs_asset_url( WP_FS__DIR_CSS . '/' . trim( $path, '/' ) ), $deps, $ver, $media );
+	}
+}
 
-    function fs_enqueue_local_script( $handle, $path, $deps = array(), $ver = false, $in_footer = 'all' ) {
-        wp_enqueue_script( $handle, fs_asset_url( WP_FS__DIR_JS . '/' . trim( $path, '/' ) ), $deps, $ver, $in_footer );
-    }
+if ( ! function_exists( 'fs_enqueue_local_script' ) ) {
+	function fs_enqueue_local_script( $handle, $path, $deps = array(), $ver = false, $in_footer = 'all' ) {
+		wp_enqueue_script( $handle, fs_asset_url( WP_FS__DIR_JS . '/' . trim( $path, '/' ) ), $deps, $ver, $in_footer );
+	}
+}
 
-    function fs_img_url( $path, $img_dir = WP_FS__DIR_IMG ) {
-        return ( fs_asset_url( $img_dir . '/' . trim( $path, '/' ) ) );
-    }
+if ( ! function_exists( 'fs_img_url' ) ) {
+	function fs_img_url( $path, $img_dir = WP_FS__DIR_IMG ) {
+		return ( fs_asset_url( $img_dir . '/' . trim( $path, '/' ) ) );
+	}
+}
 
-    #--------------------------------------------------------------------------------
-    #region Request handlers.
-    #--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#region Request handlers.
+#--------------------------------------------------------------------------------
 
-    if ( ! function_exists( 'fs_request_get' ) ) {
-        /**
-         * A helper method to fetch GET/POST user input with an optional default value when the input is not set.
-         * @author Vova Feldman (@svovaf)
+if ( ! function_exists( 'fs_request_get' ) ) {
+	/**
+	 * A helper method to fetch GET/POST user input with an optional default value when the input is not set.
+	 * @author Vova Feldman (@svovaf)
          *
          * @param string      $key
          * @param mixed       $def
@@ -306,149 +314,202 @@
             if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
                 return wp_unslash( $_REQUEST['_wp_http_referer'] );
             } else if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
-                return wp_unslash( $_SERVER['HTTP_REFERER'] );
+	            return wp_unslash( $_SERVER['HTTP_REFERER'] );
             }
 
-            return false;
+	        return false;
         }
     }
 
-    /* Core UI.
-    --------------------------------------------------------------------------------------------*/
-    /**
-     * @param number      $module_id
-     * @param string      $page
-     * @param string      $action
-     * @param string      $title
-     * @param string      $button_class
-     * @param array       $params
-     * @param bool        $is_primary
-     * @param bool        $is_small
-     * @param string|bool $icon_class   Optional class for an icon (since 1.1.7).
-     * @param string|bool $confirmation Optional confirmation message before submit (since 1.1.7).
-     * @param string      $method       Since 1.1.7
-     *
-     * @uses fs_ui_get_action_button()
-     */
-    function fs_ui_action_button(
-        $module_id,
-        $page,
-        $action,
-        $title,
-        $button_class = '',
-        $params = array(),
-        $is_primary = true,
-        $is_small = false,
-        $icon_class = false,
-        $confirmation = false,
-        $method = 'GET'
-    ) {
-        echo fs_ui_get_action_button(
-            $module_id,
-            $page,
-            $action,
-            $title,
-            $button_class,
-            $params,
-            $is_primary,
-            $is_small,
-            $icon_class,
-            $confirmation,
-            $method
-        );
-    }
+/* Core UI.
+--------------------------------------------------------------------------------------------*/
+if ( ! function_exists( 'fs_ui_action_button' ) ) {
+	/**
+	 * @param number      $module_id
+	 * @param string      $page
+	 * @param string      $action
+	 * @param string      $title
+	 * @param string      $button_class
+	 * @param array       $params
+	 * @param bool        $is_primary
+	 * @param bool        $is_small
+	 * @param string|bool $icon_class   Optional class for an icon (since 1.1.7).
+	 * @param string|bool $confirmation Optional confirmation message before submit (since 1.1.7).
+	 * @param string      $method       Since 1.1.7
+	 *
+	 * @uses fs_ui_get_action_button()
+	 */
+	function fs_ui_action_button(
+		$module_id,
+		$page,
+		$action,
+		$title,
+		$button_class = '',
+		$params = array(),
+		$is_primary = true,
+		$is_small = false,
+		$icon_class = false,
+		$confirmation = false,
+		$method = 'GET'
+	) {
+		echo fs_ui_get_action_button(
+			$module_id,
+			$page,
+			$action,
+			$title,
+			$button_class,
+			$params,
+			$is_primary,
+			$is_small,
+			$icon_class,
+			$confirmation,
+			$method
+		);
+	}
+}
 
-    /**
-     * @author Vova Feldman (@svovaf)
-     * @since  1.1.7
-     *
-     * @param number      $module_id
-     * @param string      $page
-     * @param string      $action
-     * @param string      $title
-     * @param string      $button_class
-     * @param array       $params
-     * @param bool        $is_primary
-     * @param bool        $is_small
-     * @param string|bool $icon_class   Optional class for an icon.
-     * @param string|bool $confirmation Optional confirmation message before submit.
-     * @param string      $method
-     *
-     * @return string
-     */
-    function fs_ui_get_action_button(
-        $module_id,
-        $page,
-        $action,
-        $title,
-        $button_class = '',
-        $params = array(),
-        $is_primary = true,
-        $is_small = false,
-        $icon_class = false,
-        $confirmation = false,
-        $method = 'GET'
-    ) {
-        // Prepend icon (if set).
-        $title = ( is_string( $icon_class ) ? '<i class="' . $icon_class . '"></i> ' : '' ) . $title;
+if ( ! function_exists( 'fs_ui_get_action_button' ) ) {
+	/**
+	 * @param number      $module_id
+	 * @param string      $page
+	 * @param string      $action
+	 * @param string      $title
+	 * @param string      $button_class
+	 * @param array       $params
+	 * @param bool        $is_primary
+	 * @param bool        $is_small
+	 * @param string|bool $icon_class   Optional class for an icon.
+	 * @param string|bool $confirmation Optional confirmation message before submit.
+	 * @param string      $method
+	 *
+	 * @return string
+	 * @author Vova Feldman (@svovaf)
+	 * @since  1.1.7
+	 *
+	 */
+	function fs_ui_get_action_button(
+		$module_id,
+		$page,
+		$action,
+		$title,
+		$button_class = '',
+		$params = array(),
+		$is_primary = true,
+		$is_small = false,
+		$icon_class = false,
+		$confirmation = false,
+		$method = 'GET'
+	) {
+		// Prepend icon (if set).
+		$title = ( is_string( $icon_class ) ? '<i class="' . $icon_class . '"></i> ' : '' ) . $title;
 
-        if ( is_string( $confirmation ) ) {
-            return sprintf( '<form action="%s" method="%s"><input type="hidden" name="fs_action" value="%s">%s<a href="#" class="%s" onclick="if (confirm(\'%s\')) this.parentNode.submit(); return false;">%s</a></form>',
-                freemius( $module_id )->_get_admin_page_url( $page, $params ),
-                $method,
-                $action,
-                wp_nonce_field( $action, '_wpnonce', true, false ),
-                'button' . ( ! empty( $button_class ) ? ' ' . $button_class : '' ) . ( $is_primary ? ' button-primary' : '' ) . ( $is_small ? ' button-small' : '' ),
-                $confirmation,
-                $title
-            );
-        } else if ( 'GET' !== strtoupper( $method ) ) {
-            return sprintf( '<form action="%s" method="%s"><input type="hidden" name="fs_action" value="%s">%s<a href="#" class="%s" onclick="this.parentNode.submit(); return false;">%s</a></form>',
-                freemius( $module_id )->_get_admin_page_url( $page, $params ),
-                $method,
-                $action,
-                wp_nonce_field( $action, '_wpnonce', true, false ),
-                'button' . ( ! empty( $button_class ) ? ' ' . $button_class : '' ) . ( $is_primary ? ' button-primary' : '' ) . ( $is_small ? ' button-small' : '' ),
-                $title
-            );
-        } else {
-            return sprintf( '<a href="%s" class="%s">%s</a></form>',
-                wp_nonce_url( freemius( $module_id )->_get_admin_page_url( $page, array_merge( $params, array( 'fs_action' => $action ) ) ), $action ),
-                'button' . ( ! empty( $button_class ) ? ' ' . $button_class : '' ) . ( $is_primary ? ' button-primary' : '' ) . ( $is_small ? ' button-small' : '' ),
-                $title
-            );
-        }
-    }
+		if ( is_string( $confirmation ) ) {
+			return sprintf( '<form action="%s" method="%s"><input type="hidden" name="fs_action" value="%s">%s<a href="#" class="%s" onclick="if (confirm(\'%s\')) this.parentNode.submit(); return false;">%s</a></form>',
+				freemius( $module_id )->_get_admin_page_url( $page, $params ),
+				$method,
+				$action,
+				wp_nonce_field( $action, '_wpnonce', true, false ),
+				'button' . ( ! empty( $button_class ) ? ' ' . $button_class : '' ) . ( $is_primary ? ' button-primary' : '' ) . ( $is_small ? ' button-small' : '' ),
+				$confirmation,
+				$title
+			);
+		} else if ( 'GET' !== strtoupper( $method ) ) {
+			return sprintf( '<form action="%s" method="%s"><input type="hidden" name="fs_action" value="%s">%s<a href="#" class="%s" onclick="this.parentNode.submit(); return false;">%s</a></form>',
+				freemius( $module_id )->_get_admin_page_url( $page, $params ),
+				$method,
+				$action,
+				wp_nonce_field( $action, '_wpnonce', true, false ),
+				'button' . ( ! empty( $button_class ) ? ' ' . $button_class : '' ) . ( $is_primary ? ' button-primary' : '' ) . ( $is_small ? ' button-small' : '' ),
+				$title
+			);
+		} else {
+			return sprintf( '<a href="%s" class="%s">%s</a></form>',
+				wp_nonce_url( freemius( $module_id )->_get_admin_page_url( $page, array_merge( $params, array( 'fs_action' => $action ) ) ), $action ),
+				'button' . ( ! empty( $button_class ) ? ' ' . $button_class : '' ) . ( $is_primary ? ' button-primary' : '' ) . ( $is_small ? ' button-small' : '' ),
+				$title
+			);
+		}
+	}
 
-    function fs_ui_action_link( $module_id, $page, $action, $title, $params = array() ) {
-        ?><a class=""
-             href="<?php echo wp_nonce_url( freemius( $module_id )->_get_admin_page_url( $page, array_merge( $params, array( 'fs_action' => $action ) ) ), $action ) ?>"><?php echo $title ?></a><?php
-    }
+	function fs_ui_action_link( $module_id, $page, $action, $title, $params = array() ) {
+		?><a class=""
+		     href="<?php echo wp_nonce_url( freemius( $module_id )->_get_admin_page_url( $page, array_merge( $params, array( 'fs_action' => $action ) ) ), $action ) ?>"><?php echo $title ?></a><?php
+	}
+}
 
-    /*function fs_error_handler($errno, $errstr, $errfile, $errline)
-    {
-        if (false === strpos($errfile, 'freemius/'))
-        {
-            // @todo Dump Freemius errors to local log.
-        }
+if ( ! function_exists( 'fs_get_entity' ) ) {
+	/**
+	 * @param mixed  $entity
+	 * @param string $class
+	 *
+	 * @return FS_Plugin|FS_User|FS_Site|FS_Plugin_License|FS_Plugin_Plan|FS_Plugin_Tag|FS_Subscription
+	 * @since  2.3.1
+	 *
+	 * @author Leo Fajardo (@leorw)
+	 */
+	function fs_get_entity( $entity, $class ) {
+		if ( ! is_object( $entity ) || $entity instanceof $class ) {
+			return $entity;
+		}
 
-//		switch ($errno) {
-//			case E_USER_ERROR:
-//				break;
-//			case E_WARNING:
-//			case E_USER_WARNING:
-//				break;
-//			case E_NOTICE:
-//			case E_USER_NOTICE:
-//				break;
-//			default:
-//				break;
-//		}
-    }
+		return new $class( $entity );
+	}
+}
 
-    set_error_handler('fs_error_handler');*/
+if ( ! function_exists( 'fs_get_entities' ) ) {
+	/**
+	 * @param mixed  $entities
+	 * @param string $class_name
+	 *
+	 * @return FS_Plugin[]|FS_User[]|FS_Site[]|FS_Plugin_License[]|FS_Plugin_Plan[]|FS_Plugin_Tag[]|FS_Subscription[]
+	 * @since  2.3.1
+	 *
+	 * @author Leo Fajardo (@leorw)
+	 */
+	function fs_get_entities( $entities, $class_name ) {
+		if ( ! is_array( $entities ) || empty( $entities ) ) {
+			return $entities;
+		}
 
-    if ( ! function_exists( 'fs_nonce_url' ) ) {
+		// Get first element.
+		$first_array_element = reset( $entities );
+
+		if ( $first_array_element instanceof $class_name ) {
+			/**
+			 * If the first element of the array is an instance of the context class, assume that all other
+			 * elements are instances of the class.
+			 */
+			return $entities;
+		}
+
+		if (
+			is_array( $first_array_element ) &&
+			! empty( $first_array_element )
+		) {
+			$first_array_element = reset( $first_array_element );
+
+			if ( $first_array_element instanceof $class_name ) {
+				/**
+				 * If the first element of the `$entities` array is an array whose first element is an instance of the
+				 * context class, assume that all other objects are instances of the class.
+				 */
+				return $entities;
+			}
+		}
+
+		foreach ( $entities as $key => $entities_or_entity ) {
+			if ( is_array( $entities_or_entity ) ) {
+				$entities[ $key ] = fs_get_entities( $entities_or_entity, $class_name );
+			} else {
+				$entities[ $key ] = fs_get_entity( $entities_or_entity, $class_name );
+			}
+		}
+
+		return $entities;
+	}
+}
+
+if ( ! function_exists( 'fs_nonce_url' ) ) {
         /**
          * Retrieve URL with nonce added to URL query.
          *
@@ -625,81 +686,85 @@
             if ( is_array( $input ) ) {
                 return array_map( 'fs_urlencode_rfc3986', $input );
             } else if ( is_scalar( $input ) ) {
-                return str_replace( '+', ' ', str_replace( '%7E', '~', rawurlencode( $input ) ) );
+	            return str_replace( '+', ' ', str_replace( '%7E', '~', rawurlencode( $input ) ) );
             }
 
-            return '';
+	        return '';
         }
     }
 
-    #endregion Url Canonization ------------------------------------------------------------------
+#endregion Url Canonization ------------------------------------------------------------------
 
-    /**
-     * @author Vova Feldman (@svovaf)
-     *
-     * @since  1.2.2 Changed to usage of WP_Filesystem_Direct.
-     *
-     * @param string $from URL
-     * @param string $to   File path.
-     *
-     * @return bool Is successfully downloaded.
-     */
-    function fs_download_image( $from, $to ) {
-        $dir = dirname( $to );
+if ( ! function_exists( 'fs_download_image' ) ) {
+	/**
+	 * @param string $from URL
+	 * @param string $to   File path.
+	 *
+	 * @return bool Is successfully downloaded.
+	 * @since  1.2.2 Changed to usage of WP_Filesystem_Direct.
+	 *
+	 * @author Vova Feldman (@svovaf)
+	 *
+	 */
+	function fs_download_image( $from, $to ) {
+		$dir = dirname( $to );
 
-        if ( 'direct' !== get_filesystem_method( array(), $dir ) ) {
-            return false;
-        }
+		if ( 'direct' !== get_filesystem_method( array(), $dir ) ) {
+			return false;
+		}
 
-        if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {
-            require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-            require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
-        }
+		if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		}
 
-        $fs      = new WP_Filesystem_Direct( '' );
-        $tmpfile = download_url( $from );
+		$fs      = new WP_Filesystem_Direct( '' );
+		$tmpfile = download_url( $from );
 
-        if ( $tmpfile instanceof WP_Error ) {
-            // Issue downloading the file.
-            return false;
-        }
+		if ( $tmpfile instanceof WP_Error ) {
+			// Issue downloading the file.
+			return false;
+		}
 
-        $fs->copy( $tmpfile, $to );
-        $fs->delete( $tmpfile );
+		$fs->copy( $tmpfile, $to );
+		$fs->delete( $tmpfile );
 
-        return true;
-    }
+		return true;
+	}
+}
 
-    /* General Utilities
-    --------------------------------------------------------------------------------------------*/
+/* General Utilities
+--------------------------------------------------------------------------------------------*/
 
-    /**
-     * Sorts an array by the value of the priority key.
-     *
-     * @author Daniel Iser (@danieliser)
-     * @since  1.1.7
-     *
-     * @param $a
-     * @param $b
-     *
-     * @return int
-     */
-    function fs_sort_by_priority( $a, $b ) {
+if ( ! function_exists( 'fs_sort_by_priority' ) ) {
+	/**
+	 * Sorts an array by the value of the priority key.
+	 *
+	 * @param $a
+	 * @param $b
+	 *
+	 * @return int
+	 * @since  1.1.7
+	 *
+	 * @author Daniel Iser (@danieliser)
+	 */
+	function fs_sort_by_priority( $a, $b ) {
 
-        // If b has a priority and a does not, b wins.
-        if ( ! isset( $a['priority'] ) && isset( $b['priority'] ) ) {
-            return 1;
-        } // If b has a priority and a does not, b wins.
-        elseif ( isset( $a['priority'] ) && ! isset( $b['priority'] ) ) {
-            return - 1;
-        } // If neither has a priority or both priorities are equal its a tie.
-        elseif ( ( ! isset( $a['priority'] ) && ! isset( $b['priority'] ) ) || $a['priority'] === $b['priority'] ) {
-            return 0;
-        }
+		// If b has a priority and a does not, b wins.
+		if ( ! isset( $a['priority'] ) && isset( $b['priority'] ) ) {
+			return 1;
+		} // If b has a priority and a does not, b wins.
+		elseif ( isset( $a['priority'] ) && ! isset( $b['priority'] ) ) {
+			return - 1;
+		} // If neither has a priority or both priorities are equal its a tie.
+		elseif ( ( ! isset( $a['priority'] ) && ! isset( $b['priority'] ) ) || $a['priority'] === $b['priority'] ) {
+			return 0;
+		}
 
-        // If both have priority return the winner.
-        return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
-    }
+		// If both have priority return the winner.
+		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
+	}
+}
 
     #--------------------------------------------------------------------------------
     #region Localization

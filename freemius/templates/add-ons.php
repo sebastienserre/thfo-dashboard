@@ -14,22 +14,25 @@
 	 * @var array $VARS
 	 * @var Freemius
 	 */
-	$fs = freemius( $VARS['id'] );
+$fs = freemius( $VARS['id'] );
 
-	$slug = $fs->get_slug();
+$slug = $fs->get_slug();
 
-	$open_addon_slug = fs_request_get( 'slug' );
+$open_addon_slug = fs_request_get( 'slug' );
 
-	$open_addon = false;
+$open_addon = false;
 
-	/**
-	 * @var FS_Plugin[]
-	 */
-	$addons = $fs->get_addons();
+$is_data_debug_mode = $fs->is_data_debug_mode();
+$is_whitelabeled    = $fs->is_whitelabeled();
 
-	$has_addons = ( is_array( $addons ) && 0 < count( $addons ) );
+/**
+ * @var FS_Plugin[]
+ */
+$addons = $fs->get_addons();
 
-    $account_addon_ids = $fs->get_updated_account_addons();
+$has_addons = ( is_array( $addons ) && 0 < count( $addons ) );
+
+$account_addon_ids = $fs->get_updated_account_addons();
 
     $download_latest_text = fs_text_x_inline( 'Download Latest', 'as download latest version', 'download-latest', $slug );
     $view_details_text    = fs_text_inline( 'View details', 'view-details', $slug );
@@ -52,29 +55,70 @@
 				<h3><?php echo esc_html( sprintf(
 						'%s... %s',
 						fs_text_x_inline( 'Oops', 'exclamation', 'oops', $slug ),
-						fs_text_inline( 'We could\'nt load the add-ons list. It\'s probably an issue on our side, please try to come back in few minutes.', 'add-ons-missing', $slug )
+						fs_text_inline( 'We couldn\'t load the add-ons list. It\'s probably an issue on our side, please try to come back in few minutes.', 'add-ons-missing', $slug )
 					) ) ?></h3>
 			<?php endif ?>
 			<ul class="fs-cards-list">
 				<?php if ( $has_addons ) : ?>
 					<?php
-                    $plans_and_pricing_by_addon_id = $fs->_get_addons_plans_and_pricing_map_by_id();
+					$plans_and_pricing_by_addon_id = $fs->_get_addons_plans_and_pricing_map_by_id();
 
-                    $active_plugins_directories_map = Freemius::get_active_plugins_directories_map( $fs_blog_id );
+					$active_plugins_directories_map = Freemius::get_active_plugins_directories_map( $fs_blog_id );
+					?>
+					<?php
+					$hide_all_addons_data = false;
+
+					if ( $fs->is_whitelabeled_by_flag() ) {
+						$hide_all_addons_data = true;
+
+						$addon_ids        = $fs->get_updated_account_addons();
+						$installed_addons = $fs->get_installed_addons();
+						foreach ( $installed_addons as $fs_addon ) {
+							$addon_ids[] = $fs_addon->get_id();
+						}
+
+						if ( ! empty( $addon_ids ) ) {
+							$addon_ids = array_unique( $addon_ids );
+						}
+
+						foreach ( $addon_ids as $addon_id ) {
+							$addon = $fs->get_addon( $addon_id );
+
+							if ( ! is_object( $addon ) ) {
+								continue;
+							}
+
+							$addon_storage = FS_Storage::instance( WP_FS__MODULE_TYPE_PLUGIN, $addon->slug );
+
+							if ( ! $addon_storage->is_whitelabeled ) {
+								$hide_all_addons_data = false;
+								break;
+							}
+
+							if ( $is_data_debug_mode ) {
+								$is_whitelabeled = false;
+							}
+						}
+					}
 					?>
 					<?php foreach ( $addons as $addon ) : ?>
 						<?php
-                        $basename = $fs->get_addon_basename( $addon->id );
+						$basename = $fs->get_addon_basename( $addon->id );
 
-                        $is_addon_installed = file_exists( fs_normalize_path( WP_PLUGIN_DIR . '/' . $basename ) );
-                        $is_addon_activated = $is_addon_installed ?
-                            $fs->is_addon_activated( $addon->id ) :
-                            false;
+						$is_addon_installed = file_exists( fs_normalize_path( WP_PLUGIN_DIR . '/' . $basename ) );
 
-                        $is_plugin_active = (
-                            $is_addon_activated ||
-                            isset( $active_plugins_directories_map[ dirname( $basename ) ] )
-                        );
+						if ( ! $is_addon_installed && $hide_all_addons_data ) {
+							continue;
+						}
+
+						$is_addon_activated = $is_addon_installed ?
+							$fs->is_addon_activated( $addon->id ) :
+							false;
+
+						$is_plugin_active = (
+							$is_addon_activated ||
+							isset( $active_plugins_directories_map[ dirname( $basename ) ] )
+						);
 
 						$open_addon = ( $open_addon || ( $open_addon_slug === $addon->slug ) );
 
@@ -103,9 +147,21 @@
 
 									$min_price = 999999;
 									foreach ( $plan->pricing as $pricing ) {
-										if ( ! is_null( $pricing->annual_price ) && $pricing->annual_price > 0 ) {
+										$pricing = new FS_Pricing( $pricing );
+
+										if ( ! $pricing->is_usd() ) {
+											/**
+											 * Skip non-USD pricing.
+											 *
+											 * @author Leo Fajardo (@leorw)
+											 * @since  2.3.1
+											 */
+											continue;
+										}
+
+										if ( $pricing->has_annual() ) {
 											$min_price = min( $min_price, $pricing->annual_price );
-										} else if ( ! is_null( $pricing->monthly_price ) && $pricing->monthly_price > 0 ) {
+										} else if ( $pricing->has_monthly() ) {
 											$min_price = min( $min_price, 12 * $pricing->monthly_price );
 										}
 									}
@@ -171,35 +227,43 @@
                                                 '<span class="fs-badge fs-installed-addon-badge">%s</span>',
                                                 esc_html( $is_plugin_active ?
                                                     fs_text_x_inline( 'Active', 'active add-on', 'active-addon', $slug ) :
-                                                    fs_text_x_inline( 'Installed', 'installed add-on', 'installed-addon', $slug )
+	                                                fs_text_x_inline( 'Installed', 'installed add-on', 'installed-addon', $slug )
                                                 )
                                             );
                                         }
-                                        ?></li>
+										?></li>
 									<!-- <li class="fs-tag"></li> -->
 									<li class="fs-title"><?php echo $addon->title ?></li>
 									<li class="fs-offer">
 									<span
 										class="fs-price"><?php
+										if ( $is_whitelabeled ) {
+											echo '&nbsp;';
+										} else {
 											$descriptors = array();
 
-											if ($has_free_plan)
+											if ( $has_free_plan ) {
 												$descriptors[] = fs_text_inline( 'Free', 'free', $slug );
-											if ($has_paid_plan && $price > 0)
+											}
+											if ( $has_paid_plan && $price > 0 ) {
 												$descriptors[] = '$' . number_format( $price, 2 );
-											if ($has_trial)
-												$descriptors[] = fs_text_x_inline( 'Trial', 'trial period',  'trial', $slug );
+											}
+											if ( $has_trial ) {
+												$descriptors[] = fs_text_x_inline( 'Trial', 'trial period', 'trial', $slug );
+											}
 
-											echo implode(' - ', $descriptors) ?></span>
+											echo implode( ' - ', $descriptors );
+
+										} ?></span>
 									</li>
 									<li class="fs-description"><?php echo ! empty( $addon->info->short_description ) ? $addon->info->short_description : 'SHORT DESCRIPTION' ?></li>
-                                    <?php
-                                        $is_free_only_wp_org_compliant = ( ! $has_paid_plan && $addon->is_wp_org_compliant );
+									<?php
+									$is_free_only_wp_org_compliant = ( ! $has_paid_plan && $addon->is_wp_org_compliant );
 
-                                        $is_allowed_to_install = (
-                                            $fs->is_allowed_to_install() ||
-                                            $is_free_only_wp_org_compliant
-                                        );
+									$is_allowed_to_install = (
+										$fs->is_allowed_to_install() ||
+										$is_free_only_wp_org_compliant
+									);
 
                                         $show_premium_activation_or_installation_action = true;
 

@@ -65,26 +65,30 @@
         /**
          * @var int
          */
-        public $activated_local;
-        /**
-         * @var string
-         */
-        public $expiration;
-        /**
-         * @var string
-         */
-        public $secret_key;
-        /**
-         * @var bool $is_free_localhost Defaults to true. If true, allow unlimited localhost installs with the same
-         *      license.
-         */
-        public $is_free_localhost;
-        /**
-         * @var bool $is_block_features Defaults to true. If false, don't block features after license expiry - only
-         *      block updates and support.
-         */
-        public $is_block_features;
-        /**
+	    public $activated_local;
+	    /**
+	     * @var string
+	     */
+	    public $expiration;
+	    /**
+	     * @var string
+	     */
+	    public $secret_key;
+	    /**
+	     * @var bool
+	     */
+	    public $is_whitelabeled;
+	    /**
+	     * @var bool $is_free_localhost Defaults to true. If true, allow unlimited localhost installs with the same
+	     *      license.
+	     */
+	    public $is_free_localhost;
+	    /**
+	     * @var bool $is_block_features Defaults to true. If false, don't block features after license expiry - only
+	     *      block updates and support.
+	     */
+	    public $is_block_features;
+	    /**
          * @var bool
          */
         public $is_cancelled;
@@ -277,14 +281,43 @@
          *
          * @return bool
          */
-        function is_first_payment_pending() {
-            return ( WP_FS__TIME_24_HOURS_IN_SEC >= strtotime( $this->expiration ) - strtotime( $this->created ) );
-        }
+	    function is_first_payment_pending() {
+		    return ( WP_FS__TIME_24_HOURS_IN_SEC >= strtotime( $this->expiration ) - strtotime( $this->created ) );
+	    }
 
-        /**
-         * @return int
-         */
-        function total_activations() {
-            return ( $this->activated + $this->activated_local );
-        }
+	    /**
+	     * @return int
+	     */
+	    function total_activations() {
+		    return ( $this->activated + $this->activated_local );
+	    }
+
+	    /**
+	     * @return string
+	     * @since  2.3.1
+	     *
+	     * @author Vova Feldman (@svovaf)
+	     */
+	    function get_html_escaped_masked_secret_key() {
+		    return self::mask_secret_key_for_html( $this->secret_key );
+	    }
+
+	    /**
+	     * @param string $secret_key
+	     *
+	     * @return string
+	     * @author Vova Feldman (@svovaf)
+	     * @since  2.3.1
+	     *
+	     */
+	    static function mask_secret_key_for_html( $secret_key ) {
+		    return (
+			    // Initial 6 chars - sk_ABC
+			    htmlspecialchars( substr( $secret_key, 0, 6 ) ) .
+			    // Masking
+			    str_pad( '', ( strlen( $secret_key ) - 9 ) * 6, '&bull;' ) .
+			    // Last 3 chars.
+			    htmlspecialchars( substr( $secret_key, - 3 ) )
+		    );
+	    }
     }

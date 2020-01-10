@@ -145,15 +145,36 @@
                         }
 
                         if ( is_array( $pricing ) && 0 < count( $pricing ) ) {
-                            $has_paid_plan = true;
+                            $filtered_pricing = array();
 
-                            foreach ( $pricing as &$prices ) {
-                                $prices = new FS_Pricing( $prices );
-                            }
+	                        foreach ( $pricing as $prices ) {
+		                        $prices = new FS_Pricing( $prices );
 
-                            $plan->pricing = $pricing;
+		                        if ( ! $prices->is_usd() ) {
+			                        /**
+			                         * Skip non-USD pricing.
+			                         *
+			                         * @author Leo Fajardo (@leorw)
+			                         * @since  2.3.1
+			                         */
+			                        continue;
+		                        }
 
-                            $has_pricing = true;
+		                        if ( ( $prices->has_monthly() && $prices->monthly_price > 1.0 ) ||
+		                             ( $prices->has_annual() && $prices->annual_price > 1.0 ) ||
+		                             ( $prices->has_lifetime() && $prices->lifetime_price > 1.0 )
+		                        ) {
+			                        $filtered_pricing[] = $prices;
+		                        }
+	                        }
+
+	                        if ( ! empty( $filtered_pricing ) ) {
+		                        $has_paid_plan = true;
+
+		                        $plan->pricing = $filtered_pricing;
+
+		                        $has_pricing = true;
+	                        }
                         }
 
                         if ( is_array( $features ) && 0 < count( $features ) ) {
@@ -1047,7 +1068,7 @@
                 $href        = add_query_arg( array( 'tab' => $tab, 'section' => $section_name ) );
                 $href        = esc_url( $href );
                 $san_section = esc_attr( $section_name );
-                echo "\t<a name='$san_section' href='$href' $class>$title</a>\n";
+	            echo "\t<a name='$san_section' href='$href' $class>" . esc_html( $title ) . "</a>\n";
             }
 
             echo "</div>\n";
@@ -1406,19 +1427,19 @@
                             ?>
                             <div class="counter-container">
 					<span class="counter-label"><a
-                            href="https://wordpress.org/support/view/plugin-reviews/<?php echo $api->slug; ?>?filter=<?php echo $key; ?>"
-                            target="_blank"
-                            title="<?php echo esc_attr( sprintf(
-                            /* translators: %s: # of stars (e.g. 5 stars) */
-                                fs_text_inline( 'Click to see reviews that provided a rating of %s', 'click-to-reviews', $api->slug ),
-                                $stars_label
-                            ) ) ?>"><?php echo $stars_label ?></a></span>
+                                href="https://wordpress.org/support/view/plugin-reviews/<?php echo $api->slug; ?>?filter=<?php echo $key; ?>"
+                                target="_blank"
+                                title="<?php echo esc_attr( sprintf(
+								/* translators: %s: # of stars (e.g. 5 stars) */
+									fs_text_inline( 'Click to see reviews that provided a rating of %s', 'click-to-reviews', $api->slug ),
+									$stars_label
+								) ) ?>"><?php echo $stars_label ?></a></span>
                                 <span class="counter-back">
-						<span class="counter-bar" style="width: <?php echo 92 * $_rating; ?>px;"></span>
+						<span class="counter-bar" style="width: <?php echo absint( 92 * $_rating ); ?>px;"></span>
 					</span>
                                 <span class="counter-count"><?php echo number_format_i18n( $ratecount ); ?></span>
                             </div>
-                            <?php
+	                        <?php
                         }
                     }
                     if ( ! empty( $api->contributors ) ) {

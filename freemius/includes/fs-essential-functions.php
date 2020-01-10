@@ -344,6 +344,10 @@
 		}
 
 		if ( ! isset( $newest_sdk->type ) || 'theme' !== $newest_sdk->type ) {
+			if ( ! function_exists( 'is_plugin_active' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
 			$in_activation = ( ! is_plugin_active( $plugin_file ) );
 		} else {
 			$theme         = wp_get_theme();

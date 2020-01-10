@@ -143,7 +143,17 @@
 		 *
 		 * @return bool
 		 */
-		static function is_valid_id($id){
-			return is_numeric($id);
+		static function is_valid_id( $id ) {
+			return is_numeric( $id );
+		}
+
+		/**
+		 * @return string
+		 * @since  2.3.1
+		 *
+		 * @author Leo Fajardo (@leorw)
+		 */
+		public static function get_class_name() {
+			return get_called_class();
 		}
 	}

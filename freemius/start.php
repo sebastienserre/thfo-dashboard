@@ -6,26 +6,26 @@
 	 * @since       1.0.3
 	 */
 
-	if ( ! defined( 'ABSPATH' ) ) {
-		exit;
-	}
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-	/**
-	 * Freemius SDK Version.
-	 *
-	 * @var string
-	 */
-	$this_sdk_version = '2.3.0';
+/**
+ * Freemius SDK Version.
+ *
+ * @var string
+ */
+$this_sdk_version = '2.3.2';
 
-	#region SDK Selection Logic --------------------------------------------------------------------
+#region SDK Selection Logic --------------------------------------------------------------------
 
-	/**
-	 * Special logic added on 1.1.6 to make sure that every Freemius powered plugin
-	 * will ALWAYS be loaded with the newest SDK from the active Freemius powered plugins.
-	 *
-	 * Since Freemius SDK is backward compatible, this will make sure that all Freemius powered
-	 * plugins will run correctly.
-	 *
+/**
+ * Special logic added on 1.1.6 to make sure that every Freemius powered plugin
+ * will ALWAYS be loaded with the newest SDK from the active Freemius powered plugins.
+ *
+ * Since Freemius SDK is backward compatible, this will make sure that all Freemius powered
+ * plugins will run correctly.
+ *
 	 * @since 1.1.6
 	 */
 

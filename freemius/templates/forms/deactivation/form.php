@@ -83,27 +83,27 @@ HTML;
 	    modalHtml =
 		    '<div class="fs-modal fs-modal-deactivation-feedback<?php echo empty( $confirmation_message ) ? ' no-confirmation-message' : ''; ?>">'
 		    + '	<div class="fs-modal-dialog">'
-		    + '		<div class="fs-modal-header">'
-		    + '		    <h4><?php fs_esc_attr_echo_inline( 'Quick Feedback', 'quick-feedback' , $slug ) ?></h4>'
-		    + '		</div>'
-		    + '		<div class="fs-modal-body">'
-		    + '			<div class="fs-modal-panel" data-panel-id="confirm"><p><?php echo $confirmation_message; ?></p></div>'
-		    + '			<div class="fs-modal-panel active" data-panel-id="reasons"><h3><strong><?php echo esc_js( sprintf( fs_text_inline( 'If you have a moment, please let us know why you are %s', 'deactivation-share-reason' , $slug ), ( $fs->is_plugin() ? fs_text_inline( 'deactivating', 'deactivating', $slug ) : fs_text_inline( 'switching', 'switching', $slug ) ) ) ) ?>:</strong></h3><ul id="reasons-list">' + reasonsHtml + '</ul></div>'
-		    + '		</div>'
-		    + '		<div class="fs-modal-footer">'
-			+ '         <?php echo $anonymous_feedback_checkbox_html ?>'
-		    + '			<a href="#" class="button button-secondary button-deactivate"></a>'
-		    + '			<a href="#" class="button button-primary button-close"><?php fs_esc_js_echo_inline( 'Cancel', 'cancel', $slug ) ?></a>'
-		    + '		</div>'
-		    + '	</div>'
-		    + '</div>',
-	    $modal = $(modalHtml),
-	    $deactivateLink = $('#the-list .deactivate > [data-module-id=<?php echo $fs->get_id() ?>].fs-module-id').prev(),
-	    selectedReasonID = false,
-	    redirectLink = '',
-		$anonymousFeedback    = $modal.find( '.anonymous-feedback-label' ),
-		isAnonymous           = <?php echo ( $is_anonymous ? 'true' : 'false' ); ?>,
-		otherReasonID         = <?php echo Freemius::REASON_OTHER; ?>,
+            + '		<div class="fs-modal-header">'
+            + '		    <h4><?php fs_esc_attr_echo_inline( 'Quick Feedback', 'quick-feedback', $slug ) ?></h4>'
+            + '		</div>'
+            + '		<div class="fs-modal-body">'
+            + '			<div class="fs-modal-panel" data-panel-id="confirm"><p><?php echo $confirmation_message; ?></p></div>'
+            + '			<div class="fs-modal-panel active" data-panel-id="reasons"><h3><strong><?php echo esc_js( sprintf( fs_text_inline( 'If you have a moment, please let us know why you are %s', 'deactivation-share-reason', $slug ), ( $fs->is_plugin() ? fs_text_inline( 'deactivating', 'deactivating', $slug ) : fs_text_inline( 'switching', 'switching', $slug ) ) ) ) ?>:</strong></h3><ul id="reasons-list">' + reasonsHtml + '</ul></div>'
+            + '		</div>'
+            + '		<div class="fs-modal-footer">'
+            + '         <?php echo $anonymous_feedback_checkbox_html ?>'
+            + '			<a href="#" class="button button-secondary button-deactivate"></a>'
+            + '			<a href="#" class="button button-secondary button-close"><?php fs_esc_js_echo_inline( 'Cancel', 'cancel', $slug ) ?></a>'
+            + '		</div>'
+            + '	</div>'
+            + '</div>',
+        $modal = $(modalHtml),
+        $deactivateLink = $('#the-list .deactivate > [data-module-id=<?php echo $fs->get_id() ?>].fs-module-id').prev(),
+        selectedReasonID = false,
+        redirectLink = '',
+        $anonymousFeedback = $modal.find('.anonymous-feedback-label'),
+        isAnonymous = <?php echo( $is_anonymous ? 'true' : 'false' ); ?>,
+        otherReasonID = <?php echo Freemius::REASON_OTHER; ?>,
 		dontShareDataReasonID = <?php echo Freemius::REASON_DONT_LIKE_TO_SHARE_MY_INFORMATION; ?>,
         deleteThemeUpdateData = <?php echo $fs->is_theme() && $fs->is_premium() && ! $fs->has_any_active_valid_license() ? 'true' : 'false' ?>,
         $subscriptionCancellationModal = $( '.fs-modal-subscription-cancellation-<?php echo $fs->get_id() ?>' ),

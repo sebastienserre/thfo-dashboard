@@ -40,82 +40,107 @@
          * @since 2.0.0
          * @var int The ID of the blog that is associated with the current site level options.
          */
-        private $_blog_id = 0;
+	    private $_blog_id = 0;
 
-        /**
-         * @since 2.0.0
-         * @var bool
-         */
-        private $_is_network_storage;
+	    /**
+	     * @since 2.0.0
+	     * @var bool
+	     */
+	    private $_is_network_storage;
 
-        /**
-         * @var array[string]FS_Option_Manager {
-         * @key   string
-         * @value FS_Option_Manager
-         * }
-         */
-        private static $_MANAGERS = array();
+	    /**
+	     * @var bool|null
+	     */
+	    private $_autoload;
 
-        /**
-         * @author Vova Feldman (@svovaf)
-         * @since  1.0.3
-         *
-         * @param string   $id
-         * @param bool     $load
-         * @param bool|int $network_level_or_blog_id Since 2.0.0
-         */
-        private function __construct( $id, $load = false, $network_level_or_blog_id = false ) {
-            $id = strtolower( $id );
+	    /**
+	     * @var array[string]FS_Option_Manager {
+	     * @key   string
+	     * @value FS_Option_Manager
+	     * }
+	     */
+	    private static $_MANAGERS = array();
 
-            $this->_logger = FS_Logger::get_logger( WP_FS__SLUG . '_opt_mngr_' . $id, WP_FS__DEBUG_SDK, WP_FS__ECHO_DEBUG_SDK );
+	    /**
+	     * @param string    $id
+	     * @param bool      $load
+	     * @param bool|int  $network_level_or_blog_id Since 2.0.0
+	     * @param bool|null $autoload
+	     *
+	     * @author Vova Feldman (@svovaf)
+	     * @since  1.0.3
+	     *
+	     */
+	    private function __construct(
+		    $id,
+		    $load = false,
+		    $network_level_or_blog_id = false,
+		    $autoload = null
+	    ) {
+		    $id = strtolower( $id );
 
-            $this->_logger->entrance();
-            $this->_logger->log( 'id = ' . $id );
+		    $this->_logger = FS_Logger::get_logger( WP_FS__SLUG . '_opt_mngr_' . $id, WP_FS__DEBUG_SDK, WP_FS__ECHO_DEBUG_SDK );
 
-            $this->_id = $id;
+		    $this->_logger->entrance();
+		    $this->_logger->log( 'id = ' . $id );
 
-            if ( is_multisite() ) {
-                $this->_is_network_storage = ( true === $network_level_or_blog_id );
+		    $this->_id = $id;
 
-                if ( is_numeric( $network_level_or_blog_id ) ) {
-                    $this->_blog_id = $network_level_or_blog_id;
-                }
-            } else {
-                $this->_is_network_storage = false;
-            }
+		    $this->_autoload = $autoload;
+
+		    if ( is_multisite() ) {
+			    $this->_is_network_storage = ( true === $network_level_or_blog_id );
+
+			    if ( is_numeric( $network_level_or_blog_id ) ) {
+				    $this->_blog_id = $network_level_or_blog_id;
+			    }
+		    } else {
+			    $this->_is_network_storage = false;
+		    }
 
             if ( $load ) {
                 $this->load();
             }
         }
 
-        /**
-         * @author Vova Feldman (@svovaf)
-         * @since  1.0.3
-         *
-         * @param string   $id
-         * @param bool     $load
-         * @param bool|int $network_level_or_blog_id Since 2.0.0
-         *
-         * @return FS_Option_Manager
-         */
-        static function get_manager( $id, $load = false, $network_level_or_blog_id = false ) {
-            $key = strtolower( $id );
+	    /**
+	     * @param string    $id
+	     * @param bool      $load
+	     * @param bool|int  $network_level_or_blog_id Since 2.0.0
+	     * @param bool|null $autoload
+	     *
+	     * @return \FS_Option_Manager
+	     * @since  1.0.3
+	     *
+	     * @author Vova Feldman (@svovaf)
+	     */
+	    static function get_manager(
+		    $id,
+		    $load = false,
+		    $network_level_or_blog_id = false,
+		    $autoload = null
+	    ) {
+		    $key = strtolower( $id );
 
-            if ( is_multisite() ) {
-                if ( true === $network_level_or_blog_id ) {
-                    $key .= ':ms';
-                } else if ( is_numeric( $network_level_or_blog_id ) && $network_level_or_blog_id > 0 ) {
-                    $key .= ":{$network_level_or_blog_id}";
-                } else {
-                    $network_level_or_blog_id = get_current_blog_id();
+		    if ( is_multisite() ) {
+			    if ( true === $network_level_or_blog_id ) {
+				    $key .= ':ms';
+			    } else if ( is_numeric( $network_level_or_blog_id ) && $network_level_or_blog_id > 0 ) {
+				    $key .= ":{$network_level_or_blog_id}";
+			    } else {
+				    $network_level_or_blog_id = get_current_blog_id();
 
                     $key .= ":{$network_level_or_blog_id}";
                 }
             }
 
             if ( ! isset( self::$_MANAGERS[ $key ] ) ) {
-                self::$_MANAGERS[ $key ] = new FS_Option_Manager( $id, $load, $network_level_or_blog_id );
+	            self::$_MANAGERS[ $key ] = new FS_Option_Manager(
+		            $id,
+		            $load,
+		            $network_level_or_blog_id,
+		            $autoload
+	            );
             } // If load required but not yet loaded, load.
             else if ( $load && ! self::$_MANAGERS[ $key ]->is_loaded() ) {
                 self::$_MANAGERS[ $key ]->load();
@@ -410,7 +435,7 @@
             } else if ( $this->_blog_id > 0 ) {
                 update_blog_option( $this->_blog_id, $option_name, $this->_options );
             } else {
-                update_option( $option_name, $this->_options );
+	            update_option( $option_name, $this->_options, $this->_autoload );
             }
 
             if ( ! WP_FS__DEBUG_SDK ) {

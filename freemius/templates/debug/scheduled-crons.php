@@ -19,12 +19,12 @@
 	);
 
 	foreach ( $module_types as $module_type ) {
-		$modules = $fs_options->get_option( $module_type . 's' );
+		$modules = fs_get_entities( $fs_options->get_option( $module_type . 's' ), FS_Plugin::get_class_name() );
 		if ( is_array( $modules ) && count( $modules ) > 0 ) {
 			foreach ( $modules as $slug => $data ) {
 				if ( WP_FS__MODULE_TYPE_THEME === $module_type ) {
 					$current_theme = wp_get_theme();
-					$is_active = ( $current_theme->stylesheet === $data->file );
+					$is_active     = ( $current_theme->stylesheet === $data->file );
 				} else {
 					$is_active = is_plugin_active( $data->file );
 				}

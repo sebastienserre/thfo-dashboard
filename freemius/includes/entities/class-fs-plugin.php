@@ -93,22 +93,27 @@
          *
          * @var bool
          */
-        public $is_live;
-        /**
-         * @since 2.2.3
-         * @var null|number
-         */
-        public $bundle_id;
+	    public $is_live;
+	    /**
+	     * @since 2.2.3
+	     * @var null|number
+	     */
+	    public $bundle_id;
+	    /**
+	     * @since 2.3.1
+	     * @var null|string
+	     */
+	    public $bundle_public_key;
 
-        const AFFILIATE_MODERATION_CUSTOMERS = 'customers';
+	    const AFFILIATE_MODERATION_CUSTOMERS = 'customers';
 
-        #endregion Install Specific Properties
+	    #endregion Install Specific Properties
 
-        /**
-         * @param stdClass|bool $plugin
-         */
-        function __construct( $plugin = false ) {
-            parent::__construct( $plugin );
+	    /**
+	     * @param stdClass|bool $plugin
+	     */
+	    function __construct( $plugin = false ) {
+		    parent::__construct( $plugin );
 
             $this->is_premium = false;
             $this->is_live    = true;

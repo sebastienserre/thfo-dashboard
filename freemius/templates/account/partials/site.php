@@ -6,39 +6,46 @@
      * @since       2.0.0
      */
 
-    if ( ! defined( 'ABSPATH' ) ) {
-        exit;
-    }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-    /**
-     * @var array             $VARS
-     * @var Freemius          $fs
-     * @var FS_Plugin_License $main_license
-     */
-    $fs            = $VARS['freemius'];
-    $slug          = $fs->get_slug();
-    $site          = $VARS['site'];
-    $main_license  = $VARS['license'];
-    $has_paid_plan = $fs->has_paid_plan();
-    $is_premium    = $fs->is_premium();
-    $main_user     = $fs->get_user();
-    $blog_id       = $site['blog_id'];
+/**
+ * @var array             $VARS
+ * @var Freemius          $fs
+ * @var FS_Plugin_License $main_license
+ */
+$fs                 = $VARS['freemius'];
+$slug               = $fs->get_slug();
+$site               = $VARS['site'];
+$main_license       = $VARS['license'];
+$is_data_debug_mode = $fs->is_data_debug_mode();
+$is_whitelabeled    = $fs->is_whitelabeled();
+$has_paid_plan      = $fs->has_paid_plan();
+$is_premium         = $fs->is_premium();
+$main_user          = $fs->get_user();
+$blog_id            = $site['blog_id'];
 
-    $install       = $VARS['install'];
-    $is_registered = ! empty( $install );
-    $license       = null;
-    $trial_plan    = $fs->get_trial_plan();
-    $free_text     = fs_text_inline( 'Free', 'free', $slug );
+$install       = $VARS['install'];
+$is_registered = ! empty( $install );
+$license       = null;
+$trial_plan    = $fs->get_trial_plan();
+$free_text     = fs_text_inline( 'Free', 'free', $slug );
+
+if ( $is_whitelabeled && $fs->is_delegated_connection( $blog_id ) ) {
+	$is_whitelabeled = $fs->is_whitelabeled( true, $blog_id );
+}
 ?>
-    <tr class="fs-site-details" data-blog-id="<?php echo $blog_id ?>"<?php if ( $is_registered ) : ?> data-install-id="<?php echo $install->id ?>"<?php endif ?>>
-        <!-- Install ID or Opt-in option -->
-        <td><?php if ( $is_registered ) : ?>
-                <?php echo $install->id ?>
-            <?php else : ?>
-                <?php $action = 'opt_in' ?>
-                <form action="<?php echo $fs->_get_admin_page_url( 'account' ) ?>" method="POST">
-                    <input type="hidden" name="fs_action" value="<?php echo $action ?>">
-                    <?php wp_nonce_field( trim( "{$action}:{$blog_id}", ':' ) ) ?>
+	<tr class="fs-site-details"
+	    data-blog-id="<?php echo $blog_id ?>"<?php if ( $is_registered ) : ?> data-install-id="<?php echo $install->id ?>"<?php endif ?>>
+		<!-- Install ID or Opt-in option -->
+		<td><?php if ( $is_registered ) : ?>
+				<?php echo $install->id ?>
+			<?php else : ?>
+				<?php $action = 'opt_in' ?>
+				<form action="<?php echo $fs->_get_admin_page_url( 'account' ) ?>" method="POST">
+					<input type="hidden" name="fs_action" value="<?php echo $action ?>">
+					<?php wp_nonce_field( trim( "{$action}:{$blog_id}", ':' ) ) ?>
                     <input type="hidden" name="blog_id" value="<?php echo $blog_id ?>">
                     <button class="fs-opt-in button button-small"><?php fs_esc_html_echo_inline( 'Opt In', 'opt-in', $slug ) ?></button>
                 </form>
@@ -62,39 +69,41 @@
                 $license = null;
                 if ( $is_registered ) {
                     $view_params['install_id']   = $install->id;
-                    $view_params['is_localhost'] = $install->is_localhost();
+	                $view_params['is_localhost'] = $install->is_localhost();
 
-                    $has_license = FS_Plugin_License::is_valid_id( $install->license_id );
-                    $license     = $has_license ?
-                        $fs->_get_license_by_id( $install->license_id ) :
-                        null;
+	                $has_license = FS_Plugin_License::is_valid_id( $install->license_id );
+	                $license     = $has_license ?
+		                $fs->_get_license_by_id( $install->license_id ) :
+		                null;
                 } else {
-                    $view_params['is_localhost'] = FS_Site::is_localhost_by_address( $site['url'] );
+	                $view_params['is_localhost'] = FS_Site::is_localhost_by_address( $site['url'] );
                 }
 
-                if ( is_object( $license ) ) {
-                    $view_params['license'] = $license;
+		        if ( ! $is_whitelabeled ) {
+			        if ( is_object( $license ) ) {
+				        $view_params['license'] = $license;
 
-                    // Show license deactivation button.
-                    fs_require_template( 'account/partials/deactivate-license-button.php', $view_params );
-                } else {
-                    if ( is_object( $main_license ) && $main_license->can_activate( $view_params['is_localhost'] ) ) {
-                        // Main license is available for activation.
-                        $available_license = $main_license;
-                    } else {
-                        // Try to find any available license for activation.
-                        $available_license = $fs->_get_available_premium_license( $view_params['is_localhost'] );
-                    }
+				        // Show license deactivation button.
+				        fs_require_template( 'account/partials/deactivate-license-button.php', $view_params );
+			        } else {
+				        if ( is_object( $main_license ) && $main_license->can_activate( $view_params['is_localhost'] ) ) {
+					        // Main license is available for activation.
+					        $available_license = $main_license;
+				        } else {
+					        // Try to find any available license for activation.
+					        $available_license = $fs->_get_available_premium_license( $view_params['is_localhost'] );
+				        }
 
-                    if ( is_object( $available_license ) ) {
-                        $premium_plan = $fs->_get_plan_by_id( $available_license->plan_id );
+				        if ( is_object( $available_license ) ) {
+					        $premium_plan = $fs->_get_plan_by_id( $available_license->plan_id );
 
-                        $view_params['license'] = $available_license;
-                        $view_params['class'] .= ' button-primary';
-                        $view_params['plan'] = $premium_plan;
+					        $view_params['license'] = $available_license;
+					        $view_params['class']   .= ' button-primary';
+					        $view_params['plan']    = $premium_plan;
 
-                        fs_require_template( 'account/partials/activate-license-button.php', $view_params );
-                    }
+					        fs_require_template( 'account/partials/activate-license-button.php', $view_params );
+				        }
+			        }
                 }
             } ?></td>
         <!--/ License Activation / Deactivation -->
@@ -106,13 +115,13 @@
                     $plan_title = $free_text;
                 } else {
                     if ( $install->is_trial() ) {
-                        if ( $trial_plan->id == $install->trial_plan_id ) {
-                            $plan_title = is_string( $trial_plan->name ) ?
-                                strtoupper( $trial_plan->title ) :
-                                fs_text_inline( 'Trial', 'trial', $slug );
-                        } else {
-                            $plan_title = fs_text_inline( 'Trial', 'trial', $slug );
-                        }
+	                    if ( is_object( $trial_plan ) && $trial_plan->id == $install->trial_plan_id ) {
+		                    $plan_title = is_string( $trial_plan->name ) ?
+			                    strtoupper( $trial_plan->title ) :
+			                    fs_text_inline( 'Trial', 'trial', $slug );
+	                    } else {
+		                    $plan_title = fs_text_inline( 'Trial', 'trial', $slug );
+	                    }
                     } else {
                         $plan       = $fs->_get_plan_by_id( $install->plan_id );
                         $plan_title = strtoupper( is_string( $plan->title ) ?
@@ -225,46 +234,59 @@
 
                 <!-- Secret Key -->
                 <tr <?php if ( 1 == $row_index % 2 ) {
-                    echo ' class="alternate"';
+	                echo ' class="alternate"';
                 } ?>>
-                    <td>
-                        <nobr><?php fs_esc_html_echo_inline( 'Secret Key', 'secret-key', $slug ) ?>:</nobr>
-                    </td>
-                    <td>
-                        <code><?php echo htmlspecialchars( substr( $install->secret_key, 0, 6 ) ) . str_pad( '', 23 * 6, '&bull;' ) . htmlspecialchars( substr( $install->secret_key, - 3 ) ) ?></code>
-                        <input type="text" value="<?php echo htmlspecialchars( $install->secret_key ) ?>"
-                               style="display: none" readonly/></td>
-                    <td><button class="button button-small fs-toggle-visibility"><?php fs_esc_html_echo_x_inline( 'Show', 'verb', 'show', $slug ) ?></button></td>
+	                <td>
+		                <nobr><?php fs_esc_html_echo_inline( 'Secret Key', 'secret-key', $slug ) ?>:</nobr>
+	                </td>
+	                <td>
+		                <code><?php echo FS_Plugin_License::mask_secret_key_for_html( $install->secret_key ) ?></code>
+		                <?php if ( ! $is_whitelabeled ) : ?>
+		                <input type="text" value="<?php echo htmlspecialchars( $install->secret_key ) ?>"
+		                       style="display: none" readonly/></td>
+	                <?php endif ?>
+	                <?php if ( ! $is_whitelabeled ) : ?>
+		                <td>
+			                <button
+				                class="button button-small fs-toggle-visibility"><?php fs_esc_html_echo_x_inline( 'Show', 'verb', 'show', $slug ) ?></button>
+		                </td>
+	                <?php endif ?>
                 </tr>
                 <?php $row_index ++ ?>
                 <!--/ Secret Key -->
 
                 <?php if ( is_object( $license ) ) : ?>
-                    <!-- License Key -->
-                    <tr <?php if ( 1 == $row_index % 2 ) {
-                        echo ' class="alternate"';
-                    } ?>>
-                        <td>
-                            <nobr><?php fs_esc_html_echo_inline( 'License Key', 'license-key', $slug ) ?>:</nobr>
-                        </td>
-                        <td>
-                            <code><?php echo htmlspecialchars( substr( $license->secret_key, 0, 6 ) ) . str_pad( '', 23 * 6, '&bull;' ) . htmlspecialchars( substr( $license->secret_key, - 3 ) ) ?></code>
-                            <input type="text" value="<?php echo htmlspecialchars( $license->secret_key ) ?>"
-                                   style="display: none" readonly/></td>
-                        <td>
-                            <button class="button button-small fs-toggle-visibility"><?php fs_esc_html_echo_x_inline( 'Show', 'verb', 'show', $slug ) ?></button>
-                            <button class="button button-small activate-license-trigger <?php echo $fs->get_unique_affix() ?>"><?php fs_esc_html_echo_inline( 'Change License', 'change-license', $slug ) ?></button>
-                        </td>
-                    </tr>
-                    <?php $row_index ++ ?>
-                    <!--/ License Key -->
+	                <!-- License Key -->
+	                <tr <?php if ( 1 == $row_index % 2 ) {
+		                echo ' class="alternate"';
+	                } ?>>
+		                <td>
+			                <nobr><?php fs_esc_html_echo_inline( 'License Key', 'license-key', $slug ) ?>:</nobr>
+		                </td>
+		                <td>
+			                <code><?php echo $license->get_html_escaped_masked_secret_key() ?></code>
+			                <?php if ( ! $is_whitelabeled ) : ?>
+			                <input type="text" value="<?php echo htmlspecialchars( $license->secret_key ) ?>"
+			                       style="display: none" readonly/></td>
+		                <?php endif ?>
+		                <?php if ( ! $is_whitelabeled ) : ?>
+			                <td>
+				                <button
+					                class="button button-small fs-toggle-visibility"><?php fs_esc_html_echo_x_inline( 'Show', 'verb', 'show', $slug ) ?></button>
+				                <button
+					                class="button button-small activate-license-trigger <?php echo $fs->get_unique_affix() ?>"><?php fs_esc_html_echo_inline( 'Change License', 'change-license', $slug ) ?></button>
+			                </td>
+		                <?php endif ?>
+	                </tr>
+	                <?php $row_index ++ ?>
+	                <!--/ License Key -->
 
-                    <?php if ( ! is_object( $main_license ) || $main_license->id != $license->id ) : ?>
-                        <?php $subscription = $fs->_get_subscription( $license->id ) ?>
-                        <?php if ( ! $license->is_lifetime() && is_object( $subscription ) ) : ?>
-                            <!-- Subscription -->
-                            <tr <?php if ( 1 == $row_index % 2 ) {
-                                echo ' class="alternate"';
+	                <?php if ( ! is_object( $main_license ) || $main_license->id != $license->id ) : ?>
+		                <?php $subscription = $fs->_get_subscription( $license->id ) ?>
+		                <?php if ( ! $license->is_lifetime() && is_object( $subscription ) ) : ?>
+			                <!-- Subscription -->
+			                <tr <?php if ( 1 == $row_index % 2 ) {
+				                echo ' class="alternate"';
                             } ?>>
                                 <td>
                                     <nobr><?php fs_esc_html_echo_inline( 'Subscription', 'subscription', $slug ) ?>:</nobr>
@@ -295,8 +317,8 @@
                                         $downgrading_plan_text        = fs_text_inline( 'Downgrading your plan', 'downgrading-plan', $slug );
                                         $cancelling_subscription_text = fs_text_inline( 'Cancelling the subscription', 'cancelling-subscription', $slug );
                                         /* translators: %1$s: Either 'Downgrading your plan' or 'Cancelling the subscription' */
-                                        $downgrade_x_confirm_text          = fs_text_inline( '%1$s will immediately stop all future recurring payments and your %s plan license will expire in %s.', 'downgrade-x-confirm', $slug );
-                                        $prices_increase_text              = fs_text_inline( 'Please note that we will not be able to grandfather outdated pricing for renewals/new subscriptions after a cancellation. If you choose to renew the subscription manually in the future, after a price increase, which typically occurs once a year, you will be charged the updated price.', 'pricing-increase-warning', $slug );
+		                                $downgrade_x_confirm_text          = fs_text_inline( '%1$s will immediately stop all future recurring payments and your %2$s plan license will expire in %3$s.', 'downgrade-x-confirm', $slug );
+		                                $prices_increase_text              = fs_text_inline( 'Please note that we will not be able to grandfather outdated pricing for renewals/new subscriptions after a cancellation. If you choose to renew the subscription manually in the future, after a price increase, which typically occurs once a year, you will be charged the updated price.', 'pricing-increase-warning', $slug );
                                         $after_downgrade_non_blocking_text = fs_text_inline( 'You can still enjoy all %s features but you will not have access to %s security & feature updates, nor support.', 'after-downgrade-non-blocking', $slug );
                                         $after_downgrade_blocking_text     = fs_text_inline( 'Once your license expires you can still use the Free version but you will NOT have access to the %s features.', 'after-downgrade-blocking', $slug );
                                         $downgrade_text                    = fs_text_x_inline( 'Downgrade', 'verb', 'downgrade', $slug );
