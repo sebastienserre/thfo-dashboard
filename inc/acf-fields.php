@@ -390,8 +390,8 @@ if ( function_exists( 'acf_add_local_field_group' ) ):
 					'class' => '',
 					'id'    => '',
 				),
-				'display_format'    => 'H\hi',
-				'return_format'     => 'H\hi',
+				'display_format'    => 'H:i',
+				'return_format'     => 'H:i',
 			),
 		),
 		'location'              => array(

@@ -7,6 +7,7 @@ use function add_action;
 use function delete_transient;
 use function get_attachment_fields_to_edit;
 use function get_field;
+use function get_option;
 use function get_post_meta;
 use function get_transient;
 use function register_rest_field;
@@ -26,20 +27,21 @@ function register_route() {
     $register  = register_rest_route(
         $namespace,
         'dashboard-settings',
-        [
-            'methods'  => 'POST',
-            'callback' => __NAMESPACE__ . '\\get_acf_settings',
-        ]
+	    [
+		    'methods'  => 'POST',
+		    'callback' => __NAMESPACE__ . '\\get_settings',
+	    ]
     );
 }
 
-function get_acf_settings(  $resquest ) {
-	$acf = get_transient( 'remote-settings' );
-	if ( empty( $acf ) ) {
-		$acf['acf'] = get_fields( 'dashboard-settings' );
-		set_transient( 'remote-settings', $acf, 86400 );
+function get_settings( $resquest ) {
+	$remote = get_transient( 'remote-settings' );
+	if ( empty( $remote ) ) {
+		$remote = get_option( 'dbwp_options' );
+		set_transient( 'remote-settings', $remote, 86400 );
 	}
-    return $acf;
+
+	return $remote;
 }
 
 add_action( 'acf/save_post', __NAMESPACE__ . '\\delete_transients_on_saving', 15 );
