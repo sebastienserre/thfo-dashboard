@@ -55,7 +55,7 @@ if ( ! function_exists( 'wd_fs' ) ) {
 					'slug'    => 'dashboard-settings',
 					'support' => false,
 					'parent'  => array(
-						'slug' => 'edit.php',
+						'slug' => 'options-general.php',
 					),
 				),
 				// Set the SDK to work in a sandbox mode (for development & testing).
@@ -98,14 +98,12 @@ function thfo_bd_load_cpt() {
 	include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/api-route.php';
 	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
 	require_once plugin_dir_path( __FILE__ ) . 'admin/inc/class-dashboard-widget.php';
+	include_once THFO_DASHBOARD_PLUGIN_PATH . 'admin/settings.php';
 
 	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() || MAIN_SITE === trailingslashit( home_url() ) ||
 	     MAIN_SITE === untrailingslashit( home_url() ) ) {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/alert-cpt.php';
 		require_once plugin_dir_path( __FILE__ ) . 'inc/website-taxo.php';
-
-		include_once THFO_DASHBOARD_PLUGIN_PATH . 'admin/settings.php';
-
 	}
 }
 
@@ -199,20 +197,4 @@ function get_main_url() {
 	 * This is the url where the data come from.
 	 */
 	return apply_filters( 'dbwp_set_main_url', $main_url );
-}
-
-add_action( 'admin_menu', 'wpdb_admin_menu' );
-function wpdb_admin_menu() {
-	add_submenu_page(
-		'options-general.php',
-		'Dashboard WP',
-		'Dashboard WP',
-		'manage_options',
-		'dasboard-wp',
-		'wpdb_admin_menu_render'
-	);
-}
-
-function wpdb_admin_menu_render() {
-
 }

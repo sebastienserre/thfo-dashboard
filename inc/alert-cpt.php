@@ -57,6 +57,7 @@ if ( ! function_exists( 'alert' ) ) {
 			'capability_type'     => 'page',
 			'show_in_rest'        => true,
 		);
+
 		register_post_type( 'alert', $args );
 
 	}

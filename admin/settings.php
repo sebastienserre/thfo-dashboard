@@ -7,17 +7,27 @@ function register_options_pages() {
 
 	// register options page.
 
-	add_submenu_page( 'edit.php?post_type=alert', __( 'Settings' ), __( 'Settings' ), 'manage_options', 'dashboard-settings',
+	add_submenu_page( 'options-general.php', __( 'Dashboard WP Settings', 'dashboard-wp' ), __( 'Dashboard WP Settings', 'dashboard-wp' ),
+		'manage_options', 'dashboard-settings',
 		'dbwp_settings' );
 }
 
 add_action( 'admin_menu', 'register_options_pages' );
 
 function dbwp_settings() {
-	$tabs = array(
-		'general' => __( 'General', 'dashboard-wp' ),
-		'help'    => __( 'Help', 'dashboard-wp' ),
-	);
+	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() || MAIN_SITE === trailingslashit( home_url() ) ||
+	     MAIN_SITE === untrailingslashit( home_url() ) ) {
+		$tabs = array(
+			'general' => __( 'General', 'dashboard-wp' ),
+			'help'    => __( 'Help', 'dashboard-wp' ),
+		);
+	} else {
+		$tabs        = [
+			'help' => __( 'Help', 'dashboard-wp' ),
+		];
+		$_GET['tab'] = 'help';
+
+	}
 	$tabs = apply_filters( 'dbwp_settings_tabs', $tabs );
 
 	if ( isset( $_GET['tab'] ) ) {
@@ -64,6 +74,7 @@ function dbwp_settings() {
 add_action( 'admin_init', 'dbwp_register_setting' );
 function dbwp_register_setting() {
 	add_settings_section( 'dashboard-wp-help', __( 'Help Center', 'wp-openagenda' ), 'thfo_openwp_help', 'dashboard-wp-help' );
+
 	add_settings_section( 'dashboard-wp', 'Socials', 'dbwp_socials_network', 'dashboard-wp' );
 	register_setting( 'dashboard-wp', 'dbwp_options ' );
 }
@@ -71,7 +82,7 @@ function dbwp_register_setting() {
 
 
 function dbwp_socials_network() {
-	$socials = Helpers::dbwp_set_social();
+	$socials = Dashboard\Helpers\Helpers::dbwp_set_social();
 	foreach ( $socials as $social ) {
 		add_settings_field( 'dashboard-wp' . $social, $social, function ( $social ) {
 			$option       = get_option( 'dbwp_options' );
