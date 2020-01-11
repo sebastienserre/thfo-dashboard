@@ -15,6 +15,7 @@ function register_options_pages() {
 add_action( 'admin_menu', 'register_options_pages' );
 
 function dbwp_settings() {
+    $setting_url = 'options-general.php?page=dashboard-settings&tab=';
 	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() || MAIN_SITE === trailingslashit( home_url() ) ||
 	     MAIN_SITE === untrailingslashit( home_url() ) ) {
 		$tabs = array(
@@ -44,7 +45,7 @@ function dbwp_settings() {
 			<?php
 			foreach ( $tabs as $tab => $value ) {
 				?>
-                <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=alert&page=dashboard-settings&tab=' . $tab ) ); ?>"
+                <a href="<?php echo esc_url( admin_url( $setting_url . $tab ) ); ?>"
                    class="nav-tab <?php echo 'nav-tab-' . $tab;
 				   echo $active_tab === $tab ? ' nav-tab-active' : ''; ?>"><?php echo $value ?></a>
 			<?php } ?>
