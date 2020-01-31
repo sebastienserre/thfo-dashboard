@@ -17,21 +17,21 @@ use function strpos;
 use function var_dump;
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 } // Exit if accessed directly.
 
-add_action( 'rest_api_init', __NAMESPACE__ .  '\register_route' );
+add_action( 'rest_api_init', __NAMESPACE__ . '\register_route' );
 
 function register_route() {
-    $namespace = 'dashboard-wp/v1';
-    $register  = register_rest_route(
-        $namespace,
-        'dashboard-settings',
-	    [
-		    'methods'  => 'POST',
-		    'callback' => __NAMESPACE__ . '\\get_settings',
-	    ]
-    );
+	$namespace = 'dashboard-wp/v1';
+	$register  = register_rest_route(
+		$namespace,
+		'dashboard-settings',
+		[
+			'methods'  => 'POST',
+			'callback' => __NAMESPACE__ . '\\get_settings',
+		]
+	);
 }
 
 function get_settings( $resquest ) {
@@ -47,9 +47,11 @@ function get_settings( $resquest ) {
 add_action( 'acf/save_post', __NAMESPACE__ . '\\delete_transients_on_saving', 15 );
 /**
  * Delete Transients on settings saving
+ *
  * @param $post_id
+ *
  * @author Sébastien Serre
- * @since 1.2.0
+ * @since  1.2.0
  */
 function delete_transients_on_saving( $post_id ) {
 	$screen = get_current_screen();

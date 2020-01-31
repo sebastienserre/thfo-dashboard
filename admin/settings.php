@@ -15,7 +15,7 @@ function register_options_pages() {
 add_action( 'admin_menu', 'register_options_pages' );
 
 function dbwp_settings() {
-    $setting_url = 'options-general.php?page=dashboard-settings&tab=';
+	$setting_url = 'options-general.php?page=dashboard-settings&tab=';
 	if ( defined( 'MAIN_SITE' ) && MAIN_SITE === home_url() || MAIN_SITE === trailingslashit( home_url() ) ||
 	     MAIN_SITE === untrailingslashit( home_url() ) ) {
 		$tabs = array(
@@ -56,11 +56,13 @@ function dbwp_settings() {
 			switch ( $active_tab ) {
 				case 'general':
 				default:
+					settings_fields( 'general-dashboard-wp' );
+					do_settings_sections( 'general-dashboard-wp' );
 					settings_fields( 'dashboard-wp' );
-				do_settings_sections( 'dashboard-wp' );
-				submit_button( __( 'Save' ) );
-				delete_transient( 'remote-settings' );
-				break;
+					do_settings_sections( 'dashboard-wp' );
+					submit_button( __( 'Save' ) );
+					delete_transient( 'remote-settings' );
+					break;
 				case 'help':
 					settings_fields( 'dashboard-wp-help' );
 					do_settings_sections( 'dashboard-wp-help' );
@@ -75,11 +77,14 @@ function dbwp_settings() {
 add_action( 'admin_init', 'dbwp_register_setting' );
 function dbwp_register_setting() {
 	add_settings_section( 'dashboard-wp-help', __( 'Help Center', 'wp-openagenda' ), 'thfo_openwp_help', 'dashboard-wp-help' );
-
 	add_settings_section( 'dashboard-wp', 'Socials', 'dbwp_socials_network', 'dashboard-wp' );
-	register_setting( 'dashboard-wp', 'dbwp_options ' );
-}
+	add_settings_section( 'general-dashboard-wp', 'Generals', '', 'dashboard-wp' );
 
+	register_setting( 'dashboard-wp', 'dbwp_options ' );
+	register_setting( 'dashboard-wp', 'wp_dashboard_api' );
+	add_settings_field( 'openagenda-wp-api', __( 'API Dashboard WP', 'wp-openagenda' ), 'dbwp_api',
+		'dashboard-wp', 'general-dashboard-wp' );
+}
 
 
 function dbwp_socials_network() {
@@ -97,5 +102,40 @@ function dbwp_socials_network() {
 			?>]" <?php echo $value; ?>>
 			<?php
 		}, 'dashboard-wp', 'dashboard-wp', $social );
+	}
+
+	function dbwp_api() {
+
+		if ( '1' === get_option( 'thfo_key_validated' ) ) {
+			$text = __( 'Deactivate Key', 'dashboard-wp' );
+			$args = [
+				'activate' => '2',
+				'key'      => get_option( 'wp_dashboard_api' ),
+			];
+
+		} else {
+			$text = __( 'Activate Key', 'dashboard-wp' );
+			$args = [
+				'activate' => '1',
+				'key'      => get_option( 'wp_dashboard_api' ),
+			];
+		}
+		global $wp;
+		$activation_url = wp_nonce_url(
+			add_query_arg(
+				$args,
+				admin_url( 'options-general.php?page=dashboard-settings' )
+			),
+			'validate',
+			'_wpnonce'
+		);
+		?>
+        <input type="text" name="wp_dashboard_api" value="<?php echo esc_html( get_option( 'wp_dashboard_api' ) );
+		?>"/>
+		<?php $url = esc_url( 'https://thivinfo.com' ); ?>
+		<?php // translators: Add the OpenAGenda URL. ?>
+        <p><?php printf( wp_kses( __( 'Find it in your account on <a href="%s" target="_blank">Thivinfo</a>. ', 'dashboard-wp' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( $url ) ); ?></p>
+        <a href="<?php echo esc_url( $activation_url ); ?>"><?php echo $text; ?></a>
+		<?php
 	}
 }
