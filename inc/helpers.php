@@ -10,6 +10,7 @@ use function explode;
 use function get_current_screen;
 use function get_field;
 use function get_transient;
+use function home_url;
 use function is_array;
 use function is_wp_error;
 use function json_decode;
@@ -195,23 +196,29 @@ class Helpers {
 		$options = get_transient( 'remote-settings' );
 
 		if ( empty( $options ) ) {
-			$json = wp_remote_post(
-				untrailingslashit( MAIN_SITE ) . '/wp-json/dashboard-wp/v1/dashboard-settings',
-				[
-					'timeout'    => 20,
-					'user-agent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0',
-				]
-			);
 
-			if ( 200 === (int) wp_remote_retrieve_response_code( $json ) || 404 === (int)
-				wp_remote_retrieve_response_code( $json ) ) {
-				$body    = wp_remote_retrieve_body( $json );
-				$options = json_decode( $body, true );
+			if ( MAIN_SITE === home_url() ) {
+				$options = get_option( 'dbwp_options' );
 				set_transient( 'remote_settings', $options, 86400 );
-			}
+			} else {
+				$json = wp_remote_post(
+					untrailingslashit( MAIN_SITE ) . '/wp-json/dashboard-wp/v1/dashboard-settings',
+					[
+						'timeout'    => 20,
+						'user-agent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0',
+					]
+				);
 
-			if ( 404 === (int) wp_remote_retrieve_response_code( $json ) ) {
-				$options = __( $options['message'], 'dashboard-wp' );
+				if ( 200 === (int) wp_remote_retrieve_response_code( $json ) || 404 === (int)
+					wp_remote_retrieve_response_code( $json ) ) {
+					$body    = wp_remote_retrieve_body( $json );
+					$options = json_decode( $body, true );
+					set_transient( 'remote_settings', $options, 86400 );
+				}
+
+				if ( 404 === (int) wp_remote_retrieve_response_code( $json ) ) {
+					$options = __( $options['message'], 'dashboard-wp' );
+				}
 			}
 		}
 
