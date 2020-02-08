@@ -22,7 +22,6 @@ register_activation_hook( __FILE__, 'thfo_add_main_constant' );
 
 //i18n (to come shortly)
 load_plugin_textdomain( 'dashboard-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-load_plugin_textdomain( 'openwp_licence', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 
 define( 'THFO_CONSUMER_KEY', 'ck_fcf85c1cb9f3fdcd4268913f21364f25ffa9d10a' );
@@ -52,7 +51,7 @@ function thfo_bd_load_cpt() {
 	include_once DWP_ACF_PATH . 'acf.php';
 	include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/acf-fields.php';
 	include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/api-route.php';
-	include_once THFO_DASHBOARD_PLUGIN_PATH . 'inc/class-licence.php';
+	include_once THFO_DASHBOARD_PLUGIN_PATH . '3rd-party/thfo-license/class-licence.php';
 	require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
 	require_once plugin_dir_path( __FILE__ ) . 'admin/inc/class-dashboard-widget.php';
 	include_once THFO_DASHBOARD_PLUGIN_PATH . 'admin/settings.php';
