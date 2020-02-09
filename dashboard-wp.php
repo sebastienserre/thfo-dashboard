@@ -23,7 +23,14 @@ register_activation_hook( __FILE__, 'thfo_add_main_constant' );
 //i18n (to come shortly)
 load_plugin_textdomain( 'dashboard-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
-
+/**
+ * Customize with your datas
+ * THFO_WEBSITE_URL - Website where License Manager is used
+ * THFO_CONSUMER_KEY - License manager Consumer Key
+ * THFO_CONSUMER_SECRET - License manager Consumer Secret
+ * WP_PLUGIN_ID - WooComerce Product ID
+ */
+define( 'THFO_WEBSITE_URL', 'https://thivinfo.com' );
 define( 'THFO_CONSUMER_KEY', 'ck_fcf85c1cb9f3fdcd4268913f21364f25ffa9d10a' );
 define( 'THFO_CONSUMER_SECRET', 'cs_325b704ac98496ca3a5bcb600bc4778cd963157e' );
 define( 'WP_MAIN_FILE_PLUGIN_PATH', __FILE__ );
