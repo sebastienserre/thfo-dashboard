@@ -81,7 +81,7 @@ function dbwp_register_setting() {
 	add_settings_section( 'general-dashboard-wp', 'Generals', '', 'dashboard-wp' );
 
 	register_setting( 'dashboard-wp', 'dbwp_options ' );
-	register_setting( 'dashboard-wp', 'wp_dashboard_api' );
+	register_setting( 'dashboard-wp', 'thfo_api_key' );
 	add_settings_field( 'openagenda-wp-api', __( 'API Dashboard WP', 'wp-openagenda' ), 'dbwp_api',
 		'dashboard-wp', 'general-dashboard-wp' );
 }
@@ -110,14 +110,14 @@ function dbwp_socials_network() {
 			$text = __( 'Deactivate Key', 'dashboard-wp' );
 			$args = [
 				'activate' => '2',
-				'key'      => get_option( 'wp_dashboard_api' ),
+				'key'      => get_option( 'thfo_api_key' ),
 			];
 
 		} else {
 			$text = __( 'Activate Key', 'dashboard-wp' );
 			$args = [
 				'activate' => '1',
-				'key'      => get_option( 'wp_dashboard_api' ),
+				'key'      => get_option( 'thfo_api_key' ),
 			];
 		}
 		global $wp;
@@ -130,9 +130,9 @@ function dbwp_socials_network() {
 			'_wpnonce'
 		);
 		?>
-        <input type="text" name="wp_dashboard_api" value="<?php echo esc_html( get_option( 'wp_dashboard_api' ) );
+        <input type="text" name="thfo_api_key" value="<?php echo esc_html( get_option( 'wp_dashboard_api' ) );
 		?>"/>
-		<?php $url = esc_url( 'https://thivinfo.com' ); ?>
+		<?php $url = esc_url( THFO_WEBSITE_URL ); ?>
 		<?php // translators: Add the OpenAGenda URL. ?>
         <p><?php printf( wp_kses( __( 'Find it in your account on <a href="%s" target="_blank">Thivinfo</a>. ', 'dashboard-wp' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( $url ) ); ?></p>
         <a href="<?php echo esc_url( $activation_url ); ?>"><?php echo $text; ?></a>

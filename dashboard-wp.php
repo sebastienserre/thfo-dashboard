@@ -3,7 +3,7 @@
  * Plugin Name:       WordPress Dashboard
  * Plugin URI:        https://thivinfo.com
  * Description:       Thivinfo Custom Dashboard for WordPress.
- * Version:           1.3.0
+ * Version:           1.3.1
  * Author:            Thivinfo
  * Author URI:        https://thivinfo.com
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ define( 'THFO_CONSUMER_KEY', 'ck_fcf85c1cb9f3fdcd4268913f21364f25ffa9d10a' );
 define( 'THFO_CONSUMER_SECRET', 'cs_325b704ac98496ca3a5bcb600bc4778cd963157e' );
 define( 'WP_MAIN_FILE_PLUGIN_PATH', __FILE__ );
 define( 'WP_PLUGIN_ID', '1174632' );
-define( 'THFO_PLUGIN_VERSION', '1.3.0' );
+define( 'THFO_PLUGIN_VERSION', '1.3.1' );
 define( 'THFO_OPENWP_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'THFO_SLUG', basename( __FILE__ ) );
 define( 'THFO_PLUGIN_NAME', dirname( plugin_basename( __FILE__ ) ) );
